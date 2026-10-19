@@ -31,24 +31,27 @@ type Submission struct {
 	Delays []int `json:"delays_ms,omitempty"`
 }
 type Config struct {
-	Name        string           `json:"name"`
-	Seed        int64            `json:"seed"`
-	Nodes       int              `json:"nodes"`
-	Faults      int              `json:"fault_bound"`
-	Admission   int              `json:"admission_signatures"`
-	Release     int              `json:"release_approvals"`
-	PerNode     int              `json:"per_node_round_capacity"`
-	Service     int              `json:"service_capacity"`
-	Window      int              `json:"window_ms"`
-	Omit        string           `json:"omit_node,omitempty"`
-	Refuse      string           `json:"refuse_node,omitempty"`
-	Equivocate  string           `json:"equivocate_node,omitempty"`
-	InitialCash map[string]int64 `json:"initial_cash_cents,omitempty"`
-	Orders      []Submission     `json:"orders"`
+	Name            string           `json:"name"`
+	Seed            int64            `json:"seed"`
+	Nodes           int              `json:"nodes"`
+	Faults          int              `json:"fault_bound"`
+	Admission       int              `json:"admission_signatures"`
+	Release         int              `json:"release_approvals"`
+	PerNode         int              `json:"per_node_round_capacity"`
+	Service         int              `json:"service_capacity"`
+	Window          int              `json:"window_ms"`
+	Omit            string           `json:"omit_node,omitempty"`
+	Refuse          string           `json:"refuse_node,omitempty"`
+	Equivocate      string           `json:"equivocate_node,omitempty"`
+	DuplicateCopies int              `json:"duplicate_copies,omitempty"`
+	CorruptTo       string           `json:"corrupt_to_node,omitempty"`
+	DropTo          string           `json:"drop_to_node,omitempty"`
+	InitialCash     map[string]int64 `json:"initial_cash_cents,omitempty"`
+	Orders          []Submission     `json:"orders"`
 }
 
 func (c Config) Validate() error {
-	if c.Nodes < 1 || c.Nodes > 32 || c.Faults < 0 || c.Nodes < 3*c.Faults+1 {
+	if c.Nodes < 1 || c.Nodes > 32 || c.Faults < 0 || c.Faults > c.Nodes || c.Nodes < 3*c.Faults+1 {
 		return errors.New("require 1..32 nodes and n >= 3f+1")
 	}
 	if c.Admission <= c.Faults || c.Admission > c.Nodes-c.Faults || 2*c.Admission <= c.Nodes+c.Faults {
@@ -57,8 +60,21 @@ func (c Config) Validate() error {
 	if c.Release <= c.Faults || c.Release > c.Nodes-c.Faults {
 		return errors.New("require f<t<=n-f")
 	}
-	if c.PerNode < 1 || c.Service < 1 || c.Window < 1 || len(c.Orders) > 10000 {
+	if c.PerNode < 1 || c.PerNode > 10000 || c.Service < 1 || c.Service > 10000 || c.Window < 1 || c.Window > 100000 || len(c.Orders) > 10000 || c.DuplicateCopies < 0 || c.DuplicateCopies > 3 {
 		return errors.New("invalid capacity, window, or workload")
+	}
+	for _, id := range []string{c.CorruptTo, c.DropTo} {
+		if id != "" {
+			found := false
+			for i := 0; i < c.Nodes; i++ {
+				if id == NodeID(i) {
+					found = true
+				}
+			}
+			if !found {
+				return fmt.Errorf("unknown transport destination %s", id)
+			}
+		}
 	}
 	bad := map[string]bool{}
 	for _, id := range []string{c.Omit, c.Refuse, c.Equivocate} {
@@ -96,8 +112,8 @@ func (c Config) Validate() error {
 			return errors.New("delays must specify every member")
 		}
 		for _, d := range s.Delays {
-			if d < 0 {
-				return errors.New("negative delivery delay")
+			if d < 0 || d > 1000000000 {
+				return errors.New("delivery delay outside 0..1000000000 ms")
 			}
 		}
 	}
@@ -200,7 +216,7 @@ func (e Evidence) Verify(keys map[string][]byte, ctx string) bool {
 	}
 	for _, s := range []Statement{a, b} {
 		if s.Kind == "final_list" {
-			if !sort.StringsAreSorted(s.Items) {
+			if s.Items == nil || !sort.StringsAreSorted(s.Items) {
 				return false
 			}
 			for i := 1; i < len(s.Items); i++ {

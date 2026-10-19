@@ -1,0 +1,67 @@
+{
+  "name": "capacity",
+  "seed": 7,
+  "nodes": 5,
+  "fault_bound": 1,
+  "admission_signatures": 4,
+  "release_approvals": 3,
+  "per_node_round_capacity": 1,
+  "service_capacity": 1,
+  "window_ms": 100,
+  "orders": [
+    {
+      "round": 1,
+      "order": {
+        "owner": "alice",
+        "nonce": 0,
+        "kind": "buy",
+        "listing": "yes-1",
+        "quantity": 4,
+        "limit_cents": 60
+      },
+      "delays_ms": [
+        10,
+        10,
+        10,
+        10,
+        10
+      ]
+    },
+    {
+      "round": 1,
+      "order": {
+        "owner": "bob",
+        "nonce": 0,
+        "kind": "buy",
+        "listing": "yes-1",
+        "quantity": 3,
+        "limit_cents": 60
+      },
+      "delays_ms": [
+        11,
+        11,
+        11,
+        11,
+        11
+      ]
+    },
+    {
+      "round": 2,
+      "order": {
+        "owner": "carol",
+        "nonce": 0,
+        "kind": "buy",
+        "listing": "yes-1",
+        "quantity": 3,
+        "limit_cents": 60
+      },
+      "delays_ms": [
+        12,
+        12,
+        12,
+        12,
+        12
+      ]
+    }
+  ]
+}

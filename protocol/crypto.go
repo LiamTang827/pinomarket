@@ -1,6 +1,7 @@
 package protocol
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/ed25519"
@@ -30,16 +31,24 @@ type lockedService struct {
 }
 type IdealVault struct {
 	releaseThreshold int
+	members          map[string][]byte
+	openings         map[string]Opening
 	keys             map[string][]byte
 	locks            map[string]lockedService
 	opened           map[string]bool
 }
 
 func NewIdealVault(threshold int) *IdealVault {
-	return &IdealVault{releaseThreshold: threshold, keys: map[string][]byte{}, locks: map[string]lockedService{}, opened: map[string]bool{}}
+	return &IdealVault{releaseThreshold: threshold, openings: map[string]Opening{}, keys: map[string][]byte{}, locks: map[string]lockedService{}, opened: map[string]bool{}}
 }
 
 func (v *IdealVault) Seal(h Header, o Order, key ed25519.PrivateKey) (Envelope, error) {
+	if len(key) != ed25519.PrivateKeySize {
+		return Envelope{}, errors.New("invalid signing private key")
+	}
+	if h.Domain != Domain || h.Context == "" || h.Round < 1 || h.Owner != o.Owner || h.Nonce != o.Nonce {
+		return Envelope{}, errors.New("header/order context mismatch")
+	}
 	k := make([]byte, 32)
 	if _, err := rand.Read(k); err != nil {
 		return Envelope{}, err
@@ -65,11 +74,17 @@ func (v *IdealVault) Seal(h Header, o Order, key ed25519.PrivateKey) (Envelope, 
 
 // lock is called by the ideal finality coordinator ONLY for a finalized queue prefix.
 func (v *IdealVault) lock(c Certificate, ids []string, keys map[string][]byte, q int) error {
+	if v.members != nil && !sameKeys(v.members, keys) {
+		return errors.New("member trust anchors changed")
+	}
 	if c.Item != digest(ids) || !verifyService(c, keys, q) {
 		return errors.New("invalid service certificate")
 	}
 	if _, exists := v.locks[c.Item]; exists {
 		return errors.New("duplicate lock")
+	}
+	if v.members == nil {
+		v.members = cloneKeys(keys)
 	}
 	v.locks[c.Item] = lockedService{c, append([]string{}, ids...)}
 	return nil
@@ -88,6 +103,9 @@ func verifyService(c Certificate, keys map[string][]byte, q int) bool {
 	return len(seen) >= q
 }
 func (v *IdealVault) Open(e Envelope, lock Certificate, approvals []Statement, members, users map[string][]byte, t int) (Order, error) {
+	if !sameKeys(v.members, members) {
+		return Order{}, errors.New("member trust anchors changed")
+	}
 	if t != v.releaseThreshold || t < 1 || t > len(members) {
 		return Order{}, errors.New("invalid release threshold")
 	}
@@ -139,5 +157,56 @@ func (v *IdealVault) Open(e Envelope, lock Certificate, approvals []Statement, m
 		return Order{}, errors.New("invalid order authorization")
 	}
 	v.opened[e.ID()] = true
+	v.openings[e.ID()] = Opening{ID: e.ID(), Key: append([]byte{}, k...), Order: o, Signature: append([]byte{}, body.Signature...)}
 	return o, nil
+}
+
+// Opening publishes only a serviced order's key, enabling independent AEAD checks.
+// Waiting orders' keys and all signing private keys remain absent from reports.
+type Opening struct {
+	ID        string `json:"id"`
+	Key       []byte `json:"released_aes_key"`
+	Order     Order  `json:"order"`
+	Signature []byte `json:"inner_signature"`
+}
+
+func cloneKeys(keys map[string][]byte) map[string][]byte {
+	out := map[string][]byte{}
+	for id, k := range keys {
+		out[id] = append([]byte{}, k...)
+	}
+	return out
+}
+func sameKeys(a, b map[string][]byte) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for id, k := range a {
+		if !bytes.Equal(k, b[id]) {
+			return false
+		}
+	}
+	return true
+}
+func verifyOpening(e Envelope, o Opening, users map[string][]byte) bool {
+	if o.ID != e.ID() || len(o.Key) != 32 {
+		return false
+	}
+	block, err := aes.NewCipher(o.Key)
+	if err != nil {
+		return false
+	}
+	gcm, err := cipher.NewGCM(block)
+	if err != nil || len(e.Nonce) != gcm.NonceSize() {
+		return false
+	}
+	raw, err := gcm.Open(nil, e.Nonce, e.Ciphertext, bytesOf(e.Header))
+	if err != nil {
+		return false
+	}
+	var body signedOrder
+	if json.Unmarshal(raw, &body) != nil {
+		return false
+	}
+	return body.Order == o.Order && bytes.Equal(body.Signature, o.Signature) && o.Order.Owner == e.Header.Owner && o.Order.Nonce == e.Header.Nonce && valid(users[o.Order.Owner], orderMessage(e.Header, o.Order), o.Signature)
 }

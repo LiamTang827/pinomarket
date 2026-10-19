@@ -1,0 +1,47 @@
+{
+  "name": "equivocation",
+  "seed": 7,
+  "nodes": 5,
+  "fault_bound": 1,
+  "admission_signatures": 4,
+  "release_approvals": 3,
+  "per_node_round_capacity": 8,
+  "service_capacity": 1,
+  "window_ms": 100,
+  "equivocate_node": "node-1",
+  "orders": [
+    {
+      "round": 1,
+      "order": {
+        "owner": "alice",
+        "nonce": 0,
+        "kind": "buy",
+        "listing": "yes-1",
+        "quantity": 4,
+        "limit_cents": 60
+      }
+    },
+    {
+      "round": 1,
+      "order": {
+        "owner": "bob",
+        "nonce": 0,
+        "kind": "buy",
+        "listing": "yes-1",
+        "quantity": 3,
+        "limit_cents": 60
+      }
+    },
+    {
+      "round": 2,
+      "order": {
+        "owner": "carol",
+        "nonce": 0,
+        "kind": "buy",
+        "listing": "yes-1",
+        "quantity": 3,
+        "limit_cents": 60
+      }
+    }
+  ]
+}

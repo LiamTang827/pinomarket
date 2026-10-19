@@ -30,7 +30,7 @@ func write(path string, v any) error {
 }
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("pinocchio run [-scenario normal|delay|omission|refusal|equivocation|late|capacity|funds|cancel] [-config path] [-out runs/demo]\npinocchio verify -file runs/demo/evidence.json\npinocchio replay -file runs/demo/report.json")
+		fmt.Println("pinocchio run [-scenario normal|delay|omission|refusal|equivocation|late|capacity|funds|cancel|duplicate|corrupt|drop] [-config path] [-out runs/demo]\npinocchio verify -file runs/demo/evidence.json\npinocchio audit -file runs/demo/report.json\npinocchio replay -file runs/demo/report.json")
 		return
 	}
 	fs := flag.NewFlagSet(os.Args[1], flag.ExitOnError)
@@ -60,6 +60,9 @@ func main() {
 		if err = os.Mkdir(*out, 0755); err != nil {
 			fail(fmt.Errorf("refuse to overwrite output: %w", err))
 		}
+		if err = protocol.AuditReport(*r); err != nil {
+			fail(fmt.Errorf("internal report audit: %w", err))
+		}
 		if err = write(filepath.Join(*out, "report.json"), r); err != nil {
 			fail(err)
 		}
@@ -80,6 +83,10 @@ func main() {
 		if err = f.Close(); err != nil {
 			fail(err)
 		}
+		if err = write(filepath.Join(*out, "metrics.json"), r.Metrics); err != nil {
+			fail(err)
+		}
+		fmt.Printf("Metrics: %+v\n", r.Metrics)
 		fmt.Printf("Scenario: %s\nMODE: single-process simulation; ideal finality and ideal key vault\n", c.Name)
 		for _, x := range r.Results {
 			fmt.Printf("  %-12s %-20s filled=%d cost=%d cents\n", x.Order, x.Status, x.Filled, x.Cost)
@@ -95,6 +102,15 @@ func main() {
 			fail(err)
 		}
 		fmt.Printf("Verified %d evidence item(s) against the supplied scenario member keys.\nThis is not proof of real-world identity or completeness.\n", n)
+	case "audit":
+		var r protocol.Report
+		if err := read(*file, &r); err != nil {
+			fail(err)
+		}
+		if err := protocol.AuditReport(r); err != nil {
+			fail(err)
+		}
+		fmt.Println("Artifact audit passed: signatures, openings, certificates, FIFO service and independent market accounting. Scenario keys remain the supplied trust root; no physical-time or BFT proof.")
 	case "replay":
 		var old protocol.Report
 		if err := read(*file, &old); err != nil {

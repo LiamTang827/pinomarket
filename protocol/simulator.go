@@ -3,6 +3,8 @@ package protocol
 import (
 	"container/heap"
 	"crypto/ed25519"
+	"crypto/rand"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	mathrand "math/rand"
@@ -17,21 +19,27 @@ type Event struct {
 	Detail string `json:"detail,omitempty"`
 }
 type Report struct {
-	Config         Config        `json:"config"`
-	Context        string        `json:"context"`
-	Assumptions    []string      `json:"assumptions"`
-	Events         []Event       `json:"events"`
-	Results        []Result      `json:"results"`
-	Market         *Market       `json:"market"`
-	Audit          AuditBundle   `json:"audit"`
-	Envelopes      []Envelope    `json:"encrypted_orders"`
-	Promises       []Statement   `json:"promises"`
-	FinalLists     []Statement   `json:"final_lists"`
-	Admissions     []Certificate `json:"admission_certificates"`
-	Registrations  []Statement   `json:"ideal_registrations"`
-	Services       []Certificate `json:"service_certificates"`
-	Releases       []Statement   `json:"release_approvals"`
-	SemanticDigest string        `json:"semantic_digest"`
+	Version        string            `json:"version"`
+	Session        string            `json:"session_nonce"`
+	UserKeys       map[string][]byte `json:"user_public_keys"`
+	Openings       []Opening         `json:"openings"`
+	ServiceRecords []ServiceRecord   `json:"service_records"`
+	Metrics        Metrics           `json:"metrics"`
+	Config         Config            `json:"config"`
+	Context        string            `json:"context"`
+	Assumptions    []string          `json:"assumptions"`
+	Events         []Event           `json:"events"`
+	Results        []Result          `json:"results"`
+	Market         *Market           `json:"market"`
+	Audit          AuditBundle       `json:"audit"`
+	Envelopes      []Envelope        `json:"encrypted_orders"`
+	Promises       []Statement       `json:"promises"`
+	FinalLists     []Statement       `json:"final_lists"`
+	Admissions     []Certificate     `json:"admission_certificates"`
+	Registrations  []Statement       `json:"ideal_registrations"`
+	Services       []Certificate     `json:"service_certificates"`
+	Releases       []Statement       `json:"release_approvals"`
+	SemanticDigest string            `json:"semantic_digest"`
 }
 
 func (r Report) Semantic() string {
@@ -72,6 +80,12 @@ func DefaultConfig(name string) (Config, error) {
 	c.Orders = []Submission{{Round: 1, Order: buy("alice", 4)}, {Round: 1, Order: buy("bob", 3)}, {Round: 2, Order: buy("carol", 3)}}
 	switch name {
 	case "normal":
+	case "duplicate":
+		c.DuplicateCopies = 2
+	case "corrupt":
+		c.CorruptTo = "node-1"
+	case "drop":
+		c.DropTo = "node-1"
 	case "delay":
 		c.Orders[0].Delays = []int{90, 10, 70, 30, 50}
 		c.Orders[1].Delays = []int{5, 80, 20, 60, 40}
@@ -104,11 +118,14 @@ func Run(c Config) (*Report, error) {
 	if err := c.Validate(); err != nil {
 		return nil, err
 	}
-	ctx := digest(struct {
-		Domain string
-		Config Config
-	}{Domain, c})
-	r := &Report{Config: c, Context: ctx, Market: NewMarket(), Results: []Result{}, Events: []Event{}, Audit: AuditBundle{Context: ctx, Members: map[string][]byte{}, Evidence: []Evidence{}}, Assumptions: []string{
+	sessionBytes := make([]byte, 32)
+	if _, err := rand.Read(sessionBytes); err != nil {
+		return nil, err
+	}
+	session := hex.EncodeToString(sessionBytes)
+	ctx := ContextFor(c, session)
+
+	r := &Report{Version: "0.2", Session: session, Config: c, Context: ctx, Market: NewMarket(), Results: []Result{}, Events: []Event{}, Audit: AuditBundle{Context: ctx, Members: map[string][]byte{}, Evidence: []Evidence{}}, Assumptions: []string{
 		"Single process, virtual time; node views are separate state, not isolated machines.",
 		"Common registration/finality is an ideal coordinator, not implemented BFT consensus.",
 		"All members publish a final list in each round; crashes/unavailable lists are not modeled.",
@@ -142,6 +159,7 @@ func Run(c Config) (*Report, error) {
 			userPrivate[s.Order.Owner] = priv
 		}
 	}
+	r.UserKeys = cloneKeys(users)
 	vault := NewIdealVault(c.Release)
 	rng := mathrand.New(mathrand.NewSource(c.Seed))
 	record := func(time int, kind, node, order, detail string) {
@@ -151,6 +169,7 @@ func Run(c Config) (*Report, error) {
 	queue := []Envelope{}
 	registered := map[string]bool{}
 	serviceRound := 0
+	lastRegistration := 0
 	maxRound := 0
 	for _, s := range c.Orders {
 		maxRound = max(maxRound, s.Round)
@@ -175,6 +194,7 @@ func Run(c Config) (*Report, error) {
 			return err
 		}
 		r.Services = append(r.Services, lock)
+		r.ServiceRecords = append(r.ServiceRecords, ServiceRecord{lock, append([]string{}, ids...), lastRegistration})
 		for _, e := range prefix {
 			record(now, "service_locked", "", e.Header.Owner+fmt.Sprintf(":%d", e.Header.Nonce), fmt.Sprintf("service=%d", serviceRound))
 		}
@@ -189,6 +209,7 @@ func Run(c Config) (*Report, error) {
 			if err != nil {
 				return err
 			}
+			r.Openings = append(r.Openings, vault.openings[e.ID()])
 			record(now, "decrypted", "", o.Ref(), "ideal threshold authorization; real AES-GCM open")
 			result := r.Market.Execute(o)
 			r.Results = append(r.Results, result)
@@ -222,8 +243,20 @@ func Run(c Config) (*Report, error) {
 				if len(s.Delays) > 0 {
 					delay = s.Delays[i]
 				}
-				heap.Push(pending, delivery{base + delay, seq, i, e})
-				seq++
+				if members[i].id == c.DropTo {
+					record(base, "message_dropped", members[i].id, s.Order.Ref(), "transport omission; not signed misconduct")
+					continue
+				}
+				delivered := e
+				if members[i].id == c.CorruptTo {
+					delivered.Signature = append([]byte{}, e.Signature...)
+					delivered.Signature[0] ^= 1
+				}
+				for copyIndex := 0; copyIndex <= c.DuplicateCopies; copyIndex++ {
+					heap.Push(pending, delivery{base + delay, seq, i, delivered})
+					seq++
+				}
+
 			}
 		}
 		for pending.Len() > 0 {
@@ -237,13 +270,15 @@ func Run(c Config) (*Report, error) {
 			}
 			record(d.at, "received", m.id, ref, "")
 			if !e.Verify(users, ctx) {
-				return nil, errors.New("invalid incoming envelope")
+				record(d.at, "invalid_envelope", m.id, ref, "signature or context rejected")
+				continue
 			}
 			if m.id == c.Refuse {
 				record(d.at, "refused", m.id, ref, "no signed receipt; not proof of misconduct")
 				continue
 			}
 			if contains(inbox[d.node], e.ID()) {
+				record(d.at, "duplicate_ignored", m.id, ref, "")
 				continue
 			}
 			if len(inbox[d.node]) >= c.PerNode {
@@ -344,6 +379,7 @@ func Run(c Config) (*Report, error) {
 		}
 		// This signed coordinator record is a simulation artifact, not a quorum certificate.
 		r.Registrations = append(r.Registrations, statement(members[0].private, ctx, "ideal_registry", members[0].id, round, ids))
+		lastRegistration = round
 		if err := serve(closeAt); err != nil {
 			return nil, err
 		}
@@ -356,6 +392,7 @@ func Run(c Config) (*Report, error) {
 	if _, err := VerifyAudit(r.Audit); err != nil {
 		return nil, err
 	}
+	r.Metrics = Summarize(*r)
 	r.SemanticDigest = r.Semantic()
 	return r, nil
 }
@@ -369,4 +406,64 @@ func VerifyAudit(a AuditBundle) (int, error) {
 		}
 	}
 	return len(a.Evidence), nil
+}
+
+// Context binds only public policy and a fresh session; never hash secret orders
+// or attacker-control flags into a supposedly public protocol context.
+func ContextFor(c Config, session string) string {
+	return digest(struct {
+		Domain, Session                      string
+		N, F, Q, T, PerNode, Service, Window int
+	}{Domain, session, c.Nodes, c.Faults, c.Admission, c.Release, c.PerNode, c.Service, c.Window})
+}
+
+type ServiceRecord struct {
+	Certificate       Certificate `json:"certificate"`
+	Items             []string    `json:"ordered_items"`
+	RegisteredThrough int         `json:"registered_through_round"`
+}
+type Metrics struct {
+	FilledOrders     int   `json:"filled_orders"`
+	BusinessFailures int   `json:"business_failures"`
+	FilledShares     int64 `json:"filled_shares"`
+	Submitted        int   `json:"submitted"`
+	Received         int   `json:"received"`
+	Duplicates       int   `json:"duplicates_ignored"`
+	Invalid          int   `json:"invalid_envelopes"`
+	Dropped          int   `json:"dropped_deliveries"`
+	Admitted         int   `json:"registered"`
+	Executed         int   `json:"executed"`
+	Evidence         int   `json:"evidence_items"`
+	Services         int   `json:"services"`
+	Pending          int   `json:"pending"`
+}
+
+func Summarize(r Report) Metrics {
+	m := Metrics{Submitted: len(r.Envelopes), Executed: len(r.Results), Evidence: len(r.Audit.Evidence), Services: len(r.Services)}
+	for _, e := range r.Events {
+		switch e.Kind {
+		case "received":
+			m.Received++
+		case "duplicate_ignored":
+			m.Duplicates++
+		case "invalid_envelope":
+			m.Invalid++
+		case "message_dropped":
+			m.Dropped++
+		case "registered":
+			m.Admitted++
+		}
+	}
+	for _, result := range r.Results {
+		m.FilledShares += result.Filled
+		switch result.Status {
+		case "filled", "partially_filled":
+			m.FilledOrders++
+		case "cancelled":
+		default:
+			m.BusinessFailures++
+		}
+	}
+	m.Pending = m.Admitted - m.Executed
+	return m
 }

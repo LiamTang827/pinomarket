@@ -35,18 +35,26 @@ The project aims to replay the same scenario under different visibility, admissi
 
 ## Current status
 
-**v0.1 now includes a runnable Go protocol model.** It uses real signatures and AES-GCM, with simulated networking, ideal common finality, and an ideal key vault. **It does not implement threshold encryption or BFT consensus.**
+**v0.2 now includes a runnable Go protocol model.** It uses real signatures and AES-GCM, with simulated networking, ideal common finality, and an ideal key vault. **It does not implement threshold encryption or BFT consensus.**
+
+New in v0.2: offline artifact auditing, independent market accounting, duplicate/corrupt/dropped-message cases, and metrics.
 
 See the [prototype guide](docs/PROTOTYPE.md) or [中文运行说明](docs/PROTOTYPE.zh-CN.md).
 
 - [x] Document the project scope and roadmap.
-- [x] Define v0.1 messages, state transitions, and signed evidence formats.
+- [x] Define v0.2 messages, state transitions, and signed evidence formats.
 - [x] Implement a minimal market and replayable event engine.
 - [x] Implement promise/list consistency checks and attack scenarios.
 - [ ] Add real multi-process nodes and cryptographic components.
 - [ ] Add an interactive interface and reproducible comparisons.
 
 Earlier ordering and AMM experiments remain in a separate research directory. They have not been imported here and do not implement the full proposed encrypted-admission protocol. There are no new performance results, formal security proofs, or established novelty claims at this stage.
+
+## Development records
+
+- [Development report (Chinese)](docs/DEVELOPMENT_REPORT.zh-CN.md)
+- [Go learning and maintenance guide (Chinese)](docs/LEARNING.zh-CN.md)
+- [v0.2 validation record](docs/validation-v02.json)
 
 ## Getting started
 
