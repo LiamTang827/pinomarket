@@ -1,75 +1,76 @@
-# Pinocchio · 匹诺曹
+# Pinocchio
+
+**English** | [简体中文](README.zh-CN.md)
 
 **Make promises checkable. Make markets replayable.**
 
-让节点的承诺可检查，让订单的处理过程可重放。
+Pinocchio is a market attack-and-defense research project in the design stage. We plan to build an interactive prediction-market environment where users can follow orders through propagation, admission promises, queuing, decryption, and execution, and check whether nodes violate their signed statements.
 
-Pinocchio 是一个正在设计中的市场攻防研究项目。我们希望构建一个可交互的预测市场环境，让用户观察订单如何传播、获得承诺、排队、解密和执行，并检查节点是否违反自己签署的声明。
+## Why Pinocchio?
 
-## 为什么叫匹诺曹？
+Network delays can cause nodes to receive transactions in different orders. Different views alone are not evidence of lying. However, conflicting statements signed for the same round, or a complete published list that contradicts a node's admission promise, may provide verifiable evidence.
 
-节点可以因为网络延迟而看到不同的交易顺序；不同视图本身不是说谎。但如果它对同一轮签署互相冲突的声明，或发布与自己承诺不一致的完整清单，就可能留下可验证的证据。
+We want these contradictions to be visible, like Pinocchio's nose. Here, “lying” means a verifiable statement that violates an explicit rule; it does not mean guessing a node's motives.
 
-我们希望让这些矛盾像匹诺曹的鼻子一样可见。这里的“说谎”指违反明确规则的可验证声明，不是对节点动机的猜测。
+## A scenario
 
-## 一个场景
+Alice learns a match result at the venue and submits an order to buy YES shares. Meanwhile:
 
-Alice 在现场先知道比赛结果，提交买入 YES 的订单。与此同时：
+- Bots may observe public orders and submit competing orders.
+- Sellers may cancel inventory that has not yet been traded.
+- Nodes may receive messages in different orders.
+- Limited admission and processing capacity may leave orders waiting.
 
-- 监听机器人可能观察公开订单并提交竞争订单；
-- 卖家可能撤回尚未成交的库存；
-- 不同节点可能以不同顺序收到消息；
-- 有限接单额度和处理容量可能让订单继续等待。
+The project aims to replay the same scenario under different visibility, admission, and processing rules, then compare order outcomes and system overhead.
 
-项目计划允许用户重放同一场景，更换交易可见性、准入和处理规则，比较订单结果与系统开销。
+## Planned components
 
-## 计划提供什么？
-
-| 部分 | 用途 |
+| Component | Purpose |
 |---|---|
-| 市场模拟引擎 | 处理买入、撤单、余额和库存，记录确定的状态变化 |
-| 消息与节点模型 | 表达传播延迟、签名承诺和节点故障 |
-| 协议适配层 | 比较公开订单、加密订单及候选准入规则 |
-| 证据检查器 | 检查冲突声明、承诺遗漏等明确定义的违规 |
-| 交互与重放界面 | 展示订单时间线、节点视图和可核验的证据 |
+| Market simulation engine | Process purchases, cancellations, balances, and inventory, recording deterministic state changes |
+| Message and node model | Represent propagation delays, signed promises, and node failures |
+| Protocol adapters | Compare public orders, encrypted orders, and candidate admission rules |
+| Evidence checker | Check explicitly defined violations, such as conflicting statements and omitted promised orders |
+| Interactive replay interface | Display order timelines, node views, and verifiable evidence |
 
-## 当前进度
+## Current status
 
-**本仓库目前只有项目说明与设计文档，没有可运行的 Pinocchio 原型。**
+**This repository currently contains documentation only. There is no runnable Pinocchio prototype yet.**
 
-- [x] 建立项目定位、范围说明和路线图。
-- [ ] 定义一笔订单的消息、状态转换和证据格式。
-- [ ] 实现最小市场与可重放事件引擎。
-- [ ] 实现承诺与清单一致性检查，并加入攻击案例。
-- [ ] 增加真实多进程节点和密码组件。
-- [ ] 增加交互界面与可重复的对比实验。
+- [x] Document the project scope and roadmap.
+- [ ] Define messages, state transitions, and evidence formats for one order.
+- [ ] Implement a minimal market and replayable event engine.
+- [ ] Implement promise/list consistency checks and attack scenarios.
+- [ ] Add real multi-process nodes and cryptographic components.
+- [ ] Add an interactive interface and reproducible comparisons.
 
-既有研究目录中的排序与 AMM 实验尚未迁入本仓库；它们不是当前加密准入协议的完整实现。目前没有新的性能结果、形式化安全证明或已确认的原创性结论。
+Earlier ordering and AMM experiments remain in a separate research directory. They have not been imported here and do not implement the full proposed encrypted-admission protocol. There are no new performance results, formal security proofs, or established novelty claims at this stage.
 
-## 从哪里开始？
+## Getting started
 
-1. 阅读 [设计范围](docs/SCOPE.md)，理解各阶段保护什么。
-2. 阅读 [路线图](ROADMAP.md)，了解第一版要完成的工作。
-3. 代码加入后，再提供经过验证的安装、运行和复现实验命令。
+1. Read the [design scope (Chinese)](docs/SCOPE.md) to understand what each stage protects.
+2. Read the [roadmap (Chinese)](ROADMAP.md) for the planned first version.
+3. For help using GitHub, see the [beginner guide (Chinese)](docs/GITHUB_GUIDE.zh-CN.md).
+4. Verified installation, execution, and experiment commands will be added when code is available.
 
-## 研究边界
+## Research boundaries
 
-- 加密隐藏内容，不自动保证公平接入或最先成交。
-- 签名证明节点说过什么，不自动证明真实接收时间。
-- 超时或不同接收顺序不能单独作为说谎证据。
-- 在节点留下第一份记录之前发生的隐瞒，仍是需要研究的边界。
-- 模拟中的理想密码操作与真实密码实现将明确区分。
+- Encryption hides contents; it does not automatically guarantee fair admission or the first fill.
+- Signatures establish what a node stated, not its actual message arrival time.
+- A timeout or a different reception order alone is not evidence of lying.
+- Withholding before a node produces its first record remains a research limitation.
+- Idealized cryptographic operations in simulation will be distinguished from real implementations.
 
-## 相关工作与参考项目
+## Related work and reference projects
 
-本项目参考已有加密交易、收录保证、可问责系统和市场仿真研究。采用已有机制时会明确标注来源。
+This project draws on encrypted transactions, inclusion guarantees, accountable systems, and market simulation. Existing mechanisms will be attributed to their sources.
 
-- [Shutter＋Primev 公开设计](https://ethresear.ch/t/threshold-encrypted-mempools-with-mev-commit-preconfirmations/23588)与 [primev-sequencer 原型](https://github.com/shutter-network/primev-sequencer)：加密交易与收录承诺。
-- [Rolling Shutter](https://github.com/shutter-network/rolling-shutter)：门限加密基础设施。
-- [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf)：交易排序、共同输出与纳入保证。
-- [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf)：签名日志与分布式系统问责。
-- [ABIDES](https://github.com/abides-sim/abides)：多智能体市场与消息延迟仿真。
+- [Shutter + Primev public design](https://ethresear.ch/t/threshold-encrypted-mempools-with-mev-commit-preconfirmations/23588) and [primev-sequencer prototype](https://github.com/shutter-network/primev-sequencer): encrypted transactions and inclusion commitments.
+- [Rolling Shutter](https://github.com/shutter-network/rolling-shutter): threshold-encryption infrastructure.
+- [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf): transaction ordering, common output, and inclusion guarantees.
+- [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf): signed logs and distributed-system accountability.
+- [ABIDES](https://github.com/abides-sim/abides): multi-agent market and message-delay simulation.
 
-## 许可
+## License
 
-开源许可证尚未选定。复用第三方代码前，需要核对相应许可证并保留归属说明。
+An open-source license has not been selected yet. Before reusing third-party code, its license must be checked and attribution retained.
