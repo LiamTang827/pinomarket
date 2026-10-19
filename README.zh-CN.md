@@ -37,12 +37,14 @@ Alice 在现场先知道比赛结果，提交买入 YES 的订单。与此同时
 
 ## 当前进度
 
-**本仓库目前只有项目说明与设计文档，没有可运行的 Pinocchio 原型。**
+**v0.1 已有可运行的 Go 协议模型。** 使用真实签名和 AES-GCM；网络、共同最终确认与门限释放条件使用模拟组件。**尚未实现真实门限加密或拜占庭共识。**
+
+阅读 [中文运行与协议说明](docs/PROTOTYPE.zh-CN.md) 或 [English prototype guide](docs/PROTOTYPE.md)。
 
 - [x] 建立项目定位、范围说明和路线图。
-- [ ] 定义一笔订单的消息、状态转换和证据格式。
-- [ ] 实现最小市场与可重放事件引擎。
-- [ ] 实现承诺与清单一致性检查，并加入攻击案例。
+- [x] 定义 v0.1 消息、状态转换和签名证据格式。
+- [x] 实现最小市场与可重放事件引擎。
+- [x] 实现承诺与清单一致性检查，并加入攻击案例。
 - [ ] 增加真实多进程节点和密码组件。
 - [ ] 增加交互界面与可重复的对比实验。
 
@@ -53,7 +55,16 @@ Alice 在现场先知道比赛结果，提交买入 YES 的订单。与此同时
 1. 阅读 [设计范围](docs/SCOPE.md)，理解各阶段保护什么。
 2. 阅读 [路线图](ROADMAP.md)，了解第一版要完成的工作。
 3. 阅读 [GitHub 使用入门](docs/GITHUB_GUIDE.zh-CN.md)。
-4. 代码加入后，再提供经过验证的安装、运行和复现实验命令。
+4. 运行 Go 原型（需要 Go >=1.23，无第三方 Go 依赖）：
+
+```sh
+./scripts/go.sh test ./...
+./scripts/go.sh run ./cmd/pinocchio run -scenario normal -out runs/normal-01
+./scripts/go.sh run ./cmd/pinocchio run -scenario omission -out runs/omission-01
+./scripts/go.sh run ./cmd/pinocchio verify -file runs/omission-01/evidence.json
+```
+
+每次运行使用新的输出目录。这些是功能性案例，不是测得的安全性或性能实验结果。
 
 ## 研究边界
 

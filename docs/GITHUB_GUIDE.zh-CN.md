@@ -51,4 +51,4 @@ git push
 
 ## 目前从哪里看起
 
-先看 README、[设计范围](SCOPE.md) 和[路线图](../ROADMAP.md)。目前仓库只有文档，还没有可运行程序，所以暂时没有安装或启动步骤。
+先看 README、[设计范围](SCOPE.md) 和[路线图](../ROADMAP.md)。目前已有 Go 协议模拟原型，请按 [中文运行说明](PROTOTYPE.zh-CN.md) 启动；真实门限加密和分布式共识尚未实现。

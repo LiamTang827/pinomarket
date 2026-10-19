@@ -38,3 +38,8 @@ tmp/
 
 # Private research materials
 private/
+
+# Local Go SDK and compiled binaries
+.tools/
+bin/
+*.test

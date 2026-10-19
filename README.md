@@ -35,12 +35,14 @@ The project aims to replay the same scenario under different visibility, admissi
 
 ## Current status
 
-**This repository currently contains documentation only. There is no runnable Pinocchio prototype yet.**
+**v0.1 now includes a runnable Go protocol model.** It uses real signatures and AES-GCM, with simulated networking, ideal common finality, and an ideal key vault. **It does not implement threshold encryption or BFT consensus.**
+
+See the [prototype guide](docs/PROTOTYPE.md) or [中文运行说明](docs/PROTOTYPE.zh-CN.md).
 
 - [x] Document the project scope and roadmap.
-- [ ] Define messages, state transitions, and evidence formats for one order.
-- [ ] Implement a minimal market and replayable event engine.
-- [ ] Implement promise/list consistency checks and attack scenarios.
+- [x] Define v0.1 messages, state transitions, and signed evidence formats.
+- [x] Implement a minimal market and replayable event engine.
+- [x] Implement promise/list consistency checks and attack scenarios.
 - [ ] Add real multi-process nodes and cryptographic components.
 - [ ] Add an interactive interface and reproducible comparisons.
 
@@ -51,7 +53,16 @@ Earlier ordering and AMM experiments remain in a separate research directory. Th
 1. Read the [design scope (Chinese)](docs/SCOPE.md) to understand what each stage protects.
 2. Read the [roadmap (Chinese)](ROADMAP.md) for the planned first version.
 3. For help using GitHub, see the [beginner guide (Chinese)](docs/GITHUB_GUIDE.zh-CN.md).
-4. Verified installation, execution, and experiment commands will be added when code is available.
+4. Run the Go model (Go >=1.23; standard library only):
+
+```sh
+./scripts/go.sh test ./...
+./scripts/go.sh run ./cmd/pinocchio run -scenario normal -out runs/normal-01
+./scripts/go.sh run ./cmd/pinocchio run -scenario omission -out runs/omission-01
+./scripts/go.sh run ./cmd/pinocchio verify -file runs/omission-01/evidence.json
+```
+
+Use a new output directory for each run. These are functional scenarios, not measured security or performance results.
 
 ## Research boundaries
 
