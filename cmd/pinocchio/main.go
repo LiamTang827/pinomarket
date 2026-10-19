@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/LiamTang827/pinocchio-market/internal/live"
 	"github.com/LiamTang827/pinocchio-market/protocol"
 )
 
@@ -29,8 +30,14 @@ func write(path string, v any) error {
 	return os.WriteFile(path, append(b, '\n'), 0600)
 }
 func main() {
+	if len(os.Args) > 1 && (os.Args[1] == "network" || os.Args[1] == "net") {
+		if err := live.RunCLI(os.Args[2:]); err != nil {
+			fail(err)
+		}
+		return
+	}
 	if len(os.Args) < 2 {
-		fmt.Println("pinocchio run [-scenario normal|delay|omission|refusal|equivocation|late|capacity|funds|cancel|duplicate|corrupt|drop] [-config path] [-out runs/demo]\npinocchio verify -file runs/demo/evidence.json\npinocchio audit -file runs/demo/report.json\npinocchio replay -file runs/demo/report.json")
+		fmt.Println("pinocchio network init|node|ready|open|submit|wait|status|audit\npinocchio run [-scenario normal|delay|omission|refusal|equivocation|late|capacity|funds|cancel|duplicate|corrupt|drop] [-config path] [-out runs/demo]\npinocchio verify -file runs/demo/evidence.json\npinocchio audit -file runs/demo/report.json\npinocchio replay -file runs/demo/report.json")
 		return
 	}
 	fs := flag.NewFlagSet(os.Args[1], flag.ExitOnError)

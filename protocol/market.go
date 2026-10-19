@@ -20,6 +20,9 @@ func NewMarket() *Market {
 
 // One pre-funded listing, price 60 cents. No minting, AMM, oracle, or external chain.
 func (m *Market) Execute(o Order) Result {
+	if m.processed == nil {
+		m.processed = map[string]bool{}
+	}
 	r := Result{Order: o.Ref(), Status: "invalid"}
 	if m.processed[o.Ref()] {
 		r.Status = "duplicate"

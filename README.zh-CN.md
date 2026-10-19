@@ -6,92 +6,96 @@
 
 让节点的承诺可检查，让订单的处理过程可重放。
 
-Pinocchio 是一个正在设计中的市场攻防研究项目。我们希望构建一个可交互的预测市场环境，让用户观察订单如何传播、获得承诺、排队、解密和执行，并检查节点是否违反自己签署的声明。
+Pinocchio 是研究加密订单准入、处理与节点问责的 Go 原型。**v0.3 已能在本机多个独立进程之间运行完整流程**，接入 CometBFT 共识和真实 Shutter 门限加密。原来的单进程模拟保留，用于控制变量和重放场景。
 
 ## 为什么叫匹诺曹？
 
-节点可以因为网络延迟而看到不同的交易顺序；不同视图本身不是说谎。但如果它对同一轮签署互相冲突的声明，或发布与自己承诺不一致的完整清单，就可能留下可验证的证据。
+网络延迟会让不同节点看到不同的交易接收顺序。这本身不能证明说谎；但一个节点签了承诺，后来又签署遗漏该订单的完整清单，就可能留下违反规则的证据。
 
-我们希望让这些矛盾像匹诺曹的鼻子一样可见。这里的“说谎”指违反明确规则的可验证声明，不是对节点动机的猜测。
+我们希望这些矛盾像匹诺曹的鼻子一样可见。检查器核对声明与规则，不猜测节点动机，也不能证明节点在现实中第一次收到订单的时间。
 
-## 一个场景
+## 现在能运行什么？
 
-Alice 在现场先知道比赛结果，提交买入 YES 的订单。与此同时：
+| 模式 | 已实现部分 | 用途 |
+|---|---|---|
+| **v0.3 `network`** | 独立节点进程与持久化状态；CometBFT v0.38.26；Shutter shlib v0.1.19 门限加密；承诺、登记、队首锁序、份额发布、执行和遗漏证据 | 用真实共识和密码操作运行协议 |
+| **v0.2 模拟** | 虚拟消息调度；真实签名和 AES-GCM；理想最终确认和密钥保管器；报告审计与语义重放 | 重复观察延迟、损坏、重复消息和遗漏场景 |
 
-- 监听机器人可能观察公开订单并提交竞争订单；
-- 卖家可能撤回尚未成交的库存；
-- 不同节点可能以不同顺序收到消息；
-- 有限接单额度和处理容量可能让订单继续等待。
+默认网络有五个等权验证节点，在共识假设下容忍一个拜占庭节点；取得承诺需要四个不同节点签名，解密需要三个不同成员的有效份额。运行时，每个节点持有自己的签名私钥与门限私钥份额。
 
-项目计划允许用户重放同一场景，更换交易可见性、准入和处理规则，比较订单结果与系统开销。
+### 一笔订单怎样走完？
 
-## 计划提供什么？
+```mermaid
+flowchart LR
+    A[钱包签名并加密] --> B[节点持久化收录承诺]
+    B --> C[完整清单经共识确认]
+    C --> D[合并登记到队列]
+    D --> E[最终确认队首名单与顺序]
+    E --> F[节点发布可验证解密份额]
+    F --> G[解密并按固定顺序执行]
+    B -. 承诺与矛盾的完整清单 .-> H[核验遗漏证据]
+```
 
-| 部分 | 用途 |
-|---|---|
-| 市场模拟引擎 | 处理买入、撤单、余额和库存，记录确定的状态变化 |
-| 消息与节点模型 | 表达传播延迟、签名承诺和节点故障 |
-| 协议适配层 | 比较公开订单、加密订单及候选准入规则 |
-| 证据检查器 | 检查冲突声明、承诺遗漏等明确定义的违规 |
-| 交互与重放界面 | 展示订单时间线、节点视图和可核验的证据 |
+Alice 在现场得知赛果后提交 YES 买单。加密使订单内容在服务顺序锁定前保持隐藏，收录承诺则让节点承担明确、可检查的收录义务。这不保证成交、获利，也不保证她一定排在所有后来得知赛果的人前面。
 
-## 当前进度
+## 运行真实本地协议
 
-**v0.2 已有可运行的 Go 协议模型。** 使用真实签名和 AES-GCM；网络、共同最终确认与门限释放条件使用模拟组件。**尚未实现真实门限加密或拜占庭共识。**
+需要 Go >=1.23，以及密码依赖所需的 C 编译器。首次构建会下载 Go 依赖。在仓库根目录执行：
 
-v0.2 新增：离线报告审计、独立市场核算、重复／损坏／丢包案例和指标输出。
+```sh
+./scripts/network-demo.sh runs/my-v03-test offline
+```
 
-阅读 [中文运行与协议说明](docs/PROTOTYPE.zh-CN.md) 或 [English prototype guide](docs/PROTOTYPE.md)。
+脚本会构建程序、初始化新网络、启动五个节点进程，再停止第五个验证节点，并提交三笔买单。其余四个节点继续完成登记、锁序、解密与处理。审计器检查真实共识提交签名、重放已提交区块、验证门限解密结果，并独立重算市场账本。脚本退出时会停止自己启动的节点。
 
-- [x] 建立项目定位、范围说明和路线图。
-- [x] 定义 v0.2 消息、状态转换和签名证据格式。
-- [x] 实现最小市场与可重放事件引擎。
-- [x] 实现承诺与清单一致性检查，并加入攻击案例。
-- [ ] 增加真实多进程节点和密码组件。
-- [ ] 增加交互界面与可重复的对比实验。
+每次使用**尚不存在的输出目录**。完成后查看 `runs/my-v03-test/audit.json`、三个 `*-receipt.json` 和 `node*.log`。网络目录还包含本地演示私钥，需保留在 Git 忽略目录中。
 
-既有研究目录中的排序与 AMM 实验尚未迁入本仓库；它们不是当前加密准入协议的完整实现。目前没有新的性能结果、形式化安全证明或已确认的原创性结论。
+脚本也支持 `normal`、`omission`、`withhold`。手动启动节点和各故障的具体含义见[中文协议与操作说明](docs/LIVE_PROTOCOL.zh-CN.md)或 [English guide](docs/LIVE_PROTOCOL.md)。
 
-## 开发记录
+## 已验证什么，边界在哪里？
 
-- [完整开发报告](docs/DEVELOPMENT_REPORT.zh-CN.md)
-- [Go 入门与维护指南](docs/LEARNING.zh-CN.md)
-- [v0.2 验证记录](docs/validation-v02.json)
+真实进程集成测试已经通过：签了承诺的节点重启后仍返回同一份持久化承诺；一个节点离线时其余四个继续处理；离线节点回来后追上状态，不重复执行；恶意节点遗漏已承诺订单时能形成证据，订单仍被处理。单元测试和 `go vet` 也已通过。这些是功能检查，**不是性能基准或安全证明**。
 
-## 从哪里开始？
+当前部署边界：
 
-1. 阅读 [设计范围](docs/SCOPE.md)，理解各阶段保护什么。
-2. 阅读 [路线图](ROADMAP.md)，了解第一版要完成的工作。
-3. 阅读 [GitHub 使用入门](docs/GITHUB_GUIDE.zh-CN.md)。
-4. 运行 Go 原型（需要 Go >=1.23，无第三方 Go 依赖）：
+- 初始化器通过本地消息转发运行真实的逐成员 DKG 计算，但配置期间可接触全部输出份额。这还不是独立部署、经过认证的分布式 DKG 仪式。
+- 所有进程在同一台电脑、同一个 OS 用户下运行。它们是独立协议参与者，不是相互隔离的安全域；接口只绑定本机回环地址。
+- 同轮内部使用确定排序占位规则，尚不保证按实际到达时间公平排序，也未实现孔多塞排序。
+- 目前记录证据；尚未实现 gas、押金、经济惩罚或买方资金预留。
+- 足够多的份额持有者串谋仍可提前解密；共识票数或解密份额不足时会停滞。
+- 尚无外部资金结算、生产预测市场设施、已确认的新颖性结论或完整 MEV 防护。
+
+## 保留模拟作为基线
 
 ```sh
 ./scripts/go.sh test ./...
-./scripts/go.sh run ./cmd/pinocchio run -scenario normal -out runs/normal-01
-./scripts/go.sh run ./cmd/pinocchio run -scenario omission -out runs/omission-01
-./scripts/go.sh run ./cmd/pinocchio verify -file runs/omission-01/evidence.json
+./scripts/go.sh run ./cmd/pinocchio run -scenario normal -out runs/sim-normal-01
+./scripts/go.sh run ./cmd/pinocchio run -scenario omission -out runs/sim-omission-01
+./scripts/go.sh run ./cmd/pinocchio audit -file runs/sim-omission-01/report.json
 ```
 
-每次运行使用新的输出目录。这些是功能性案例，不是测得的安全性或性能实验结果。
+`run`、`audit`、`replay` 模拟命令见 [v0.2 原型说明](docs/PROTOTYPE.zh-CN.md)，它们不会启动真实网络。
 
-## 研究边界
+## 文档入口
 
-- 加密隐藏内容，不自动保证公平接入或最先成交。
-- 签名证明节点说过什么，不自动证明真实接收时间。
-- 超时或不同接收顺序不能单独作为说谎证据。
-- 在节点留下第一份记录之前发生的隐瞒，仍是需要研究的边界。
-- 模拟中的理想密码操作与真实密码实现将明确区分。
+- [完整本地协议与命令](docs/LIVE_PROTOCOL.zh-CN.md) · [English](docs/LIVE_PROTOCOL.md)
+- [设计范围](docs/SCOPE.md) · [路线图](ROADMAP.md)
+- [完整开发报告](docs/DEVELOPMENT_REPORT.zh-CN.md)
+- [Go 入门与维护指南](docs/LEARNING.zh-CN.md)
+- [GitHub 使用入门](docs/GITHUB_GUIDE.zh-CN.md)
+- [v0.3 验证记录](docs/validation-v03.json) · [v0.2 验证记录](docs/validation-v02.json)
 
-## 相关工作与参考项目
+## 相关工作与依赖
 
-本项目参考已有加密交易、收录保证、可问责系统和市场仿真研究。采用已有机制时会明确标注来源。
+已有机制会标注来源；组合已有机制本身不代表已证明原创性。
 
-- [Shutter＋Primev 公开设计](https://ethresear.ch/t/threshold-encrypted-mempools-with-mev-commit-preconfirmations/23588)与 [primev-sequencer 原型](https://github.com/shutter-network/primev-sequencer)：加密交易与收录承诺。
-- [Rolling Shutter](https://github.com/shutter-network/rolling-shutter)：门限加密基础设施。
-- [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf)：交易排序、共同输出与纳入保证。
-- [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf)：签名日志与分布式系统问责。
-- [ABIDES](https://github.com/abides-sim/abides)：多智能体市场与消息延迟仿真。
+- [Shutter＋Primev 公开设计](https://ethresear.ch/t/threshold-encrypted-mempools-with-mev-commit-preconfirmations/23588)与 [primev-sequencer](https://github.com/shutter-network/primev-sequencer)：加密交易与收录承诺。
+- [Shutter shlib](https://github.com/shutter-network/shutter/tree/main/shlib) 与 [Rolling Shutter](https://github.com/shutter-network/rolling-shutter)：门限加密组件和基础设施。
+- [CometBFT](https://github.com/cometbft/cometbft)：真实网络模式使用的共识引擎。
+- [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf)：排序、共同输出与纳入保证。
+- [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf)：签名日志与可问责系统。
+- [ABIDES](https://github.com/abides-sim/abides)：市场与消息延迟仿真。
 
 ## 许可
 
-开源许可证尚未选定。复用第三方代码前，需要核对相应许可证并保留归属说明。
+项目自身代码的许可证尚未选定。第三方依赖保留各自许可证，见[归属说明](THIRD_PARTY.md)和[门限组件说明](threshold/THIRD_PARTY.md)。

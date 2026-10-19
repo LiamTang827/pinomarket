@@ -4,92 +4,96 @@
 
 **Make promises checkable. Make markets replayable.**
 
-Pinocchio is a market attack-and-defense research project in the design stage. We plan to build an interactive prediction-market environment where users can follow orders through propagation, admission promises, queuing, decryption, and execution, and check whether nodes violate their signed statements.
+Pinocchio is a Go research prototype for encrypted order admission, processing, and node accountability. **v0.3 runs a complete local protocol across independent processes**, using CometBFT consensus and real Shutter threshold encryption. The earlier single-process simulation remains available for controlled scenarios.
 
 ## Why Pinocchio?
 
-Network delays can cause nodes to receive transactions in different orders. Different views alone are not evidence of lying. However, conflicting statements signed for the same round, or a complete published list that contradicts a node's admission promise, may provide verifiable evidence.
+Network delay can give nodes different views of transaction arrival. Different views alone do not prove dishonesty. A signed admission promise followed by the same node's signed complete list omitting that order can, however, provide evidence of a rule violation.
 
-We want these contradictions to be visible, like Pinocchio's nose. Here, “lying” means a verifiable statement that violates an explicit rule; it does not mean guessing a node's motives.
+We want these contradictions to be visible, like Pinocchio's nose. The project checks statements and rules; it does not infer a node's motives or prove the real-world time at which it first received an order.
 
-## A scenario
+## What runs today?
 
-Alice learns a match result at the venue and submits an order to buy YES shares. Meanwhile:
+| Mode | Implemented components | Purpose |
+|---|---|---|
+| **v0.3 `network`** | Separate node processes and durable state; CometBFT v0.38.26; Shutter shlib v0.1.19 threshold encryption; signed promises, registration, queue locks, share release, execution, and omission evidence | Exercise the protocol with actual consensus and cryptographic operations |
+| **v0.2 simulation** | Virtual message scheduling; real signatures and AES-GCM; ideal finality and key vault; artifact audit and semantic replay | Reproduce controlled delay, corruption, duplicate, and omission scenarios |
 
-- Bots may observe public orders and submit competing orders.
-- Sellers may cancel inventory that has not yet been traded.
-- Nodes may receive messages in different orders.
-- Limited admission and processing capacity may leave orders waiting.
+The default live network has five equal-power validators, tolerates one Byzantine validator under the consensus assumptions, requires four admission signatures, and decrypts with three distinct valid shares. Each running node holds its own signing key and threshold secret share.
 
-The project aims to replay the same scenario under different visibility, admission, and processing rules, then compare order outcomes and system overhead.
+### Follow an order
 
-## Planned components
+```mermaid
+flowchart LR
+    A[Wallet signs and encrypts] --> B[Nodes persist signed admission promises]
+    B --> C[Complete lists reach consensus]
+    C --> D[Register their union in the queue]
+    D --> E[Finalize a queue prefix and its order]
+    E --> F[Nodes publish verifiable decryption shares]
+    F --> G[Decrypt and execute in the fixed order]
+    B -. signed promise and contradictory list .-> H[Verify omission evidence]
+```
 
-| Component | Purpose |
-|---|---|
-| Market simulation engine | Process purchases, cancellations, balances, and inventory, recording deterministic state changes |
-| Message and node model | Represent propagation delays, signed promises, and node failures |
-| Protocol adapters | Compare public orders, encrypted orders, and candidate admission rules |
-| Evidence checker | Check explicitly defined violations, such as conflicting statements and omitted promised orders |
-| Interactive replay interface | Display order timelines, node views, and verifiable evidence |
+Alice can submit a YES purchase after seeing a match result. Encryption hides her order contents until its service order is locked. Admission promises give nodes an explicit, checkable inclusion obligation. These protections do not guarantee a fill, a profit, or priority over everybody who learned the result later.
 
-## Current status
+## Run the local protocol
 
-**v0.2 now includes a runnable Go protocol model.** It uses real signatures and AES-GCM, with simulated networking, ideal common finality, and an ideal key vault. **It does not implement threshold encryption or BFT consensus.**
+Prerequisites: Go >=1.23 and a working C compiler for the cryptographic dependency. The first build downloads Go modules. Run from the repository root:
 
-New in v0.2: offline artifact auditing, independent market accounting, duplicate/corrupt/dropped-message cases, and metrics.
+```sh
+./scripts/network-demo.sh runs/my-v03-test offline
+```
 
-See the [prototype guide](docs/PROTOTYPE.md) or [中文运行说明](docs/PROTOTYPE.zh-CN.md).
+The script builds the executable, initializes a new network, starts five node processes, stops the fifth validator, and submits three purchases. The remaining four validators register, lock, decrypt, and process the orders. An auditor checks signed consensus commits, replays committed blocks, verifies threshold openings, and independently recomputes market accounting. The script stops its node processes on exit.
 
-- [x] Document the project scope and roadmap.
-- [x] Define v0.2 messages, state transitions, and signed evidence formats.
-- [x] Implement a minimal market and replayable event engine.
-- [x] Implement promise/list consistency checks and attack scenarios.
-- [ ] Add real multi-process nodes and cryptographic components.
-- [ ] Add an interactive interface and reproducible comparisons.
+Use a **new output directory** for every run. Inspect `runs/my-v03-test/audit.json`, the three `*-receipt.json` files, and `node*.log`. The network directory also contains private demo keys; keep it out of Git.
 
-Earlier ordering and AMM experiments remain in a separate research directory. They have not been imported here and do not implement the full proposed encrypted-admission protocol. There are no new performance results, formal security proofs, or established novelty claims at this stage.
+Other script modes are `normal`, `omission`, and `withhold`. See the [live protocol guide](docs/LIVE_PROTOCOL.md) or [中文协议与操作说明](docs/LIVE_PROTOCOL.zh-CN.md) for manual node operation and exact fault behavior.
 
-## Development records
+## Validation and limits
 
-- [Development report (Chinese)](docs/DEVELOPMENT_REPORT.zh-CN.md)
-- [Go learning and maintenance guide (Chinese)](docs/LEARNING.zh-CN.md)
-- [v0.2 validation record](docs/validation-v02.json)
+The actual process integration test has passed: a promise signer restarts with the same durable promise; four validators continue with one offline; the returning node catches up without duplicate execution; and a signed omission produces evidence while the order is still processed. Unit tests and `go vet` also pass. These are functional checks, **not a performance benchmark or security proof**.
 
-## Getting started
+Important deployment boundaries:
 
-1. Read the [design scope (Chinese)](docs/SCOPE.md) to understand what each stage protects.
-2. Read the [roadmap (Chinese)](ROADMAP.md) for the planned first version.
-3. For help using GitHub, see the [beginner guide (Chinese)](docs/GITHUB_GUIDE.zh-CN.md).
-4. Run the Go model (Go >=1.23; standard library only):
+- The initializer runs real per-party DKG calculations through a local relay, but can access all resulting shares while provisioning. This is not an independently deployed, authenticated distributed DKG ceremony.
+- Processes run on the same machine and under the same OS user. They are separate protocol participants, not separate security domains. APIs bind to loopback.
+- Within-round sorting is a deterministic placeholder, not arrival-time fairness or Condorcet ordering.
+- Evidence is recorded; gas, deposits, economic penalties, and buyer-funds reservation are not implemented.
+- Enough colluding share holders can reveal orders early. Missing consensus quorum or decryption shares can stop progress.
+- No external settlement, production prediction-market infrastructure, established novelty claim, or complete MEV protection is provided.
+
+## Keep the simulation baseline
 
 ```sh
 ./scripts/go.sh test ./...
-./scripts/go.sh run ./cmd/pinocchio run -scenario normal -out runs/normal-01
-./scripts/go.sh run ./cmd/pinocchio run -scenario omission -out runs/omission-01
-./scripts/go.sh run ./cmd/pinocchio verify -file runs/omission-01/evidence.json
+./scripts/go.sh run ./cmd/pinocchio run -scenario normal -out runs/sim-normal-01
+./scripts/go.sh run ./cmd/pinocchio run -scenario omission -out runs/sim-omission-01
+./scripts/go.sh run ./cmd/pinocchio audit -file runs/sim-omission-01/report.json
 ```
 
-Use a new output directory for each run. These are functional scenarios, not measured security or performance results.
+The `run`, `audit`, and `replay` simulation commands are described in the [v0.2 prototype guide](docs/PROTOTYPE.md). They do not start the live network.
 
-## Research boundaries
+## Documentation
 
-- Encryption hides contents; it does not automatically guarantee fair admission or the first fill.
-- Signatures establish what a node stated, not its actual message arrival time.
-- A timeout or a different reception order alone is not evidence of lying.
-- Withholding before a node produces its first record remains a research limitation.
-- Idealized cryptographic operations in simulation will be distinguished from real implementations.
+- [Live protocol and commands](docs/LIVE_PROTOCOL.md) · [中文版](docs/LIVE_PROTOCOL.zh-CN.md)
+- [Design scope](docs/SCOPE.md) · [Roadmap](ROADMAP.md)
+- [Development report](docs/DEVELOPMENT_REPORT.zh-CN.md)
+- [Go learning and maintenance guide](docs/LEARNING.zh-CN.md)
+- [GitHub beginner guide](docs/GITHUB_GUIDE.zh-CN.md)
+- [v0.3 validation record](docs/validation-v03.json) · [v0.2 validation record](docs/validation-v02.json)
 
-## Related work and reference projects
+## Related work and dependencies
 
-This project draws on encrypted transactions, inclusion guarantees, accountable systems, and market simulation. Existing mechanisms will be attributed to their sources.
+Existing mechanisms are attributed to their sources; combining them does not establish novelty.
 
-- [Shutter + Primev public design](https://ethresear.ch/t/threshold-encrypted-mempools-with-mev-commit-preconfirmations/23588) and [primev-sequencer prototype](https://github.com/shutter-network/primev-sequencer): encrypted transactions and inclusion commitments.
-- [Rolling Shutter](https://github.com/shutter-network/rolling-shutter): threshold-encryption infrastructure.
-- [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf): transaction ordering, common output, and inclusion guarantees.
-- [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf): signed logs and distributed-system accountability.
-- [ABIDES](https://github.com/abides-sim/abides): multi-agent market and message-delay simulation.
+- [Shutter + Primev public design](https://ethresear.ch/t/threshold-encrypted-mempools-with-mev-commit-preconfirmations/23588) and [primev-sequencer](https://github.com/shutter-network/primev-sequencer): encrypted transactions and inclusion commitments.
+- [Shutter shlib](https://github.com/shutter-network/shutter/tree/main/shlib) and [Rolling Shutter](https://github.com/shutter-network/rolling-shutter): threshold-encryption components and infrastructure.
+- [CometBFT](https://github.com/cometbft/cometbft): the live mode's consensus engine.
+- [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf): ordering, common output, and inclusion guarantees.
+- [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf): signed logs and accountability.
+- [ABIDES](https://github.com/abides-sim/abides): market and message-delay simulation.
 
 ## License
 
-An open-source license has not been selected yet. Before reusing third-party code, its license must be checked and attribution retained.
+A license for this project's own code has not been selected. Third-party dependencies retain their licenses; see [attribution](THIRD_PARTY.md) and [threshold-component notices](threshold/THIRD_PARTY.md).
