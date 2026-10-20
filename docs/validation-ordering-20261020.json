@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-20",
+  "scope": "Local functional validation; not a full AOAB implementation, security proof, or WAN performance benchmark",
+  "unit_tests": {
+    "top_level_passed": 45,
+    "subtests_passed": 66,
+    "skipped": 3,
+    "failed": 0
+  },
+  "vet": "passed",
+  "shell_syntax": "passed",
+  "real_process_test": {
+    "ordering": "median-receipts",
+    "status": "passed",
+    "nodes": 5,
+    "offline_nodes": 1,
+    "restart": true,
+    "final_processed": 4,
+    "omission_evidence": 1,
+    "commit_signatures": 4,
+    "trace": "experiments/2026-10-20/median-process-validation.txt"
+  },
+  "normal_comparison": "experiments/2026-10-20/normal-summary.json",
+  "known_limits": [
+    "Median reference mode has explicit sparse-observation identity fallback",
+    "Phase timestamps are first client poll observations",
+    "Only normal paired CLI scenario was run; fault CLI modes remain available",
+    "No AOAB PRBC/MVBA/ADD or median threshold-signature certificate",
+    "No cloud deployment or dependency changes"
+  ],
+  "resolved_during_validation": "A restart regression first read a stale but valid peer snapshot. AuditNetwork now selects the highest responsive committed state before authenticating replay and finality; the process test then passed."
+}

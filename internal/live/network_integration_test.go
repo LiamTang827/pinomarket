@@ -135,7 +135,7 @@ func TestLiveNetworkProcessesRestartAndOmission(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
 	defer cancel()
 	dir := t.TempDir()
-	manifest, err := InitNetwork(dir, InitOptions{Nodes: 5, Threshold: 3, QueueCapacity: 30, ServiceCapacity: 2, BasePort: 34656, APIPort: 35600, WindowBlocks: 20, BlockInterval: 200 * time.Millisecond})
+	manifest, err := InitNetwork(dir, InitOptions{Nodes: 5, Threshold: 3, QueueCapacity: 30, ServiceCapacity: 2, BasePort: 34656, APIPort: 35600, WindowBlocks: 20, BlockInterval: 200 * time.Millisecond, Ordering: os.Getenv("PINOCCHIO_TEST_ORDERING")})
 	if err != nil {
 		t.Fatal(err)
 	}

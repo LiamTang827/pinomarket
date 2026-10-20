@@ -19,6 +19,7 @@ type InitOptions struct {
 	Nodes, Threshold, QueueCapacity, ServiceCapacity, BasePort, APIPort int
 	WindowBlocks                                                        int64
 	BlockInterval                                                       time.Duration
+	Ordering                                                            string
 }
 
 func InitNetwork(dir string, o InitOptions) (Manifest, error) {
@@ -55,7 +56,7 @@ func InitNetwork(dir string, o InitOptions) (Manifest, error) {
 		return Manifest{}, err
 	}
 	f := (o.Nodes - 1) / 3
-	m := Manifest{Version: Domain, Session: session, Policy: Policy{o.Nodes, f, o.Nodes - f, o.Threshold, o.QueueCapacity, o.ServiceCapacity, o.WindowBlocks}, Users: map[string][]byte{}, Crypto: public}
+	m := Manifest{Version: Domain, Session: session, Policy: Policy{Nodes: o.Nodes, Faults: f, Quorum: o.Nodes - f, Threshold: o.Threshold, QueueCapacity: o.QueueCapacity, ServiceCapacity: o.ServiceCapacity, WindowBlocks: o.WindowBlocks, Ordering: o.Ordering}, Users: map[string][]byte{}, Crypto: public}
 	private := make([]ed25519.PrivateKey, o.Nodes)
 	for i, info := range infos {
 		pub, key, e := ed25519.GenerateKey(rand.Reader)

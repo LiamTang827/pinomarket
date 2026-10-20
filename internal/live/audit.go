@@ -45,6 +45,9 @@ func AuditState(m Manifest, s *State) error {
 				return err
 			}
 		}
+		if err := auditRegistrationOrder(m, r, refs); err != nil {
+			return err
+		}
 		for _, id := range r.Items {
 			p, ok := s.Orders[id]
 			if !ok || p.ID() != id || p.Header.Round != r.Round || registered[id] || refs[p.Ref()] {
@@ -151,9 +154,13 @@ func AuditNetwork(ctx context.Context, m Manifest) (map[string]any, error) {
 			last = e
 			continue
 		}
-		client = c
-		snapshot = &state
-		break
+		// A restarted first peer may be healthy but still behind another peer.
+		// Select the freshest responsive committed snapshot, then authenticate it
+		// by replay and validator signatures below; height alone is not trusted.
+		if snapshot == nil || state.Height > snapshot.Height {
+			client = c
+			snapshot = &state
+		}
 	}
 	if client == nil {
 		return nil, fmt.Errorf("no responsive validator RPC: %v", last)

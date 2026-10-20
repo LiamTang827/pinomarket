@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — 2026-10-20
+
+- Add optional median-receipts reference ordering from signed, durable local admission observations, with explicit sparse-evidence fallback and independent ordering audit.
+- Add network measure and paired local normal/fault experiment orchestration with raw-metric aggregation and incomplete-work accounting.
+- Select the freshest responsive committed snapshot for real-network audits before verifying replay and validator signatures.
+- Add tests for signed sequences, persistence, deterministic median output, fallback, audit tampering and measurement denominators. The extension is not a full AOAB implementation.
+
 ## v0.3 — 2026-10-19
 
 - Add a separate `network` mode with independent local node processes, loopback HTTP transport, durable admission journals, and per-node state.

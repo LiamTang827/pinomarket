@@ -95,19 +95,22 @@ func OpenRound(ctx context.Context, m Manifest) (*Round, error) {
 }
 
 type SubmissionReceipt struct {
-	Packet   Packet            `json:"packet"`
-	Promises []Promise         `json:"promises"`
-	Errors   map[string]string `json:"node_errors"`
-	Quorum   bool              `json:"quorum_obtained"`
+	Packet         Packet             `json:"packet"`
+	Promises       []Promise          `json:"promises"`
+	Errors         map[string]string  `json:"node_errors"`
+	Quorum         bool               `json:"quorum_obtained"`
+	NodeResponseMS map[string]float64 `json:"node_response_ms,omitempty"`
+	QuorumMS       *float64           `json:"quorum_ms,omitempty"`
 }
 
 func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt, error) {
-	out := SubmissionReceipt{Packet: p, Promises: []Promise{}, Errors: map[string]string{}}
+	out := SubmissionReceipt{Packet: p, Promises: []Promise{}, Errors: map[string]string{}, NodeResponseMS: map[string]float64{}}
 	if err := p.Validate(m); err != nil {
 		return out, err
 	}
 	var mu sync.Mutex
 	var wg sync.WaitGroup
+	started := time.Now()
 	for _, peer := range m.Peers {
 		wg.Add(1)
 		go func(peer Peer) {
@@ -122,10 +125,16 @@ func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt,
 			}
 			mu.Lock()
 			defer mu.Unlock()
+			elapsed := float64(time.Since(started)) / float64(time.Millisecond)
+			out.NodeResponseMS[peer.ID] = elapsed
 			if err != nil {
 				out.Errors[peer.ID] = err.Error()
 			} else {
 				out.Promises = append(out.Promises, pr)
+				if len(out.Promises) == m.Policy.Quorum {
+					value := elapsed
+					out.QuorumMS = &value
+				}
 			}
 		}(peer)
 	}
@@ -135,7 +144,7 @@ func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt,
 }
 func RunCLI(args []string) error {
 	if len(args) == 0 {
-		fmt.Println("network init|node|ready|open|submit|wait|status|audit (use -h after command)")
+		fmt.Println("network init|node|ready|open|submit|measure|wait|status|audit (use -h after command)")
 		return nil
 	}
 	fs := flag.NewFlagSet("network "+args[0], flag.ContinueOnError)
@@ -150,6 +159,7 @@ func RunCLI(args []string) error {
 	base := fs.Int("base-port", 26656, "Comet base P2P port (RPC=base+1, next node+10)")
 	api := fs.Int("api-port", 28000, "first application HTTP port")
 	interval := fs.Duration("block-interval", 500*time.Millisecond, "minimum block commit interval")
+	ordering := fs.String("ordering", OrderingIdentity, "init only: identity or median-receipts (experimental, not full AOAB)")
 	owner := fs.String("owner", "alice", "wallet name")
 	kind := fs.String("kind", "buy", "buy or cancel")
 	quantity := fs.Int64("quantity", 1, "share quantity")
@@ -161,12 +171,13 @@ func RunCLI(args []string) error {
 	omit := fs.Bool("omit-list", false, "fault: publish empty final list")
 	withhold := fs.Bool("withhold-shares", false, "fault: do not release own shares")
 	delay := fs.Int("delay-ms", 0, "delay incoming submissions")
+	count := fs.Int("count", 3, "measure: number of purchases across alice, bob and carol")
 	timeout := fs.Duration("timeout", 60*time.Second, "client operation deadline")
 	if err := fs.Parse(args[1:]); err != nil {
 		return err
 	}
 	if args[0] == "init" {
-		m, err := InitNetwork(*dir, InitOptions{*nodes, *t, *capacity, *service, *base, *api, *window, *interval})
+		m, err := InitNetwork(*dir, InitOptions{Nodes: *nodes, Threshold: *t, QueueCapacity: *capacity, ServiceCapacity: *service, BasePort: *base, APIPort: *api, WindowBlocks: *window, BlockInterval: *interval, Ordering: *ordering})
 		if err != nil {
 			return err
 		}
@@ -189,6 +200,11 @@ func RunCLI(args []string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), *timeout)
 	defer cancel()
 	switch args[0] {
+	case "measure":
+		if *out == "" {
+			return errors.New("measure requires a new -out directory")
+		}
+		return MeasureNetwork(ctx, m, *count, *nonce, *quantity, *limit, *dir, *out)
 	case "open":
 		round, err := OpenRound(ctx, m)
 		if err != nil {

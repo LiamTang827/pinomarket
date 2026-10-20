@@ -1,5 +1,9 @@
 # Pinocchio · 匹诺曹
 
+## 新增：中位数实验排序与分阶段测量
+
+运行 `./scripts/ordering-experiment.sh runs/ordering-normal-01 normal 1`，可用真实本地节点比较原 identity 排序和新的 median-receipts 模式，导出实际采样指标和链审计结果。新模式采用签名接单序号与中位数，观察不足时明确回退，不宣称实现完整 AOAB 或继承其公平性保证。详见[实验指南](docs/ORDERING_EXPERIMENTS.zh-CN.md)。
+
 [English](README.md) | **简体中文**
 
 **Make promises checkable. Make markets replayable.**

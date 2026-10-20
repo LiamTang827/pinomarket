@@ -76,6 +76,16 @@ The `run`, `audit`, and `replay` simulation commands are described in the [v0.2 
 
 ## Documentation
 
+### Experimental median ordering and measurements
+
+Use `network init -ordering median-receipts` for signed local admission observations and experimental median-based ordering. Sparse observations explicitly fall back to identity order after qualified items; this is **not a full AOAB implementation or an inherited fairness guarantee**. The default `identity` policy remains available.
+
+```sh
+./scripts/ordering-experiment.sh runs/ordering-normal-01 normal 1
+```
+
+This runs both policies through actual local validator processes, records phase observations and completion counts, and audits the committed chain and market accounting. See the [experiment guide](docs/ORDERING_EXPERIMENTS.zh-CN.md) for faults, repetitions, and measurement limits.
+
 - [Live protocol and commands](docs/LIVE_PROTOCOL.md) · [中文版](docs/LIVE_PROTOCOL.zh-CN.md)
 - [Design scope](docs/SCOPE.md) · [Roadmap](ROADMAP.md)
 - [Development report](docs/DEVELOPMENT_REPORT.zh-CN.md)

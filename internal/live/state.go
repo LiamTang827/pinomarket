@@ -29,10 +29,11 @@ func (r Round) HasList(node string) bool {
 }
 
 type Registration struct {
-	Round  int         `json:"round"`
-	Height int64       `json:"height"`
-	Lists  []FinalList `json:"selected_lists"`
-	Items  []string    `json:"ordered_ids"`
+	Round    int         `json:"round"`
+	Height   int64       `json:"height"`
+	Lists    []FinalList `json:"selected_lists"`
+	Items    []string    `json:"ordered_ids"`
+	Ordering []OrderRank `json:"ordering,omitempty"`
 }
 type Lock struct {
 	Number int                                    `json:"number"`
@@ -156,16 +157,7 @@ func (s *State) Apply(m Manifest, t SignedTx, height int64) error {
 				ids = append(ids, id)
 			}
 		}
-		sort.Slice(ids, func(i, j int) bool {
-			a, b := packets[ids[i]], packets[ids[j]]
-			if a.Header.Owner != b.Header.Owner {
-				return a.Header.Owner < b.Header.Owner
-			}
-			if a.Header.Nonce != b.Header.Nonce {
-				return a.Header.Nonce < b.Header.Nonce
-			}
-			return ids[i] < ids[j]
-		})
+		ranks := orderRegistration(m, selected, packets, ids)
 		if len(s.Queue)+len(ids) > m.Policy.QueueCapacity {
 			return errors.New("registration exceeds reserved queue capacity")
 		}
@@ -175,7 +167,7 @@ func (s *State) Apply(m Manifest, t SignedTx, height int64) error {
 			s.Orders[id] = p
 			s.Used[p.Ref()] = id
 		}
-		s.Registrations = append(s.Registrations, Registration{r.Number, height, selected, ids})
+		s.Registrations = append(s.Registrations, Registration{Round: r.Number, Height: height, Lists: selected, Items: ids, Ordering: ranks})
 		r.Registered = true
 	case "lock":
 		if s.Active != nil || len(s.Queue) == 0 {

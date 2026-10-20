@@ -224,6 +224,7 @@ func (n *liveNode) loadJournal() error {
 			round.Accepted = map[string]Gossip{}
 		}
 		refs := map[string]string{}
+		sequences := map[int]bool{}
 		for id, g := range round.Accepted {
 			if err := n.validateGossip(g); err != nil {
 				return err
@@ -235,6 +236,12 @@ func (n *liveNode) loadJournal() error {
 				return errors.New("conflicting commands in local admission journal")
 			}
 			refs[g.Packet.Ref()] = id
+			if n.cfg.Manifest.Policy.Ordering == OrderingMedian {
+				if g.Promise.Sequence > len(round.Accepted) || sequences[g.Promise.Sequence] {
+					return errors.New("invalid durable admission sequence")
+				}
+				sequences[g.Promise.Sequence] = true
+			}
 		}
 		if round.Sealed != nil {
 			if err := round.Sealed.Validate(n.cfg.Manifest, n.cfg.Manifest.Policy.QueueCapacity); err != nil {
@@ -389,6 +396,9 @@ func (n *liveNode) accept(packet Packet) (Promise, error) {
 		return Promise{}, errors.New("node admission capacity is exhausted")
 	}
 	promise := NewPromise(n.cfg.Manifest, n.peer.ID, packet.Header.Round, id, n.private)
+	if n.cfg.Manifest.Policy.Ordering == OrderingMedian {
+		promise = NewSequencedPromise(n.cfg.Manifest, n.peer.ID, packet.Header.Round, id, len(local.Accepted)+1, n.private)
+	}
 	g := Gossip{packet, promise}
 	local.Accepted[id] = g
 	hash := Hash(promise)

@@ -20,13 +20,14 @@ import (
 const Domain = "pinocchio/live/v0.3"
 
 type Policy struct {
-	Nodes           int   `json:"nodes"`
-	Faults          int   `json:"faults"`
-	Quorum          int   `json:"quorum"`
-	Threshold       int   `json:"threshold"`
-	QueueCapacity   int   `json:"queue_capacity"`
-	ServiceCapacity int   `json:"service_capacity"`
-	WindowBlocks    int64 `json:"window_blocks"`
+	Nodes           int    `json:"nodes"`
+	Faults          int    `json:"faults"`
+	Quorum          int    `json:"quorum"`
+	Threshold       int    `json:"threshold"`
+	QueueCapacity   int    `json:"queue_capacity"`
+	ServiceCapacity int    `json:"service_capacity"`
+	WindowBlocks    int64  `json:"window_blocks"`
+	Ordering        string `json:"ordering,omitempty"`
 }
 type Peer struct {
 	ID           string `json:"id"`
@@ -49,6 +50,9 @@ type Manifest struct {
 func (m Manifest) ContextID() string { m.Context = ""; return Hash(m) }
 func (m Manifest) Validate() error {
 	p := m.Policy
+	if p.Ordering != "" && p.Ordering != OrderingIdentity && p.Ordering != OrderingMedian {
+		return errors.New("unknown within-round ordering policy")
+	}
 	if m.Version != Domain || m.Context != m.ContextID() || p.Nodes < 4 || p.Nodes > 10 || p.Faults != (p.Nodes-1)/3 || p.Quorum != p.Nodes-p.Faults || p.Threshold <= p.Faults || p.Threshold > p.Quorum || p.QueueCapacity < p.Nodes || p.QueueCapacity > p.Nodes*8 || p.ServiceCapacity < 1 || p.ServiceCapacity > p.QueueCapacity || p.WindowBlocks < 3 || p.WindowBlocks > 10000 {
 		return errors.New("invalid live manifest policy/context")
 	}
@@ -192,6 +196,7 @@ type Promise struct {
 	Node      string `json:"node"`
 	Round     int    `json:"round"`
 	ID        string `json:"id"`
+	Sequence  int    `json:"sequence,omitempty"`
 	Signature []byte `json:"signature"`
 }
 
@@ -201,8 +206,18 @@ func NewPromise(m Manifest, node string, round int, id string, key ed25519.Priva
 	p.Signature = Sign(key, p.body())
 	return p
 }
+
+// Sequence is local to a member and registration round, not a wall clock.
+func NewSequencedPromise(m Manifest, node string, round int, id string, sequence int, key ed25519.PrivateKey) Promise {
+	p := Promise{Context: m.Context, Node: node, Round: round, ID: id, Sequence: sequence}
+	p.Signature = Sign(key, p.body())
+	return p
+}
 func (p Promise) Validate(m Manifest) error {
 	n, ok := m.Peer(p.Node)
+	if p.Sequence < 0 || m.Policy.Ordering == OrderingMedian && p.Sequence == 0 {
+		return errors.New("invalid local sequence observation")
+	}
 	if !ok || p.Context != m.Context || p.Round < 1 || p.ID == "" || !Verify(n.Key, p.body(), p.Signature) {
 		return errors.New("invalid admission promise")
 	}
@@ -233,11 +248,16 @@ func (l FinalList) Validate(m Manifest, capacity int) error {
 		return errors.New("invalid final list signature/capacity")
 	}
 	prev := ""
+	sequences := map[int]bool{}
 	for i, p := range l.Packets {
 		if err := p.Validate(m); err != nil {
 			return err
 		}
 		pr := l.Promises[i]
+		if m.Policy.Ordering == OrderingMedian && (pr.Sequence > capacity || sequences[pr.Sequence]) {
+			return errors.New("duplicate or out-of-budget local sequence")
+		}
+		sequences[pr.Sequence] = true
 		if err := pr.Validate(m); err != nil {
 			return err
 		}
