@@ -103,3 +103,9 @@ Alice 在现场得知赛果后提交 YES 买单。加密使订单内容在服务
 ## 许可
 
 项目自身代码的许可证尚未选定。第三方依赖保留各自许可证，见[归属说明](THIRD_PARTY.md)和[门限组件说明](threshold/THIRD_PARTY.md)。
+
+## Python harness / 模型接入
+
+`python3 harness/pinocchio_harness.py --binary bin/pinocchio --run-dir runs/model-session-01`
+
+Control local validators, faults, measurements and audits through validated JSONL tools or a Python model adapter. 详见[Python 节点控制与模型接入](docs/PYTHON_HARNESS.zh-CN.md)。

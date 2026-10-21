@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — 2026-10-21
+
+- Add a standard-library Python process harness with validated model tools, JSONL transport and a provider-neutral bounded agent loop.
+- Support per-node lifecycle and fault restarts, structured measurement/audit results, action logs and owned-process cleanup.
+- Add unit tests, an opt-in real five-node smoke test and a Chinese model integration guide.
+
 ## Unreleased — 2026-10-20
 
 - Add optional median-receipts reference ordering from signed, durable local admission observations, with explicit sparse-evidence fallback and independent ordering audit.

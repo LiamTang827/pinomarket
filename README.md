@@ -107,3 +107,9 @@ Existing mechanisms are attributed to their sources; combining them does not est
 ## License
 
 A license for this project's own code has not been selected. Third-party dependencies retain their licenses; see [attribution](THIRD_PARTY.md) and [threshold-component notices](threshold/THIRD_PARTY.md).
+
+## Python harness / 模型接入
+
+`python3 harness/pinocchio_harness.py --binary bin/pinocchio --run-dir runs/model-session-01`
+
+Control local validators, faults, measurements and audits through validated JSONL tools or a Python model adapter. 详见[Python 节点控制与模型接入](docs/PYTHON_HARNESS.zh-CN.md)。
