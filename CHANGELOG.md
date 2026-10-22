@@ -1,5 +1,12 @@
 # Changelog
 
+## Direct ChatGPT connection — 2026-10-23
+
+- Add an optional direct ChatGPT-plan OAuth adapter with PKCE, ID-token validation, protected per-account storage and serialized rotating refresh.
+- Add account model discovery, bounded Responses streaming, validated JSON action replies and token/latency telemetry.
+- Add a connection-only smoke command that cannot execute harness actions. Real authorization and inference remain dependent on the account completing the official flow.
+
+
 ## Project rename — 2026-10-23
 
 - Rename the project and GitHub repository to `pinomarket`; update Go module imports, repository links and bilingual documentation.

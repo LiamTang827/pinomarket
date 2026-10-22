@@ -115,3 +115,7 @@ Alice 在现场得知赛果后提交 YES 买单。加密使订单内容在服务
 `python3 harness/pinocchio_harness.py --binary bin/pinocchio --run-dir runs/model-session-01`
 
 Control local validators, faults, measurements and audits through validated JSONL tools or a Python model adapter. 详见[Python 节点控制与模型接入](docs/PYTHON_HARNESS.zh-CN.md)。
+
+## 直接使用 ChatGPT 计划额度（无需 Codex）
+
+[登录、连接测试及 harness 接入](docs/CHATGPT_LOGIN.zh-CN.md) · `harness/chatgpt_model.py`

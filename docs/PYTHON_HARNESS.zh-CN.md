@@ -73,3 +73,7 @@ python3 harness/smoke_harness.py --binary bin/pinocchio --run-dir runs/harness-s
 ```
 
 smoke 检查中位数网络、节点故障重启、一个节点离线、三笔订单完成、真实链审计及退出清理。单元测试另外覆盖非法模型参数、工具执行失败时保留指标、模型反馈循环和步数上限。它不要求模型账户，也不把模拟模型回复当作真实模型服务测试。
+
+## 已提供的直接 ChatGPT 连接器
+
+见 [ChatGPT 登录与模型调用](CHATGPT_LOGIN.zh-CN.md)。该可选适配器自行完成授权和模型调用，不通过 Codex；基础 harness 不依赖它。

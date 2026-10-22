@@ -1,0 +1,2 @@
+# Used only by direct ChatGPT login; the basic harness remains standard-library-only.
+PyJWT[crypto]==2.10.1

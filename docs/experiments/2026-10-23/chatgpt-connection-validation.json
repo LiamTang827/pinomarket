@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-23",
+  "connector": "direct Sign in with ChatGPT + Responses API",
+  "codex_used": false,
+  "api_key_used": false,
+  "automated_tests": {
+    "python_harness_existing": 6,
+    "chatgpt_adapter": 7,
+    "all_passed": true,
+    "real_credentials_used": false
+  },
+  "base_environment": {
+    "basic_harness_tests": 6,
+    "optional_adapter_tests": "skipped when optional dependencies absent"
+  },
+  "actual_openid_discovery": "official issuer, token and JWKS endpoints fetched successfully",
+  "real_login": "authorization page opened; waiting for user login and consent",
+  "real_model_request": "not yet attempted",
+  "node_actions_executed": false,
+  "limitations": [
+    "mocked tests do not establish actual account entitlement",
+    "independent multi-role observation isolation remains future work"
+  ]
+}

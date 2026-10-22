@@ -50,3 +50,6 @@ bin/
 **/priv_validator_state.json
 **/node_key.json
 **/node[0-9].json
+
+# Direct ChatGPT login credentials and host registration
+.local/
