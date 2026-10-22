@@ -1,5 +1,12 @@
 # Changelog
 
+## ChatGPT connection recovery — 2026-10-23
+
+- Apply the documented five-second JWT clock tolerance while retaining all identity checks.
+- Preserve the issued registration ID across incomplete sign-ins, and reuse saved connections without opening another login.
+- Show success only after verified credentials are durably saved; callback pages no longer report premature success or automatically retry.
+
+
 ## Direct ChatGPT connection — 2026-10-23
 
 - Add an optional direct ChatGPT-plan OAuth adapter with PKCE, ID-token validation, protected per-account storage and serialized rotating refresh.

@@ -5,20 +5,34 @@
   "api_key_used": false,
   "automated_tests": {
     "python_harness_existing": 6,
-    "chatgpt_adapter": 7,
+    "chatgpt_adapter": 12,
     "all_passed": true,
-    "real_credentials_used": false
+    "real_credentials_used": false,
+    "total": 18
   },
   "base_environment": {
     "basic_harness_tests": 6,
     "optional_adapter_tests": "skipped when optional dependencies absent"
   },
   "actual_openid_discovery": "official issuer, token and JWKS endpoints fetched successfully",
-  "real_login": "authorization page opened; waiting for user login and consent",
+  "real_login": "User completed OpenAI authorization; old code rejected token before storage due to measured local clock skew. Repair tested locally; no active credentials saved yet.",
   "real_model_request": "not yet attempted",
   "node_actions_executed": false,
   "limitations": [
     "mocked tests do not establish actual account entitlement",
     "independent multi-role observation isolation remains future work"
-  ]
+  ],
+  "clock_skew_recovery": {
+    "measured_server_minus_local_seconds": 3.236,
+    "jwt_leeway_seconds": 5,
+    "reason": "ImmatureSignatureError",
+    "tests": [
+      "3-second future iat/nbf accepted",
+      "30-second future iat/nbf rejected",
+      "invalid nonce/signature/issuer/audience/expiry rejected",
+      "failed login preserves existing active account",
+      "result page success requires verified save",
+      "saved connection reused with no browser or callback server"
+    ]
+  }
 }

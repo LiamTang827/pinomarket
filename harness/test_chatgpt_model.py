@@ -1,4 +1,8 @@
 import io
+import contextlib
+import html
+import re
+import urllib.parse
 import json
 import os
 from pathlib import Path
@@ -15,7 +19,7 @@ except ImportError:
 from cryptography.hazmat.primitives.asymmetric import rsa
 
 from chatgpt_model import (ChatGPTModel, ConnectionError, ISSUER, RESOURCE, REQUIRED_SCOPES,
-                          access_token, atomic_json, parse_callback, profile_id,
+                          access_token, atomic_json, parse_callback, profile_id, finish_login, login, TOKEN, JWKS,
                           sse_response, token_record, validate_identity)
 
 
@@ -32,7 +36,7 @@ class IdentityTests(unittest.TestCase):
 
     def encoded(self, **overrides):
         claims = dict(iss=ISSUER, aud='issued-client', sub='test-user',
-                      exp=int(time.time()) + 600, nonce='pending-nonce')
+                      exp=int(time.time()) + 600, iat=int(time.time()), nonce='pending-nonce')
         claims.update(overrides)
         return jwt.encode(claims, self.key, algorithm='RS256', headers={'kid': 'test-key'})
 
@@ -55,6 +59,103 @@ class IdentityTests(unittest.TestCase):
             with patch('chatgpt_model.get_json', return_value={'keys': []}):
                 with self.assertRaises(ConnectionError):
                     validate_identity(self.encoded(), 'issued-client')
+
+    def test_small_clock_skew_allowed_but_future_tokens_still_rejected(self):
+        now = int(time.time())
+        with patch('chatgpt_model.get_json', return_value={'keys': [self.jwk]}):
+            self.assertEqual(validate_identity(self.encoded(iat=now+3, nbf=now+3),
+                                              'issued-client', 'pending-nonce')['sub'], 'test-user')
+            for field in ['iat', 'nbf']:
+                with self.subTest(field=field):
+                    with self.assertRaisesRegex(ConnectionError, 'ImmatureSignatureError'):
+                        validate_identity(self.encoded(**{field: now+30}), 'issued-client', 'pending-nonce')
+
+    def test_saved_connection_reused_without_opening_login_or_server(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            account = profile_id('issued-client', 'test-user')
+            atomic_json(root/'active.json', {'profile': account})
+            atomic_json(root/'accounts'/(account+'.json'), dict(client_id='issued-client', subject='test-user',
+                        access_token='SAVED', scopes=list(REQUIRED_SCOPES), expires_at=time.time()+3600))
+            with patch('chatgpt_model.HTTPServer') as server, patch('chatgpt_model.webbrowser.open') as browser, contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(login(root), account)
+            server.assert_not_called()
+            browser.assert_not_called()
+
+    def test_completed_login_persists_verified_account(self):
+        with tempfile.TemporaryDirectory() as directory:
+            tokens = dict(id_token=self.encoded(), token_type='Bearer', access_token='ACCESS',
+                          refresh_token='REFRESH', scope=' '.join(REQUIRED_SCOPES), expires_in=3600)
+            def endpoint(url, **kwargs):
+                if url == TOKEN:
+                    self.assertEqual(kwargs['form']['client_id'], 'issued-client')
+                    self.assertEqual(kwargs['form']['redirect_uri'], 'http://127.0.0.1:12345/auth/callback')
+                    return tokens
+                self.assertEqual(url, JWKS)
+                return {'keys': [self.jwk]}
+            with patch('chatgpt_model.get_json', side_effect=endpoint):
+                account = finish_login(directory, 'issued-client', 'CODE', 'VERIFIER',
+                                       'http://127.0.0.1:12345/auth/callback', 'pending-nonce', 'urn:uuid:test')
+            root = Path(directory)
+            self.assertEqual(json.loads((root/'active.json').read_text())['profile'], account)
+            self.assertFalse((root/'pending-registration.json').exists())
+            record = json.loads((root/'accounts'/(account+'.json')).read_text())
+            self.assertEqual(record['subject'], 'test-user')
+            self.assertEqual(record['refresh_token'], 'REFRESH')
+
+    def test_failed_login_never_overwrites_active_account(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            atomic_json(root/'active.json', {'profile': 'previous-account'})
+            tokens = dict(id_token=self.encoded(nonce='wrong-nonce'), token_type='Bearer', access_token='ACCESS',
+                          scope=' '.join(REQUIRED_SCOPES), expires_in=3600)
+            with patch('chatgpt_model.get_json', side_effect=[tokens, {'keys': [self.jwk]}]):
+                with self.assertRaisesRegex(ConnectionError, 'nonce mismatch'):
+                    finish_login(root, 'issued-client', 'CODE', 'VERIFIER',
+                                 'http://127.0.0.1:12345/auth/callback', 'pending-nonce', 'urn:uuid:test')
+            self.assertEqual(json.loads((root/'active.json').read_text()), {'profile': 'previous-account'})
+            self.assertEqual(json.loads((root/'pending-registration.json').read_text()), {'client_id': 'issued-client'})
+            self.assertEqual(list((root/'accounts').glob('*.json')), [])
+
+    def test_login_page_waits_for_user_and_only_reports_verified_result(self):
+        for failed in [False, True]:
+            with self.subTest(failed=failed), tempfile.TemporaryDirectory() as directory:
+                pages, responses = [], []
+                class Server:
+                    server_port = 12345
+                    def __init__(self, address, handler):
+                        self.handler, self.step, self.query = handler, 0, None
+                    def __enter__(self):
+                        return self
+                    def __exit__(self, *_):
+                        pass
+                    def handle_request(self):
+                        obj = object.__new__(self.handler)
+                        obj.send_page = lambda title, content, status=200: pages.append((title, content, status))
+                        obj.send_response = lambda status: responses.append(status)
+                        obj.send_header = lambda *args: None
+                        obj.end_headers = lambda: None
+                        if self.step == 0:
+                            obj.path = '/'
+                        elif self.step == 1:
+                            link = html.unescape(re.search(r'href="([^"]+)"', pages[0][1])[1])
+                            state = urllib.parse.parse_qs(urllib.parse.urlsplit(link).query)['state'][0]
+                            obj.path = '/auth/callback?' + urllib.parse.urlencode({'state': state, 'code': 'CODE', 'client_id': 'issued-client'})
+                        else:
+                            obj.path = '/auth/result'
+                        self.step += 1
+                        self.handler.do_GET(obj)
+                with patch('chatgpt_model.HTTPServer', Server), patch('chatgpt_model.webbrowser.open') as browser, patch('chatgpt_model.finish_login', side_effect=ConnectionError('test failure') if failed else None, return_value='verified-account') as finish, contextlib.redirect_stdout(io.StringIO()):
+                    if failed:
+                        with self.assertRaisesRegex(ConnectionError, 'test failure'):
+                            login(directory, no_browser=True)
+                    else:
+                        self.assertEqual(login(directory, no_browser=True), 'verified-account')
+                browser.assert_not_called()
+                finish.assert_called_once()
+                self.assertEqual(responses, [303])
+                self.assertNotIn('<script', pages[0][1])
+                self.assertEqual(pages[-1][0], '尚未连接' if failed else '已连接并保存')
 
     def test_callback_state_duplicate_and_client_boundaries(self):
         self.assertEqual(parse_callback('state=s&code=c&client_id=issued-client', 's', 'dynamic_agent_client'), ('c', 'issued-client'))

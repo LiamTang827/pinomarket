@@ -10,6 +10,7 @@ import base64
 from contextlib import contextmanager
 import fcntl
 import hashlib
+import html
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import os
@@ -150,7 +151,7 @@ def validate_identity(encoded, client_id, nonce=None, expected_subject=None):
             raise ValueError('unknown signing key')
         key = jwt.PyJWK.from_dict(matches[0], algorithm='RS256').key
         claims = jwt.decode(encoded, key, algorithms=['RS256'], audience=client_id,
-                            issuer=ISSUER, options={'require': ['iss', 'aud', 'exp', 'sub']})
+                            issuer=ISSUER, leeway=5, options={'require': ['iss', 'aud', 'exp', 'iat', 'sub']})
         if not isinstance(claims['sub'], str) or not claims['sub']:
             raise ValueError('missing subject')
         if nonce is not None and not secrets.compare_digest(str(claims.get('nonce', '')), nonce):
@@ -160,8 +161,11 @@ def validate_identity(encoded, client_id, nonce=None, expected_subject=None):
         if isinstance(claims['aud'], list) and len(claims['aud']) > 1 and claims.get('azp') != client_id:
             raise ValueError('authorized-party mismatch')
         return claims
-    except (jwt.PyJWTError, ValueError, KeyError, TypeError):
-        raise ConnectionError('ID token signature, identity, audience, expiry or nonce validation failed') from None
+    except (jwt.PyJWTError, ValueError, KeyError, TypeError) as exc:
+        reason = type(exc).__name__
+        if isinstance(exc, ValueError) and str(exc) in {'unexpected signing algorithm', 'unknown signing key', 'missing subject', 'nonce mismatch', 'returning account identity mismatch', 'authorized-party mismatch'}:
+            reason = str(exc)
+        raise ConnectionError('ID token validation failed: ' + reason) from None
 
 
 def token_record(tokens, client_id, host, claims, previous=None):
@@ -207,9 +211,34 @@ def parse_callback(query, state, pending_client):
     return values['code'], client
 
 
-def login(root, *, selected=None, new_account=False, no_browser=False, timeout=600):
+def finish_login(root, client, code, verifier, redirect, nonce, host, previous=None):
+    """Only publish a connected account after identity and plan checks pass."""
     root = Path(root)
-    # Serialize login and refresh across processes sharing the same local store.
+    pending_path = root / 'pending-registration.json'
+    if previous is None:
+        atomic_json(pending_path, {'client_id': client})
+    tokens = get_json(TOKEN, form=dict(grant_type='authorization_code', client_id=client,
+                     code=code, code_verifier=verifier, redirect_uri=redirect, resource=RESOURCE))
+    claims = validate_identity(tokens.get('id_token', ''), client, nonce,
+                               previous['subject'] if previous else None)
+    record = token_record(tokens, client, host, claims, previous)
+    account = profile_id(client, claims['sub'])
+    atomic_json(root / 'accounts' / (account + '.json'), record)
+    atomic_json(root / 'active.json', {'profile': account})
+    pending_path.unlink(missing_ok=True)
+    return account
+
+
+def login(root, *, selected=None, new_account=False, no_browser=False, timeout=600, reauthorize=False):
+    root = Path(root)
+    if not new_account and not reauthorize and (selected or (root / 'active.json').exists()):
+        account, saved = load_profile(root, selected)
+        if saved.get('access_token') and REQUIRED_SCOPES.issubset(saved.get('scopes', [])):
+            # Reuse/refresh the verified record. A network or refresh failure stops
+            # here; it must never silently turn into another browser sign-in.
+            access_token(root, selected)
+            print('Reusing the saved ChatGPT connection; no browser sign-in started.', flush=True)
+            return account
     with locked(root):
         host_path = root / 'host.json'
         if not host_path.exists():
@@ -220,37 +249,84 @@ def login(root, *, selected=None, new_account=False, no_browser=False, timeout=6
         previous = None
         if not new_account and (selected or (root / 'active.json').exists()):
             _, previous = load_profile(root, selected)
-        pending = previous['client_id'] if previous else 'dynamic_agent_client'
+        pending_path = root / 'pending-registration.json'
+        pending = (previous['client_id'] if previous else
+                   read_json(pending_path)['client_id'] if pending_path.exists() and not new_account else
+                   'dynamic_agent_client')
         state, nonce, verifier = secrets.token_urlsafe(32), secrets.token_urlsafe(32), secrets.token_urlsafe(64)
         challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).decode().rstrip('=')
         outcome = {}
+        authorization_url = ''
+        redirect = ''
 
         class Callback(BaseHTTPRequestHandler):
             def log_message(self, *_):
-                pass  # Callback query contains a one-time authorization code.
+                pass
+
+            def send_page(self, title, content, status=200):
+                body = ('<!doctype html><html lang="zh-CN"><meta charset="utf-8">'
+                        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+                        '<title>pinomarket · ChatGPT 连接</title>'
+                        '<style>body{font:18px/1.7 system-ui;max-width:640px;margin:70px auto;padding:24px;'
+                        'color:#213128;background:#faf9f5}a{display:inline-block;padding:12px 20px;'
+                        'background:#176345;color:white;border-radius:8px;text-decoration:none}'
+                        'h1{font-size:28px}</style><h1>' + html.escape(title) + '</h1>' + content + '</html>').encode()
+                self.send_response(status)
+                for key, value in [('Content-Type', 'text/html; charset=utf-8'),
+                                   ('Cache-Control', 'no-store'), ('Referrer-Policy', 'no-referrer'),
+                                   ('X-Content-Type-Options', 'nosniff'), ('Content-Length', str(len(body)))]:
+                    self.send_header(key, value)
+                self.end_headers()
+                self.wfile.write(body)
 
             def do_GET(self):
                 url = urllib.parse.urlsplit(self.path)
+                if url.path == '/':
+                    self.send_page('pinomarket：连接 ChatGPT',
+                        '<p>这次使用之前保存的应用注册。只有验证通过并保存到本机后，页面才会显示“已连接”。</p>'
+                        '<p>本页面不会自动跳转或重复发起登录。</p>'
+                        '<a href="' + html.escape(authorization_url, quote=True) + '">Continue with ChatGPT</a>')
+                    return
+                if url.path == '/auth/result':
+                    if outcome.get('account'):
+                        self.send_page('已连接并保存', '<p>身份校验和计划调用权限检查通过。</p>'
+                                       '<p>本机已经保存可续期连接。可以返回聊天，继续模型测试。</p>')
+                    else:
+                        error = outcome.get('error', '尚未收到有效授权。')
+                        self.send_page('尚未连接', '<p>' + html.escape(error) + '</p>'
+                                       '<p>没有保存可用连接，也不会自动重试登录。</p>')
+                    if outcome.get('account') or outcome.get('error'):
+                        outcome['delivered'] = True
+                    return
                 if url.path != '/auth/callback':
                     self.send_error(404)
                     return
+                if outcome.get('consumed'):
+                    self.send_page('这次回调已经处理', '<p>不会再次交换授权码。</p>', 409)
+                    return
                 try:
                     code, client = parse_callback(url.query, state, pending)
-                    outcome.update(code=code, client_id=client)
-                    body = b'Authorization received. You can return to pinomarket.'
-                    status = 200
                 except ConnectionError:
-                    # Ignore unsolicited/mismatched callbacks without consuming the attempt.
-                    body, status = b'Invalid or denied authorization callback.', 400
                     params = urllib.parse.parse_qs(url.query)
-                    if params.get('state') == [state] and params.get('error'):
-                        outcome['denied'] = True
-                self.send_response(status)
-                self.send_header('Content-Type', 'text/plain; charset=utf-8')
+                    if params.get('state') != [state]:
+                        self.send_page('回调未通过校验', '<p>状态不匹配，未交换授权码。</p>', 400)
+                        return
+                    outcome.update(error='授权未完成或被拒绝。', consumed=True)
+                else:
+                    outcome['consumed'] = True
+                    try:
+                        outcome['account'] = finish_login(root, client, code, verifier, redirect, nonce, host, previous)
+                    except ConnectionError as exc:
+                        outcome['error'] = str(exc)
+                    except (OSError, KeyError, ValueError, TypeError):
+                        outcome['error'] = '本地保存或授权响应格式错误。没有切换活动账户。'
+                # Remove the one-time code from the browser address before showing a result.
+                self.send_response(303)
+                self.send_header('Location', '/auth/result')
                 self.send_header('Cache-Control', 'no-store')
-                self.send_header('Content-Length', str(len(body)))
+                self.send_header('Referrer-Policy', 'no-referrer')
+                self.send_header('Content-Length', '0')
                 self.end_headers()
-                self.wfile.write(body)
 
         with HTTPServer(('127.0.0.1', 0), Callback) as server:
             server.timeout = 0.5
@@ -258,30 +334,24 @@ def login(root, *, selected=None, new_account=False, no_browser=False, timeout=6
             params = dict(client_id=pending, ext_agent_host_id=host, response_type='code',
                           redirect_uri=redirect, scope=SCOPES, resource=RESOURCE, state=state,
                           nonce=nonce, code_challenge_method='S256', code_challenge=challenge)
-            if previous is None:
+            if pending == 'dynamic_agent_client':
                 params['agent_name_hint'] = 'pinomarket'
-            url = AUTHORIZE + '?' + urllib.parse.urlencode(params)
-            print('Continue with ChatGPT', flush=True)
-            print(url, flush=True)  # No account token or login hint is included.
+            authorization_url = AUTHORIZE + '?' + urllib.parse.urlencode(params)
+            entry_url = f'http://127.0.0.1:{server.server_port}/'
+            print('pinomarket local connection page: ' + entry_url, flush=True)
+            print('Waiting for one user-initiated sign-in. No automatic redirect/retry.', flush=True)
             if not no_browser:
-                webbrowser.open(url)
+                webbrowser.open(entry_url)
             end = time.monotonic() + timeout
-            while not outcome and time.monotonic() < end:
+            while not outcome.get('delivered') and time.monotonic() < end:
                 server.handle_request()
-            if 'code' not in outcome:
-                raise ConnectionError('authorization denied or timed out; no credentials changed')
-        client = outcome['client_id']
-        tokens = get_json(TOKEN, form=dict(grant_type='authorization_code', client_id=client,
-                         code=outcome['code'], code_verifier=verifier,
-                         redirect_uri=redirect, resource=RESOURCE))
-        claims = validate_identity(tokens.get('id_token', ''), client, nonce,
-                                   previous['subject'] if previous else None)
-        record = token_record(tokens, client, host, claims, previous)
-        account = profile_id(client, claims['sub'])
-        atomic_json(root / 'accounts' / (account + '.json'), record)
-        atomic_json(root / 'active.json', {'profile': account})
-        print('ChatGPT plan connection saved; credentials were not printed.', flush=True)
-        return account
+                if outcome.get('account') or outcome.get('error'):
+                    # The browser normally follows the result redirect immediately.
+                    end = min(end, time.monotonic() + 10)
+            if not outcome.get('account'):
+                raise ConnectionError(outcome.get('error', 'authorization denied or timed out; no credentials changed'))
+        print('ChatGPT plan connection verified and saved; credentials were not printed.', flush=True)
+        return outcome['account']
 
 
 def access_token(root, selected=None):
@@ -431,6 +501,7 @@ def main():
     sub = parser.add_subparsers(dest='command', required=True)
     auth = sub.add_parser('login')
     auth.add_argument('--new-account', action='store_true')
+    auth.add_argument('--reauthorize', action='store_true', help='explicitly request a fresh browser sign-in')
     auth.add_argument('--no-browser', action='store_true')
     auth.add_argument('--timeout', type=int, default=600)
     sub.add_parser('status')
@@ -441,7 +512,7 @@ def main():
     args = parser.parse_args()
     try:
         if args.command == 'login':
-            login(args.state_dir, selected=args.account, new_account=args.new_account, no_browser=args.no_browser, timeout=args.timeout)
+            login(args.state_dir, selected=args.account, new_account=args.new_account, no_browser=args.no_browser, timeout=args.timeout, reauthorize=args.reauthorize)
         elif args.command == 'status':
             root = Path(args.state_dir)
             entries = []
