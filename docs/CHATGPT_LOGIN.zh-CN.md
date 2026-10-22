@@ -97,3 +97,11 @@ with Harness('bin/pinocchio', 'runs/my-model-experiment') as h:
 - [模型列表与推理](https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference)
 - [账户、刷新及退出](https://developers.openai.com/siwc/token-sharing-open-source/profiles-and-sessions)
 - [预览限制](https://developers.openai.com/siwc/token-sharing-open-source/preview-limitations)
+
+## 本机实际验收（2026-10-23）
+
+已完成真实授权、身份与计划权限校验，凭据保存权限为 0600（目录 0700）。另一个 CLI 进程读取该连接，成功取得账号模型列表，并直接调用 `gpt-6.1-sol`。
+
+一次真实请求返回 `{"text":"connected","calls":[{"name":"status","arguments":{}}]}`，耗时约 4.79 秒，输入 173 token、输出 21 token。本次没有创建节点执行器，没有实际执行 status 或其他节点动作。单次连接耗时不是正式性能基准，token 数不是剩余额度或美元费用。
+
+[可复核的脱敏验证记录](experiments/2026-10-23/chatgpt-connection-validation.json)包含本地测试及真实请求结果；不包含账户身份、令牌或模型服务内部消息编号。

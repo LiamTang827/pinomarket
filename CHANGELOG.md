@@ -1,5 +1,11 @@
 # Changelog
 
+## Direct ChatGPT connection verified — 2026-10-23
+
+- Complete real user authorization, protected credential storage and account-specific model discovery.
+- Verify one direct GPT-6.1-Sol request through the model adapter; record sanitized timing, token counts and returned action without executing node tools.
+
+
 ## ChatGPT connection recovery — 2026-10-23
 
 - Apply the documented five-second JWT clock tolerance while retaining all identity checks.
