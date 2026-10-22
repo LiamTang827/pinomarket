@@ -52,7 +52,7 @@ func (a *Application) Info(context.Context, *abci.RequestInfo) (*abci.ResponseIn
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	height, hash := a.machine.Info()
-	return &abci.ResponseInfo{Data: "pinocchio-market", Version: "0.3.0", AppVersion: 3, LastBlockHeight: height, LastBlockAppHash: append([]byte(nil), hash...)}, nil
+	return &abci.ResponseInfo{Data: "pinomarket", Version: "0.3.0", AppVersion: 3, LastBlockHeight: height, LastBlockAppHash: append([]byte(nil), hash...)}, nil
 }
 
 // InitChain binds the genesis application hash to the deterministic initial

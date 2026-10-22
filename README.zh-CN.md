@@ -1,4 +1,4 @@
-# Pinocchio · 匹诺曹
+# pinomarket
 
 ## 新增：中位数实验排序与分阶段测量
 
@@ -10,9 +10,11 @@
 
 让节点的承诺可检查，让订单的处理过程可重放。
 
-Pinocchio 是研究加密订单准入、处理与节点问责的 Go 原型。**v0.3 已能在本机多个独立进程之间运行完整流程**，接入 CometBFT 共识和真实 Shutter 门限加密。原来的单进程模拟保留，用于控制变量和重放场景。
+pinomarket 是研究加密订单准入、处理与节点问责的 Go 原型。**v0.3 已能在本机多个独立进程之间运行完整流程**，接入 CometBFT 共识和真实 Shutter 门限加密。原来的单进程模拟保留，用于控制变量和重放场景。
 
-## 为什么叫匹诺曹？
+## 名字与匹诺曹节点
+
+项目名由来自 Pinocchio（匹诺曹）的 **Pino** 和 **market（市场）** 组成。节点仍叫匹诺曹，它们可以诚实履约，也可能留下可核验的签名矛盾。
 
 网络延迟会让不同节点看到不同的交易接收顺序。这本身不能证明说谎；但一个节点签了承诺，后来又签署遗漏该订单的完整清单，就可能留下违反规则的证据。
 
@@ -99,6 +101,10 @@ Alice 在现场得知赛果后提交 YES 买单。加密使订单内容在服务
 - [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf)：排序、共同输出与纳入保证。
 - [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf)：签名日志与可问责系统。
 - [ABIDES](https://github.com/abides-sim/abides)：市场与消息延迟仿真。
+
+## 名称与兼容性
+
+项目和 GitHub 仓库名称统一为 `pinomarket`。现有 `pinocchio` 命令、Python harness 文件名及密码域标识保留，以兼容已保存的实验。
 
 ## 许可
 

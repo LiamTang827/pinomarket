@@ -1,12 +1,14 @@
-# Pinocchio
+# pinomarket
 
 **English** | [简体中文](README.zh-CN.md)
 
 **Make promises checkable. Make markets replayable.**
 
-Pinocchio is a Go research prototype for encrypted order admission, processing, and node accountability. **v0.3 runs a complete local protocol across independent processes**, using CometBFT consensus and real Shutter threshold encryption. The earlier single-process simulation remains available for controlled scenarios.
+pinomarket is a Go research prototype for encrypted order admission, processing, and node accountability. **v0.3 runs a complete local protocol across independent processes**, using CometBFT consensus and real Shutter threshold encryption. The earlier single-process simulation remains available for controlled scenarios.
 
-## Why Pinocchio?
+## Why pinomarket?
+
+The name combines **Pino**, from Pinocchio, with **market**. Our nodes are called Pinocchios: they may behave honestly or leave checkable contradictions in their signed statements.
 
 Network delay can give nodes different views of transaction arrival. Different views alone do not prove dishonesty. A signed admission promise followed by the same node's signed complete list omitting that order can, however, provide evidence of a rule violation.
 
@@ -103,6 +105,10 @@ Existing mechanisms are attributed to their sources; combining them does not est
 - [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf): ordering, common output, and inclusion guarantees.
 - [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf): signed logs and accountability.
 - [ABIDES](https://github.com/abides-sim/abides): market and message-delay simulation.
+
+## Naming and compatibility
+
+The project and GitHub repository are named `pinomarket`. Existing `pinocchio` commands, Python harness filenames and cryptographic domain identifiers are retained for compatibility with saved experiments.
 
 ## License
 

@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/LiamTang827/pinocchio-market/internal/live"
-	"github.com/LiamTang827/pinocchio-market/protocol"
+	"github.com/LiamTang827/pinomarket/internal/live"
+	"github.com/LiamTang827/pinomarket/protocol"
 )
 
 func fail(err error) { fmt.Fprintln(os.Stderr, "error:", err); os.Exit(1) }

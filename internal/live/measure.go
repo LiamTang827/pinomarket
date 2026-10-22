@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/LiamTang827/pinocchio-market/protocol"
+	"github.com/LiamTang827/pinomarket/protocol"
 )
 
 type MeasuredOrder struct {

@@ -1,5 +1,10 @@
 # Changelog
 
+## Project rename — 2026-10-23
+
+- Rename the project and GitHub repository to `pinomarket`; update Go module imports, repository links and bilingual documentation.
+- Retain Pinocchio as the node character name and preserve existing CLI paths, cryptographic domain identifiers and archived experiment records.
+
 ## Unreleased — 2026-10-21
 
 - Add a standard-library Python process harness with validated model tools, JSONL transport and a provider-neutral bounded agent loop.

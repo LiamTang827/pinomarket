@@ -1,4 +1,4 @@
-# Pinocchio v0.3: local multi-process protocol
+# pinomarket v0.3: local multi-process protocol
 
 Implementation record: 2026-10-19. See [the detailed Chinese protocol and operating guide](LIVE_PROTOCOL.zh-CN.md). `network` runs real processes; the existing `run` command retains the v0.2 simulator.
 

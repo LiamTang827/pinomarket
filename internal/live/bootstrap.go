@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/LiamTang827/pinocchio-market/internal/consensus"
-	"github.com/LiamTang827/pinocchio-market/threshold"
+	"github.com/LiamTang827/pinomarket/internal/consensus"
+	"github.com/LiamTang827/pinomarket/threshold"
 )
 
 type InitOptions struct {

@@ -17,7 +17,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/LiamTang827/pinocchio-market/protocol"
+	"github.com/LiamTang827/pinomarket/protocol"
 )
 
 func RequestJSON(ctx context.Context, method, url string, input, output any) error {

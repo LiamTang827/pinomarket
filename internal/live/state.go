@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/LiamTang827/pinocchio-market/protocol"
-	"github.com/LiamTang827/pinocchio-market/threshold"
+	"github.com/LiamTang827/pinomarket/protocol"
+	"github.com/LiamTang827/pinomarket/threshold"
 )
 
 type Round struct {

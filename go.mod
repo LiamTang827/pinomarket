@@ -1,4 +1,4 @@
-module github.com/LiamTang827/pinocchio-market
+module github.com/LiamTang827/pinomarket
 
 go 1.23.0
 

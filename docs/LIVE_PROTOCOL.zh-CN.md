@@ -1,4 +1,4 @@
-# Pinocchio v0.3：可运行的本地多进程协议
+# pinomarket v0.3：可运行的本地多进程协议
 
 记录日期：2026-10-19。代码入口：`internal/live/`。本文件说明 `network` 模式；原来的 `run` 模式仍是 v0.2 单进程模拟器。
 
@@ -254,6 +254,6 @@ PINOCCHIO_LIVE_INTEGRATION=1 ./scripts/go.sh test ./internal/live -run '^TestLiv
 
 ## 11. 与已有工作的关系
 
-真实密码调用 Shutter 的公开库，共识调用 CometBFT，未宣称重新发明这些组件。Pinocchio 当前实现的是把收录承诺、容量预留、完整清单登记、持久队列、锁序后解密和签名矛盾记录接成可测试状态机。是否构成新的协议贡献，仍需与 Shutter/Primev 等工作的精确威胁模型与性质逐项比较。跑通代码本身不能证明新颖性。
+真实密码调用 Shutter 的公开库，共识调用 CometBFT，未宣称重新发明这些组件。pinomarket 当前实现的是把收录承诺、容量预留、完整清单登记、持久队列、锁序后解密和签名矛盾记录接成可测试状态机。是否构成新的协议贡献，仍需与 Shutter/Primev 等工作的精确威胁模型与性质逐项比较。跑通代码本身不能证明新颖性。
 
 依赖版本和许可证入口见根目录 `THIRD_PARTY.md`；固定版本以 `go.mod`、`go.sum` 为准。

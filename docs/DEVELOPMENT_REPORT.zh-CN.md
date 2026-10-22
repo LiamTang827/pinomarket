@@ -1,4 +1,4 @@
-# Pinocchio 开发报告与维护手册
+# pinomarket 开发报告与维护手册
 
 ## 当前版本：v0.3（2026-10-19）
 
@@ -18,7 +18,7 @@
 
 记录日期：2026-10-19。项目状态：可以运行的 Go 协议研究模型，已完成本轮功能验证；真实分布式部署和门限加密仍待接入。
 
-仓库：https://github.com/LiamTang827/pinocchio-market
+仓库：https://github.com/LiamTang827/pinomarket
 
 本地目录：`/Users/tangliam/Projects/pinocchio-market`。本报告记录实际实现与后续计划，不将模拟组件写成已经完成的真实协议。
 

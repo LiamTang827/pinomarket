@@ -18,8 +18,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/LiamTang827/pinocchio-market/internal/consensus"
-	"github.com/LiamTang827/pinocchio-market/threshold"
+	"github.com/LiamTang827/pinomarket/internal/consensus"
+	"github.com/LiamTang827/pinomarket/threshold"
 	rpchttp "github.com/cometbft/cometbft/rpc/client/http"
 	cmttypes "github.com/cometbft/cometbft/types"
 )

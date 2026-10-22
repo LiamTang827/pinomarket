@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/LiamTang827/pinocchio-market/protocol"
+	"github.com/LiamTang827/pinomarket/protocol"
 )
 
 const liveHelperConfigEnv = "PINOCCHIO_LIVE_HELPER_CONFIG"
