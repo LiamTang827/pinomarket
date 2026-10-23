@@ -103,6 +103,28 @@ type SubmissionReceipt struct {
 	QuorumMS       *float64           `json:"quorum_ms,omitempty"`
 }
 
+// VerifyReceipt authenticates client-collected promises independently of whether
+// the packet was eventually registered. A valid partial receipt is not a quorum.
+func VerifyReceipt(m Manifest, receipt SubmissionReceipt) (int, error) {
+	if err := receipt.Packet.Validate(m); err != nil {
+		return 0, err
+	}
+	seen := map[string]bool{}
+	for _, promise := range receipt.Promises {
+		if err := promise.Validate(m); err != nil {
+			return 0, err
+		}
+		if seen[promise.Node] {
+			return 0, errors.New("duplicate receipt member")
+		}
+		if promise.ID != receipt.Packet.ID() || promise.Round != receipt.Packet.Header.Round {
+			return 0, errors.New("receipt promise does not match packet/round")
+		}
+		seen[promise.Node] = true
+	}
+	return len(seen), nil
+}
+
 func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt, error) {
 	out := SubmissionReceipt{Packet: p, Promises: []Promise{}, Errors: map[string]string{}, NodeResponseMS: map[string]float64{}}
 	if err := p.Validate(m); err != nil {
@@ -144,7 +166,7 @@ func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt,
 }
 func RunCLI(args []string) error {
 	if len(args) == 0 {
-		fmt.Println("network init|node|ready|open|submit|measure|wait|status|audit (use -h after command)")
+		fmt.Println("network init|node|ready|open|prepare|submit|verify-receipt|measure|wait|status|audit (use -h after command)")
 		return nil
 	}
 	fs := flag.NewFlagSet("network "+args[0], flag.ContinueOnError)
@@ -159,14 +181,18 @@ func RunCLI(args []string) error {
 	base := fs.Int("base-port", 26656, "Comet base P2P port (RPC=base+1, next node+10)")
 	api := fs.Int("api-port", 28000, "first application HTTP port")
 	interval := fs.Duration("block-interval", 500*time.Millisecond, "minimum block commit interval")
-	ordering := fs.String("ordering", OrderingIdentity, "init only: identity or median-receipts (experimental, not full AOAB)")
+	ordering := fs.String("ordering", OrderingIdentity, "init only: identity placeholder (deterministic execution, no arrival-time fairness)")
 	owner := fs.String("owner", "alice", "wallet name")
+	prepareRound := fs.Int("round", 0, "prepare only: encrypt for this round before admission opens")
 	kind := fs.String("kind", "buy", "buy or cancel")
 	quantity := fs.Int64("quantity", 1, "share quantity")
 	limit := fs.Int64("limit", 60, "limit in cents")
 	nonce := fs.Int("nonce", 0, "unique wallet command number")
 	out := fs.String("out", "", "public receipt output file")
 	packetFile := fs.String("packet", "", "resend an existing packet or receipt file")
+	agentSocket := fs.String("agent-socket", "", "node-only private Unix socket for isolated policy decisions")
+	agentTimeout := fs.Int("agent-timeout-ms", 2000, "private policy response timeout, maximum 55000ms")
+	agentPrepare := fs.Int64("agent-prepare-blocks", 0, "start a live seal decision this many blocks before close; 0 disables prefetch")
 	refuse := fs.Bool("refuse", false, "fault: refuse admission")
 	omit := fs.Bool("omit-list", false, "fault: publish empty final list")
 	withhold := fs.Bool("withhold-shares", false, "fault: do not release own shares")
@@ -191,7 +217,7 @@ func RunCLI(args []string) error {
 		}
 		ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 		defer cancel()
-		return RunNode(ctx, cfg, NodeOptions{*refuse, *omit, *withhold, *delay})
+		return RunNode(ctx, cfg, NodeOptions{Refuse: *refuse, OmitList: *omit, WithholdShares: *withhold, DelayMS: *delay, AgentSocket: *agentSocket, AgentTimeoutMS: *agentTimeout, AgentPrepareBlocks: *agentPrepare})
 	}
 	m, err := LoadManifest(*dir)
 	if err != nil {
@@ -200,6 +226,19 @@ func RunCLI(args []string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), *timeout)
 	defer cancel()
 	switch args[0] {
+	case "verify-receipt":
+		if *packetFile == "" {
+			return errors.New("verify-receipt requires -packet receipt file")
+		}
+		var receipt SubmissionReceipt
+		if err := ReadJSON(*packetFile, &receipt); err != nil {
+			return err
+		}
+		count, err := VerifyReceipt(m, receipt)
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(JSON(map[string]any{"verified": true, "promises": count, "quorum": count >= m.Policy.Quorum})))
 	case "measure":
 		if *out == "" {
 			return errors.New("measure requires a new -out directory")
@@ -211,7 +250,7 @@ func RunCLI(args []string) error {
 			return err
 		}
 		fmt.Println(string(JSON(round)))
-	case "submit":
+	case "submit", "prepare":
 		var packet Packet
 		if *packetFile != "" {
 			var receipt SubmissionReceipt
@@ -220,21 +259,38 @@ func RunCLI(args []string) error {
 			}
 			packet = receipt.Packet
 		} else {
-			s, err := FetchState(ctx, m)
-			if err != nil {
-				return err
-			}
-			if s.Round == nil || s.Round.Registered || s.Height >= s.Round.CloseHeight {
-				return errors.New("open an admission round first")
+			round := *prepareRound
+			if args[0] != "prepare" || round <= 0 {
+				s, err := FetchState(ctx, m)
+				if err != nil {
+					return err
+				}
+				if s.Round == nil || s.Round.Registered || s.Height >= s.Round.CloseHeight {
+					return errors.New("open an admission round first")
+				}
+				round = s.Round.Number
 			}
 			var key []byte
 			if err = ReadJSON(filepath.Join(*dir, "wallets", *owner+".json"), &key); err != nil {
 				return err
 			}
-			packet, err = NewPacket(m, s.Round.Number, protocol.Order{Owner: *owner, Nonce: *nonce, Kind: *kind, Listing: "yes-1", Quantity: *quantity, Limit: *limit}, ed25519.PrivateKey(key))
+			packet, err = NewPacket(m, round, protocol.Order{Owner: *owner, Nonce: *nonce, Kind: *kind, Listing: "yes-1", Quantity: *quantity, Limit: *limit}, ed25519.PrivateKey(key))
 			if err != nil {
 				return err
 			}
+		}
+		if args[0] == "prepare" {
+			if *out == "" {
+				return errors.New("prepare requires a new -out file")
+			}
+			if _, err := os.Stat(*out); err == nil {
+				return errors.New("prepare output already exists")
+			}
+			if err := AtomicJSON(*out, map[string]any{"packet": packet, "packet_id": packet.ID()}); err != nil {
+				return err
+			}
+			fmt.Printf("Prepared encrypted order %s; packet=%s (not submitted)\n", packet.Ref(), packet.ID())
+			return nil
 		}
 		receipt, err := SubmitPacket(ctx, m, packet)
 		if err != nil {

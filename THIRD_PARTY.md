@@ -1,6 +1,6 @@
 # Third party software
 
-The optional median-receipts experiment is original project code inspired by [AOAB (DSN 2024)](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf). Experiment organization also draws on the public [Isotaxis artifact](https://github.com/xrxrxrxrxr/Isotaxis-ArtifactEvaluation). No upstream Rust source or plotting data is bundled; these references do not imply that pinomarket implements either complete protocol or inherits its guarantees.
+AOAB and the Isotaxis artifact are related-work references for experimental methodology. Their ordering protocols are not part of pinomarket. No upstream Rust source or plotting data is bundled.
 
 The v0.3 network path uses upstream implementations rather than custom implementations of consensus or threshold cryptography.
 

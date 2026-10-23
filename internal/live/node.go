@@ -27,10 +27,13 @@ import (
 // NodeOptions intentionally injects protocol faults in local experiments.
 // A node still possesses only its own signing key and threshold secret share.
 type NodeOptions struct {
-	Refuse         bool
-	OmitList       bool
-	WithholdShares bool
-	DelayMS        int
+	Refuse             bool
+	OmitList           bool
+	WithholdShares     bool
+	DelayMS            int
+	AgentSocket        string
+	AgentTimeoutMS     int
+	AgentPrepareBlocks int64
 }
 
 // Gossip contains public signed receipts; it carries no private key material.
@@ -62,7 +65,9 @@ type liveNode struct {
 	httpClient  *http.Client
 	journalPath string
 	mu          sync.Mutex
+	admissionMu sync.Mutex // serializes live local observation, choice, and durable promise
 	journal     admissionJournal
+	agent       *nodeAgent
 }
 
 // RunNode runs one independent application, HTTP transport and CometBFT process.
@@ -92,6 +97,9 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	if options.DelayMS < 0 || options.DelayMS > 60000 {
 		return errors.New("delay must be between 0 and 60000 milliseconds")
 	}
+	if options.AgentTimeoutMS < 0 || options.AgentTimeoutMS > 55000 || options.AgentPrepareBlocks < 0 {
+		return errors.New("agent timeout must be 0..55000ms and prepare blocks nonnegative")
+	}
 	listenAddress, err := localAddress(peer.API)
 	if err != nil {
 		return fmt.Errorf("node API: %w", err)
@@ -115,6 +123,16 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	// Keep retrying consensus transactions bounded; a missing quorum must not
 	// prevent the worker or HTTP server from responding to shutdown.
 	n := &liveNode{cfg: cfg, options: options, peer: peer, private: private, machine: machine, rpc: rpc, httpClient: &http.Client{Timeout: 2 * time.Second}, journalPath: filepath.Join(cfg.CometDir, "app", "admission.json")}
+	if options.AgentSocket != "" {
+		timeout := options.AgentTimeoutMS
+		if timeout == 0 {
+			timeout = 2000
+		}
+		n.agent, err = newNodeAgent(options.AgentSocket, time.Duration(timeout)*time.Millisecond)
+		if err != nil {
+			return err
+		}
+	}
 	if err := n.loadJournal(); err != nil {
 		return err
 	}
@@ -141,7 +159,11 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	mux.HandleFunc("/submit", n.submit)
 	mux.HandleFunc("/gossip", n.gossip)
 	mux.HandleFunc("/open", n.open)
-	server := &http.Server{Handler: mux, ReadHeaderTimeout: 3 * time.Second, ReadTimeout: 5 * time.Second, WriteTimeout: 65 * time.Second, IdleTimeout: 15 * time.Second, MaxHeaderBytes: 16 * 1024, BaseContext: func(net.Listener) context.Context { return runCtx }}
+	writeTimeout := 65 * time.Second
+	if n.agent != nil {
+		writeTimeout = 125 * time.Second
+	}
+	server := &http.Server{Handler: mux, ReadHeaderTimeout: 3 * time.Second, ReadTimeout: 5 * time.Second, WriteTimeout: writeTimeout, IdleTimeout: 15 * time.Second, MaxHeaderBytes: 16 * 1024, BaseContext: func(net.Listener) context.Context { return runCtx }}
 	errorsC := make(chan error, 2)
 	go func() {
 		if err := server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -224,7 +246,6 @@ func (n *liveNode) loadJournal() error {
 			round.Accepted = map[string]Gossip{}
 		}
 		refs := map[string]string{}
-		sequences := map[int]bool{}
 		for id, g := range round.Accepted {
 			if err := n.validateGossip(g); err != nil {
 				return err
@@ -236,12 +257,7 @@ func (n *liveNode) loadJournal() error {
 				return errors.New("conflicting commands in local admission journal")
 			}
 			refs[g.Packet.Ref()] = id
-			if n.cfg.Manifest.Policy.Ordering == OrderingMedian {
-				if g.Promise.Sequence > len(round.Accepted) || sequences[g.Promise.Sequence] {
-					return errors.New("invalid durable admission sequence")
-				}
-				sequences[g.Promise.Sequence] = true
-			}
+
 		}
 		if round.Sealed != nil {
 			if err := round.Sealed.Validate(n.cfg.Manifest, n.cfg.Manifest.Policy.QueueCapacity); err != nil {
@@ -349,7 +365,44 @@ func (n *liveNode) submit(w http.ResponseWriter, r *http.Request) {
 		sendError(w, http.StatusBadRequest, err)
 		return
 	}
-	promise, err := n.accept(packet)
+	// This transport mutex is distinct from protocol-state locks. Serialize the
+	// local snapshot, model response, and promise so concurrent submissions cannot
+	// act on stale admission observations. Model IO holds no state lock.
+	n.admissionMu.Lock()
+	defer n.admissionMu.Unlock()
+	if err := r.Context().Err(); err != nil {
+		return
+	}
+	// A previously persisted promise is returned verbatim without a new decision.
+	n.mu.Lock()
+	local := n.journal.Rounds[packet.Header.Round]
+	if local != nil {
+		if old, ok := local.Accepted[packet.ID()]; ok {
+			n.mu.Unlock()
+			sendJSON(w, http.StatusOK, old.Promise)
+			return
+		}
+	}
+	n.mu.Unlock()
+	decision, err := n.decideAgent(r.Context(), "admission", &packet, nil)
+	if err != nil {
+		sendError(w, http.StatusServiceUnavailable, err)
+		return
+	}
+	if decision.Action == "refuse" {
+		sendError(w, http.StatusServiceUnavailable, errors.New("agent refused admission"))
+		return
+	}
+	if decision.Action == "delay" {
+		timer := time.NewTimer(time.Duration(decision.DelayMS) * time.Millisecond)
+		defer timer.Stop()
+		select {
+		case <-r.Context().Done():
+			return
+		case <-timer.C:
+		}
+	}
+	promise, err := n.acceptDecision(packet, decision)
 	if err != nil {
 		sendError(w, http.StatusConflict, err)
 		return
@@ -360,6 +413,10 @@ func (n *liveNode) submit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (n *liveNode) accept(packet Packet) (Promise, error) {
+	return n.acceptDecision(packet, AgentDecision{Action: "normal"})
+}
+
+func (n *liveNode) acceptDecision(packet Packet, decision AgentDecision) (Promise, error) {
 	// Hold the committed-state read lock through durable admission, preventing
 	// a concurrent block commit from crossing the close height mid-promise.
 	n.machine.mu.RLock()
@@ -374,6 +431,9 @@ func (n *liveNode) accept(packet Packet) (Promise, error) {
 		}
 	}
 	s := n.machine.state
+	if decision.Action != "normal" && decision.Action != "delay" {
+		return Promise{}, errors.New("unsupported admission action")
+	}
 	if s.Round == nil || s.Round.Registered || packet.Header.Round != s.Round.Number || s.Height >= s.Round.CloseHeight {
 		return Promise{}, errors.New("admission round is not open")
 	}
@@ -396,9 +456,7 @@ func (n *liveNode) accept(packet Packet) (Promise, error) {
 		return Promise{}, errors.New("node admission capacity is exhausted")
 	}
 	promise := NewPromise(n.cfg.Manifest, n.peer.ID, packet.Header.Round, id, n.private)
-	if n.cfg.Manifest.Policy.Ordering == OrderingMedian {
-		promise = NewSequencedPromise(n.cfg.Manifest, n.peer.ID, packet.Header.Round, id, len(local.Accepted)+1, n.private)
-	}
+
 	g := Gossip{packet, promise}
 	local.Accepted[id] = g
 	hash := Hash(promise)
@@ -482,8 +540,12 @@ func (n *liveNode) work(ctx context.Context) error {
 			return err
 		}
 		if round := s.Round; round != nil && !round.Registered {
+			if n.agent != nil && n.options.AgentPrepareBlocks > 0 && s.Height < round.CloseHeight && s.Height >= round.CloseHeight-n.options.AgentPrepareBlocks {
+				o := n.agentObservation("seal", nil, s)
+				n.agent.prepare(ctx, fmt.Sprintf("seal:%d", round.Number), o)
+			}
 			if s.Height > round.CloseHeight && !round.HasList(n.peer.ID) {
-				list, err := n.seal(round)
+				list, err := n.sealContext(ctx, round)
 				if err != nil {
 					return err
 				}
@@ -502,7 +564,11 @@ func (n *liveNode) work(ctx context.Context) error {
 			}{len(s.Services) + 1, s.Queue[0]})
 		}
 		if lock := s.Active; lock != nil && s.Height >= lock.Height {
-			if !n.options.WithholdShares {
+			decision, err := n.decideAgent(ctx, "shares", nil, s)
+			if err != nil {
+				return err
+			}
+			if !n.options.WithholdShares && decision.Action != "withhold" {
 				batch := ShareBatch{LockID: lock.ID, Shares: map[string]threshold.DecryptionShare{}}
 				for _, id := range lock.Items {
 					already := false
@@ -555,6 +621,14 @@ func (n *liveNode) work(ctx context.Context) error {
 }
 
 func (n *liveNode) seal(round *Round) (FinalList, error) {
+	return n.sealContext(context.Background(), round)
+}
+
+func (n *liveNode) sealContext(ctx context.Context, round *Round) (FinalList, error) {
+	decision, err := n.decideAgent(ctx, "seal", nil, nil)
+	if err != nil {
+		return FinalList{}, err
+	}
 	n.mu.Lock()
 	defer n.mu.Unlock()
 	local := n.journal.Rounds[round.Number]
@@ -566,13 +640,24 @@ func (n *liveNode) seal(round *Round) (FinalList, error) {
 		return *local.Sealed, nil
 	}
 	list := FinalList{Context: n.cfg.Manifest.Context, Node: n.peer.ID, Round: round.Number, Packets: []Packet{}, Promises: []Promise{}}
-	if !n.options.OmitList {
+	if !n.options.OmitList && decision.Action != "omit" {
 		ids := make([]string, 0, len(local.Accepted))
 		for id := range local.Accepted {
 			ids = append(ids, id)
 		}
 		sort.Strings(ids)
+		selected := map[string]bool{}
+		observed := map[string]bool{}
+		for _, id := range decision.IncludeIDs {
+			selected[id] = true
+		}
+		for _, id := range decision.snapshotIDs {
+			observed[id] = true
+		}
 		for _, id := range ids {
+			if decision.Action == "select" && observed[id] && !selected[id] {
+				continue
+			}
 			g := local.Accepted[id]
 			list.Packets = append(list.Packets, g.Packet)
 			list.Promises = append(list.Promises, g.Promise)

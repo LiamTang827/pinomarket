@@ -23,6 +23,9 @@ type InitOptions struct {
 }
 
 func InitNetwork(dir string, o InitOptions) (Manifest, error) {
+	if o.Ordering != "" && o.Ordering != OrderingIdentity {
+		return Manifest{}, errors.New("unsupported within-round ordering policy")
+	}
 	if o.Nodes < 4 || o.Nodes > 10 || o.APIPort < 1024 || o.APIPort+o.Nodes > 65535 {
 		return Manifest{}, errors.New("invalid local network size/ports")
 	}

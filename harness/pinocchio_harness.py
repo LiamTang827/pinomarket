@@ -25,7 +25,7 @@ def enum(*values):
 # Provider-neutral function definitions; adapters may wrap these in their SDK format.
 DEFINITIONS = {
     "initialize": ("Create a new five-validator local network; only once per session.", {
-        "ordering": enum("identity", "median-receipts")}),
+        "ordering": enum("identity")}),
     "start_node": ("Start one validator with its currently configured fault.", {"node": integer(0, 4)}),
     "stop_node": ("Stop one validator owned by this harness.", {"node": integer(0, 4)}),
     "set_fault": ("Configure a node fault, restarting it if running; preserves its journal.", {

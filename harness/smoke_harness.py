@@ -18,7 +18,7 @@ def main():
             if not result['ok']:
                 raise RuntimeError(json.dumps(result))
             return result
-        call('initialize', ordering='median-receipts')
+        call('initialize', ordering='identity')
         for node in range(5):
             call('start_node', node=node)
         call('ready')
