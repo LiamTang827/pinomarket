@@ -14,7 +14,7 @@ python3 harness/pinocchio_harness.py --binary bin/pinocchio --run-dir runs/model
 进程从 stdin 接收 JSON Lines，每行输出一个 JSON 结果。第一行输出可供模型使用的工具定义。一次会话固定控制五个本地验证者；进程退出或 stdin 关闭时会停止并回收它启动的节点。
 
 ```json
-{"tool":"initialize","arguments":{"ordering":"median-receipts"}}
+{"tool":"initialize","arguments":{"ordering":"identity"}}
 {"tool":"start_node","arguments":{"node":0}}
 {"tool":"start_node","arguments":{"node":1}}
 {"tool":"start_node","arguments":{"node":2}}
@@ -51,7 +51,7 @@ def model(messages, tools):
 
 with Harness("bin/pinocchio", "runs/model-session-02") as h:
     result = run_agent(h, model,
-        "初始化中位数排序网络，启动五节点，确认就绪；"
+        "初始化基础协议网络，启动五节点，确认就绪；"
         "让第五节点离线，测量三笔订单并审计。根据实际指标说明结果。",
         max_steps=20)
 ```
@@ -72,7 +72,7 @@ python3 -m unittest discover -s harness -v
 python3 harness/smoke_harness.py --binary bin/pinocchio --run-dir runs/harness-smoke-01
 ```
 
-smoke 检查中位数网络、节点故障重启、一个节点离线、三笔订单完成、真实链审计及退出清理。单元测试另外覆盖非法模型参数、工具执行失败时保留指标、模型反馈循环和步数上限。它不要求模型账户，也不把模拟模型回复当作真实模型服务测试。
+smoke 检查基础协议网络、节点故障重启、一个节点离线、三笔订单完成、真实链审计及退出清理。单元测试另外覆盖非法模型参数、工具执行失败时保留指标、模型反馈循环和步数上限。它不要求模型账户，也不把模拟模型回复当作真实模型服务测试。
 
 ## 已提供的直接 ChatGPT 连接器
 

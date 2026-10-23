@@ -1,125 +1,146 @@
 # pinomarket
 
-**English** | [简体中文](README.zh-CN.md)
+**English** · [简体中文](README.zh-CN.md) · [Experiment report (中文)](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [Protocol guide](docs/LIVE_PROTOCOL.md)
 
 **Make promises checkable. Make markets replayable.**
 
-pinomarket is a Go research prototype for encrypted order admission, processing, and node accountability. **v0.3 runs a complete local protocol across independent processes**, using CometBFT consensus and real Shutter threshold encryption. The earlier single-process simulation remains available for controlled scenarios.
+pinomarket is a Go research prototype for encrypted orders and node accountability. A simplified prediction market connects submission, signed admission promises, common registration, queue locking, threshold decryption, and execution. Independent AI node agents can deviate from application rules so we can inspect inclusion, processing, and verifiable evidence.
 
-## Why pinomarket?
+**Status: a runnable local multiprocess research prototype.** It uses actual consensus, signatures, and threshold cryptographic operations. Arrival-time fairness is not established, and this is not a prediction-market product for real funds.
 
-The name combines **Pino**, from Pinocchio, with **market**. Our nodes are called Pinocchios: they may behave honestly or leave checkable contradictions in their signed statements.
+## Why the name?
 
-Network delay can give nodes different views of transaction arrival. Different views alone do not prove dishonesty. A signed admission promise followed by the same node's signed complete list omitting that order can, however, provide evidence of a rule violation.
+**Pino** comes from Pinocchio; **market** is the setting. Our nodes are Pinocchios: they may fulfill their promises or leave contradictions in signed statements.
 
-We want these contradictions to be visible, like Pinocchio's nose. The project checks statements and rules; it does not infer a node's motives or prove the real-world time at which it first received an order.
+Network delay alone does not prove dishonesty. A node's signed admission promise followed by its own signed complete list omitting the promised order can provide checkable evidence of a rule violation. That contradiction is the “nose” we want to make visible. It does not establish motive or the true time of first receipt.
 
-## What runs today?
+## Research questions
 
-| Mode | Implemented components | Purpose |
-|---|---|---|
-| **v0.3 `network`** | Separate node processes and durable state; CometBFT v0.38.26; Shutter shlib v0.1.19 threshold encryption; signed promises, registration, queue locks, share release, execution, and omission evidence | Exercise the protocol with actual consensus and cryptographic operations |
-| **v0.2 simulation** | Virtual message scheduling; real signatures and AES-GCM; ideal finality and key vault; artifact audit and semantic replay | Reproduce controlled delay, corruption, duplicate, and omission scenarios |
+Alice sees a match result at the venue and sends a purchase before others. Bob tries to exploit transaction propagation and processing, while nodes may delay admission or break promises.
 
-The default live network has five equal-power validators, tolerates one Byzantine validator under the consensus assumptions, requires four admission signatures, and decrypts with three distinct valid shares. Each running node holds its own signing key and threshold secret share.
+We distinguish three questions:
 
-### Follow an order
+- **Visibility:** are hidden order contents exposed before the service order is fixed?
+- **Inclusion:** is a promised order registered, and what evidence remains if a node omits it?
+- **Processing:** does execution follow the locked order, and is the order filled, partially filled, or rejected?
+
+A promise, registration, a fixed position, and a successful fill are different states. The current protocol does not guarantee that Alice executes first, receives a fill, or retains her information advantage.
+
+## Follow an order
 
 ```mermaid
-flowchart LR
-    A[Wallet signs and encrypts] --> B[Nodes persist signed admission promises]
-    B --> C[Complete lists reach consensus]
-    C --> D[Register their union in the queue]
-    D --> E[Finalize a queue prefix and its order]
-    E --> F[Nodes publish verifiable decryption shares]
-    F --> G[Decrypt and execute in the fixed order]
-    B -. signed promise and contradictory list .-> H[Verify omission evidence]
+flowchart TD
+    A["Alice signs and encrypts an order"] --> B["Nodes persist and return signed promises"]
+    B --> C["Consensus confirms signed complete lists"]
+    C --> D["Their eligible union enters the common queue"]
+    D --> E["Consensus fixes a service prefix and its order"]
+    E --> F["Nodes release verifiable decryption shares"]
+    F --> G["Threshold decryption and ordered processing"]
+    B -. "Compare statements from the same signer" .-> H["Verify omission evidence"]
+    C -.-> H
 ```
 
-Alice can submit a YES purchase after seeing a match result. Encryption hides her order contents until its service order is locked. Admission promises give nodes an explicit, checkable inclusion obligation. These protections do not guarantee a fill, a profit, or priority over everybody who learned the result later.
+| Stage | Operation | Boundary |
+|---|---|---|
+| Submission | Sign the order, encrypt it with a random symmetric key, and protect that key with the committee public key | Necessary public fields and submission timing remain visible |
+| Promise | Persist a node's promise before returning its signature; collect signatures from distinct members | An obligation does not itself determine queue position |
+| Registration | Confirm the required lists and append their eligible union | Within-round order remains a deterministic placeholder |
+| Lock and decrypt | Fix the service prefix before publishing and verifying enough shares | Depends on consensus and threshold assumptions; no second user reveal is needed |
+| Process and audit | Check the order and market state; record outcomes and signed contradictions | Evidence does not automatically impose penalties, compensate users, or restore inclusion |
 
-## Run the local protocol
+Within-round comparison currently uses `owner → nonce → ciphertext ID`. This closes the execution pipeline; **it is not first-come-first-served fairness**. Neither Condorcet nor median ordering is implemented.
 
-Prerequisites: Go >=1.23 and a working C compiler for the cryptographic dependency. The first build downloads Go modules. Run from the repository root:
+## Quick start: no model account required
+
+Requirements: Go 1.23 or later, a working C compiler, and network access for the initial dependency download. From your terminal:
 
 ```sh
-./scripts/network-demo.sh runs/my-v03-test offline
+git clone https://github.com/LiamTang827/pinomarket.git
+cd pinomarket
+./scripts/network-demo.sh runs/my-first-demo normal
 ```
 
-The script builds the executable, initializes a new network, starts five node processes, stops the fifth validator, and submits three purchases. The remaining four validators register, lock, decrypt, and process the orders. An auditor checks signed consensus commits, replays committed blocks, verifies threshold openings, and independently recomputes market accounting. The script stops its node processes on exit.
+The script builds the executable, initializes five validators, starts independent processes, submits three orders, and audits consensus commits, block replay, threshold openings, and market accounting. It stops its own processes on exit. Use a new output directory each time.
 
-Use a **new output directory** for every run. Inspect `runs/my-v03-test/audit.json`, the three `*-receipt.json` files, and `node*.log`. The network directory also contains private demo keys; keep it out of Git.
+Start with these files:
 
-Other script modes are `normal`, `omission`, and `withhold`. See the [live protocol guide](docs/LIVE_PROTOCOL.md) or [中文协议与操作说明](docs/LIVE_PROTOCOL.zh-CN.md) for manual node operation and exact fault behavior.
+- `runs/my-first-demo/audit.json`: audit results.
+- `runs/my-first-demo/*-receipt.json`: submission receipts and promises.
+- `runs/my-first-demo/node*.log`: validator logs.
 
-## Validation and limits
+Other modes are `offline`, `omission`, and `withhold`. See the [live protocol guide](docs/LIVE_PROTOCOL.md) for exact behavior and manual commands. Generated network directories contain demo private keys and are excluded by `.gitignore`.
 
-The actual process integration test has passed: a promise signer restarts with the same durable promise; four validators continue with one offline; the returning node catches up without duplicate execution; and a signed omission produces evidence while the order is still processed. Unit tests and `go vet` also pass. These are functional checks, **not a performance benchmark or security proof**.
+## Latest experiment: omission after a promise
 
-Important deployment boundaries:
+On 2026-10-23 we froze the protocol source and executable, then let independent live models choose application actions at different fractions of an eight-node network. Alice broadcast first; Bob independently chose his order. Node agents did not privately exchange strategies, and Bob had no node-control tools. Normal protocol gossip and consensus communication remained enabled.
 
-- The initializer runs real per-party DKG calculations through a local relay, but can access all resulting shares while provisioning. This is not an independently deployed, authenticated distributed DKG ceremony.
-- Processes run on the same machine and under the same OS user. They are separate protocol participants, not separate security domains. APIs bind to loopback.
-- Within-round sorting is a deterministic placeholder, not arrival-time fairness or Condorcet ordering.
-- Evidence is recorded; gas, deposits, economic penalties, and buyer-funds reservation are not implemented.
-- Enough colluding share holders can reveal orders early. Missing consensus quorum or decryption shares can stop progress.
-- No external settlement, production prediction-market infrastructure, established novelty claim, or complete MEV protection is provided.
+Parameters: `n=8, f=2, q=6, t=3`: a two-fault assumption, six admission signatures/list quorum, and three valid decryption shares. This differs from the five-node quick-start configuration.
 
-## Keep the simulation baseline
+| Model-controlled nodes | Alice's valid promises | Alice registered and processed? | Shares purchased | Omission evidence |
+|---|---:|---|---:|---:|
+| 0% | 8 | Yes | 4 | 0 |
+| 25% | 8 | Yes | 4 | 2 |
+| 50% (valid rerun) | 8 | Yes | 4 | 4 |
+| 100% | 8 | No | Not processed | 8 |
+
+In this 25% sample, honest lists and shares still supported processing. In the 100% sample, Alice held eight promises and eight pieces of omission evidence but was not registered. **Evidence and fulfillment must be evaluated separately.**
+
+Interpretation limits:
+
+- The 50% and 100% groups exceed `f=2`. They do not establish tolerance of 50% Byzantine nodes. Models cannot modify consensus votes or secret shares.
+- These are bounded adversarial tests without node economic utility. They do not explain economically motivated dishonesty.
+- Fixed `alice`/`bob` identities put Alice first when both register in the same round. This is not evidence of arrival fairness.
+- Each fraction has one planned online sample. A provider failure required one complete 50% rerun; the original record remains available. These runs do not estimate attack success rates or throughput limits.
+
+[Stage report (中文)](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [Detailed report (中文)](docs/experiments/2026-10-23/base-pair/REPORT.zh-CN.md) · [Method and reproduction (中文)](docs/BASE_PAIR_EXPERIMENT.zh-CN.md) · [Results](docs/experiments/2026-10-23/base-pair/results.json)
+
+## Runtime modes and code map
+
+| Directory or mode | Purpose |
+|---|---|
+| `internal/live/` | Local multiprocess protocol, durable state, node APIs, and audits |
+| `internal/consensus/` | CometBFT integration |
+| `threshold/` | Shutter shlib threshold operations and DKG calculations |
+| `protocol/` | Single-process simulation logic, distinct from the network mode |
+| `harness/` | Python process control, bounded model actions, experiments, and recording |
+| `scripts/` | Build and demo entry points |
+| `docs/experiments/` | Curated reports, data, and validation records |
+
+Network mode uses CometBFT v0.38.26 and Shutter shlib v0.1.19. The default five-node demo uses four admission signatures and three valid decryption shares. The v0.2 single-process simulation retains ideal networking/key custody as a controlled baseline:
 
 ```sh
-./scripts/go.sh test ./...
-./scripts/go.sh run ./cmd/pinocchio run -scenario normal -out runs/sim-normal-01
-./scripts/go.sh run ./cmd/pinocchio run -scenario omission -out runs/sim-omission-01
-./scripts/go.sh run ./cmd/pinocchio audit -file runs/sim-omission-01/report.json
+./scripts/go.sh run ./cmd/pinocchio run -scenario normal -out runs/sim-first
+./scripts/go.sh run ./cmd/pinocchio audit -file runs/sim-first/report.json
 ```
 
-The `run`, `audit`, and `replay` simulation commands are described in the [v0.2 prototype guide](docs/PROTOTYPE.md). They do not start the live network.
+See the [v0.2 guide](docs/PROTOTYPE.md).
 
-## Documentation
-
-### Experimental median ordering and measurements
-
-Use `network init -ordering median-receipts` for signed local admission observations and experimental median-based ordering. Sparse observations explicitly fall back to identity order after qualified items; this is **not a full AOAB implementation or an inherited fairness guarantee**. The default `identity` policy remains available.
+### Tests and optional AI agents
 
 ```sh
-./scripts/ordering-experiment.sh runs/ordering-normal-01 normal 1
+./scripts/go.sh test ./cmd/... ./internal/... ./protocol/... ./threshold/...
+./scripts/go.sh vet ./cmd/... ./internal/... ./protocol/... ./threshold/...
+python3 -m unittest discover -s harness -p 'test_*.py'
 ```
 
-This runs both policies through actual local validator processes, records phase observations and completion counts, and audits the committed chain and market accounting. See the [experiment guide](docs/ORDERING_EXPERIMENTS.zh-CN.md) for faults, repetitions, and measurement limits.
+AI agents choose only permitted application actions; they do not implement cryptography or validate consensus. Basic demos need no AI. Online experiments require a separately configured model connection and consume model allowance. See the [Python harness](docs/PYTHON_HARNESS.zh-CN.md), [agent experiments](docs/AGENT_EXPERIMENT.zh-CN.md), and [optional model connection](docs/CHATGPT_LOGIN.zh-CN.md). Credentials remain in ignored local storage.
 
-- [Live protocol and commands](docs/LIVE_PROTOCOL.md) · [中文版](docs/LIVE_PROTOCOL.zh-CN.md)
-- [Design scope](docs/SCOPE.md) · [Roadmap](ROADMAP.md)
-- [Development report](docs/DEVELOPMENT_REPORT.zh-CN.md)
-- [Go learning and maintenance guide](docs/LEARNING.zh-CN.md)
-- [GitHub beginner guide](docs/GITHUB_GUIDE.zh-CN.md)
-- [v0.3 validation record](docs/validation-v03.json) · [v0.2 validation record](docs/validation-v02.json)
+## Boundaries and next steps
 
-## Related work and dependencies
+- Local processes share an OS user and are not isolated security domains. Provisioning can access all DKG output shares; an independently deployed authenticated DKG ceremony is not implemented.
+- Missing consensus votes or decryption shares can stop progress. Enough colluding share holders can decrypt early.
+- Gas, deposits, automatic slashing, buyer-funds reservation, and external settlement are not implemented.
+- Arrival fairness, economically motivated reordering, and production-load benchmarks remain open.
 
-Existing mechanisms are attributed to their sources; combining them does not establish novelty.
+Next: define node payoffs and checkable obligations, then examine whether self-interested receipt-order claims can affect this protocol. See the [roadmap (中文)](ROADMAP.md).
 
-- [Shutter + Primev public design](https://ethresear.ch/t/threshold-encrypted-mempools-with-mev-commit-preconfirmations/23588) and [primev-sequencer](https://github.com/shutter-network/primev-sequencer): encrypted transactions and inclusion commitments.
-- [Shutter shlib](https://github.com/shutter-network/shutter/tree/main/shlib) and [Rolling Shutter](https://github.com/shutter-network/rolling-shutter): threshold-encryption components and infrastructure.
-- [CometBFT](https://github.com/cometbft/cometbft): the live mode's consensus engine.
-- [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf): ordering, common output, and inclusion guarantees.
-- [PeerReview](https://www.sigops.org/s/conferences/sosp/2007/papers/sosp118-haeberlen.pdf): signed logs and accountability.
-- [ABIDES](https://github.com/abides-sim/abides): market and message-delay simulation.
+## Documentation and attribution
 
-## Naming and compatibility
+- **Understand the project:** [Scope](docs/SCOPE.md) · [Development report (中文)](docs/DEVELOPMENT_REPORT.zh-CN.md)
+- **Read and maintain code:** [Go guide (中文)](docs/LEARNING.zh-CN.md) · [GitHub guide (中文)](docs/GITHUB_GUIDE.zh-CN.md)
+- **History and verification:** [Changelog](CHANGELOG.md) · [Scope correction (中文)](docs/SCOPE_CORRECTION.zh-CN.md) · [v0.3 validation](docs/validation-v03.json)
+- **Prior mechanisms:** [Shutter + Primev's public design](https://ethresear.ch/t/threshold-encrypted-mempools-with-mev-commit-preconfirmations/23588) and [primev-sequencer](https://github.com/shutter-network/primev-sequencer) address encrypted transactions and inclusion commitments. We do not claim those mechanisms themselves as original contributions.
+- **Dependencies:** [Shutter](https://github.com/shutter-network/shutter) supplies threshold components; [CometBFT](https://github.com/cometbft/cometbft) supplies consensus.
+- **Experiment reading:** [AOAB](https://gramoli.github.io/pubs/DSN24_AOAB_preprint.pdf), whose ordering protocol is not adopted here.
 
-The project and GitHub repository are named `pinomarket`. Existing `pinocchio` commands, Python harness filenames and cryptographic domain identifiers are retained for compatibility with saved experiments.
-
-## License
-
-A license for this project's own code has not been selected. Third-party dependencies retain their licenses; see [attribution](THIRD_PARTY.md) and [threshold-component notices](threshold/THIRD_PARTY.md).
-
-## Python harness / 模型接入
-
-`python3 harness/pinocchio_harness.py --binary bin/pinocchio --run-dir runs/model-session-01`
-
-Control local validators, faults, measurements and audits through validated JSONL tools or a Python model adapter. 详见[Python 节点控制与模型接入](docs/PYTHON_HARNESS.zh-CN.md)。
-
-## Direct ChatGPT plan connection (without Codex)
-
-[登录、连接测试及 harness 接入](docs/CHATGPT_LOGIN.zh-CN.md) · `harness/chatgpt_model.py`
+The project is named `pinomarket`. Existing `pinocchio` commands and cryptographic domain identifiers remain for compatibility. A license for the project's own code has not been selected; dependencies retain their licenses. See [third-party attribution](THIRD_PARTY.md).

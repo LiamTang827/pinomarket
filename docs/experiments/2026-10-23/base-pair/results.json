@@ -1,0 +1,3329 @@
+{
+  "schema": 1,
+  "experiment": "base-binary-pair",
+  "protocol_scope": "base-protocol",
+  "metadata": {
+    "schema": 2,
+    "experiment": "base-binary-pair",
+    "protocol_scope": "base-protocol",
+    "n": 8,
+    "f": 2,
+    "q": 6,
+    "t": 3,
+    "fractions": [
+      0,
+      25,
+      50,
+      100
+    ],
+    "seed": 20261023,
+    "mode": "online",
+    "model": "gpt-6.1-sol",
+    "source_sha256": {
+      "internal/live/agent.go": "ac496a0572ce7239f42ac02244a426f2d8aec4dea71fc9a9e2b622ae569f95a0",
+      "internal/live/agent_online_test.go": "a638ee74b485aa60d4c28780f33ebac8eba08e8a74c1e6a80859889d0edc9166",
+      "internal/live/agent_test.go": "f7b4b3f6bebd525b9a73991ef6617d0b0d745e2886ca03b2664edc55de29c9d5",
+      "internal/live/audit.go": "a4ff4ce264a1a5a9f53a81601ee86b2d21189e5f62322df83a66aca3fa449322",
+      "internal/live/bootstrap.go": "76a3e7b3c72e6a687f0d0c59a8cecbe2ea04dc1fd92c79976816eb362dd43e34",
+      "internal/live/cli.go": "5acd1d672a7dcd4e31ea2b8896171e836c353cc7dee107fa3003fb9dac4294d2",
+      "internal/live/machine.go": "1a3c11207528fd8e03d5e963533337175da12c0a7463874caa4bc3bf99b9371f",
+      "internal/live/measure.go": "2a5fef438da6fda006886756e0727af15005c417532cee6207b9c7ddf4520224",
+      "internal/live/measure_test.go": "e9b90e750dee60a162d02093ececbd500e2aa239c784deb0caa2c97a28bfd19a",
+      "internal/live/network_integration_test.go": "70ae80c053356b6504b82a36f5eb4b578982eeee6d9bf2db0169b7aabcbc97f6",
+      "internal/live/node.go": "805176f471d58c07d7af8ebb37003ea3b8d4e9ae0d4fc3f245f35034ff8fd8fe",
+      "internal/live/ordering.go": "5b57aeae1e648bbbd2dc31e7365cfc656342d5aca4de28422c8f0fecca9a3c38",
+      "internal/live/ordering_audit.go": "9646681f8bcfd26c2a4f26ed3d9c1b2f268762fa23747426d4820163058fefff",
+      "internal/live/ordering_test.go": "f9c6d33f403cce2557a7b46e860a6c755fa7af7ca3d25f5f3bf5d09f0c1fa76f",
+      "internal/live/state.go": "97694d70146918d5a9c49ab05ae4f5661ada60a8313585359f84b4f887cc6d8e",
+      "internal/live/state_test.go": "8a4cb1ecf7c2b09aec9b36b709ad8cf47862aec7c3813a5a5c53dc2bc6daecb6",
+      "internal/live/types.go": "53ec35fed202d60c4f27709c309f0f78c44b8ebb193681607f33ce66c524eb90",
+      "internal/consensus/application.go": "c71c9d89ac828e2f8aaae2edbfe7e4c0f67beb0bb1bf1bc516a23421d158ab42",
+      "internal/consensus/application_test.go": "d2f99ff8219f6a2edfb0b0eb703a4099084ef45190b299980bf1253f79c3a101",
+      "internal/consensus/integration_test.go": "43395b90ceaa6557da7534caa622d78da39783e9ef589a472687f35de260bd96",
+      "internal/consensus/network.go": "09831a045c6c952f74b365ea5054fc9e14ef8b0f1be2ea861e89c324fdefac9b",
+      "internal/consensus/network_test.go": "2542fc373c293de6cf5e5c35300ffbd16fd9e11b32ffde73f84455238eea039b",
+      "protocol/crypto.go": "50bb64a55668c74071ee166c6d9b79181ddddf3062bfebe072e4e7b8b21229c3",
+      "protocol/market.go": "4ef12b8cb620a992750ec7b2f6106985aac9c23e50031dfb99941c77f0327fcb",
+      "protocol/market_audit.go": "83e6896b0a82afdd0ec95dba4b982607758353b1c92132e7903325f588272d50",
+      "protocol/market_audit_test.go": "2fd794e2902f0e64ad7279319f4c06ea52104f8371949a70880250aa212c8551",
+      "protocol/protocol_test.go": "b64fb9001d54e76c2d9ac6a836125d9b10e325d8949ee48df26f105504a76d08",
+      "protocol/report_audit.go": "73c9252f08cc9ae072d3a2e8814ca61dcd4788f5fb395c44c52f72a4d135a6cc",
+      "protocol/report_audit_test.go": "d1d7061d6bc9a4f0a259413d60a363be6688d70eeb86d2bb917678bf8c5d6ccd",
+      "protocol/simulator.go": "60cb339da807b194ca29c5612cd9182fd4d9ee8f495dd8cb7f92121d2c2d6646",
+      "protocol/types.go": "ff1690acd87721826271bba254151a6668d3f624aec4c4668dfdfdfec64fc76f",
+      "threshold/dkg.go": "87d8bda251843a12d5f2fadac1682513fefcfe2b6bb06e534b9dde1bfa69c0ba",
+      "threshold/dkg_test.go": "193af4adbd09e67c3441e49aab6f50854daa1fb0b39510810580d1d0c7735fcd",
+      "threshold/threshold.go": "0caab6057dc5f5f69465095841fe6106dfd89a358731fe802c89e640c3a895f4",
+      "threshold/threshold_test.go": "c342c28ff4b825e56ff05b03f8cc2354aa5e1ee3e44f267561a7a9bd3efc34f2",
+      "harness/agent_experiment.py": "c401441c118dbd300f0989a6f9b8c919589f86da11435ab5b3d1e1f7f62636af",
+      "harness/base_pair_experiment.py": "a449455f222ceba36e9a5e2b47f60a45940c8919af6dd618b8faefe1d72d1b0e",
+      "harness/chatgpt_model.py": "b3adf0a2983ae560a59fa14ca708750d4dfca00ea91b6b24bb1791420e999a1e",
+      "harness/online_agents.py": "1513d6cbcc0b9f0fc3db69759dafeae4107eba5bfc53789051b4ab4e30ec388d",
+      "harness/online_experiment.py": "d4d722da5484ab551847b360a6d5b3469b13790a364227c0592dcf04eb2f4be0",
+      "harness/pinocchio_harness.py": "ffb62b98ff64c89891ceef01a84a33b38b6a24b78c3800c485225cead93c66a8",
+      "harness/role_agents.py": "30f50e8e2823c4732d870a7a7b0e5b6f653c97895dee15ef663375576b2292ee",
+      "harness/smoke_harness.py": "8791c6d7b736d1d7c9e772899cf5de84037dec592bab94e46dca3bdb1819eb23",
+      "harness/test_agent_experiment.py": "9dabe29f937a994454bc295aab11d941d08e55554284efbecd6c839093c9b076",
+      "harness/test_base_pair_experiment.py": "7a4e89ad3581a219c51158b3bc4bf28152e7befc226b3bdee43d0cd35a91a63c",
+      "harness/test_chatgpt_model.py": "bedc5b8d5011e2c974b16293451cc57574fb70d4e44e9b2adeeee062fcb2f6a3",
+      "harness/test_harness.py": "2a9ebffea4eda02cdf413e7947deaaf9802e301df7db49ec1ef78a23e15f5c56",
+      "harness/test_online_agents.py": "f6e7886f60f1c34de2d0bbaca06a74c67562bef67a409d2a64230c4f47e78b6a",
+      "harness/test_online_experiment.py": "98d95f22e4503719953263e1e7357eb49e09c4828840abf3915b9373a19014a8",
+      "harness/test_role_agents.py": "f47ec82a0d422c43bb8caad8f2a7b929ba3876b98c78caf28ba1f51c042ec1f7"
+    },
+    "binary_sha256": "5c492af91b21339b67616557e2e38b54a9eb3704d3894043d88c9c542a91d663",
+    "window_blocks": 120,
+    "prepare_blocks": 60,
+    "deadline_s": 125.0,
+    "scope": "Only bounded application-level decisions; consensus votes, keys and protocol rules are unchanged.",
+    "ordering_limit": "Public owner/nonce/ID fixes within-round order if both orders register; this does not test earliest-arrival fairness.",
+    "sample_limit": "One sample per fraction; assigned model proportion is not observed lying proportion."
+  },
+  "runs": [
+    {
+      "kind": "live-independent-model",
+      "fraction": 0,
+      "run": "000-online",
+      "assigned_model_nodes": [],
+      "within_fault_bound": true,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": true,
+      "alice_position": 0,
+      "bob_position": 1,
+      "bob_before_alice": false,
+      "alice_result": {
+        "order": "alice:0",
+        "status": "filled",
+        "filled": 4,
+        "cost_cents": 240
+      },
+      "alice_filled": 4,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 0,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 8088.412708,
+      "actual_alice_lead_ms": 8214.115125,
+      "observation_stop_ms": 78124.438083,
+      "alice_observed": {
+        "registered_observed_ms": 74593.46741699999,
+        "registration_position": 0,
+        "registration_height": 126,
+        "locked_observed_ms": 75189.696875,
+        "lock_height": 127,
+        "shares_ready_observed_ms": 75880.744958,
+        "processed_observed_ms": 76505.02154199999
+      },
+      "submit_errors": [],
+      "assigned_adversarial_nodes": [],
+      "peak_sampled_nodes_rss_kib": 514256,
+      "node_cpu_before_audit_s": 103.25,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 0,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-2",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-3",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-4",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-5",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-6",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-7",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-8",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        }
+      ],
+      "assigned_model_count": 0,
+      "nodes_with_non_normal_choices": [],
+      "non_normal_choice_count": 0,
+      "unexpected_node_exits": [],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": true,
+      "binary_relation": "alice_before_bob",
+      "registered_total": 2,
+      "processed_total": 2,
+      "round_registered": true,
+      "alice_processed": true,
+      "alice_locked": true,
+      "active_share_counts": {},
+      "stop_stage": "alice_processed",
+      "alice_no_result_at_stop": false,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 2,
+        "node-2": 2,
+        "node-3": 2,
+        "node-4": 2,
+        "node-5": 2,
+        "node-6": 2,
+        "node-7": 2,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "attempt_batch": "primary",
+      "source_run": "000-online",
+      "snapshot_available": true,
+      "snapshot_height": 131,
+      "registration_pair": "both",
+      "alice_position_at_snapshot": 0,
+      "bob_position_at_snapshot": 1,
+      "binary_relation_at_snapshot": "alice_before_bob",
+      "registered_ids": [
+        "1e729dc189fa40e8b1d373e8b07f4c98b89d5962446a286f7a9ed68a618322a1",
+        "e7559498248b5bdd3f2eb66c0d83c4ec1aa3a6eb78ddb809621cf9d09c6a3230"
+      ],
+      "processed_order_refs": [
+        "alice:0",
+        "bob:0"
+      ],
+      "executed_prefix_ids": [
+        "1e729dc189fa40e8b1d373e8b07f4c98b89d5962446a286f7a9ed68a618322a1",
+        "e7559498248b5bdd3f2eb66c0d83c4ec1aa3a6eb78ddb809621cf9d09c6a3230"
+      ],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 2,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-6",
+        "node-5",
+        "node-4",
+        "node-7",
+        "node-3",
+        "node-8"
+      ],
+      "evidence_at_snapshot": 0,
+      "evidenced_nodes_at_snapshot": [],
+      "alice_evidenced_nodes_at_snapshot": [],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 131,
+      "evidence_at_later_audit": 0,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 0
+    },
+    {
+      "kind": "live-independent-model",
+      "fraction": 25,
+      "run": "025-online",
+      "assigned_model_nodes": [
+        "node-4",
+        "node-6"
+      ],
+      "within_fault_bound": true,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": true,
+      "alice_position": 0,
+      "bob_position": 1,
+      "bob_before_alice": false,
+      "alice_result": {
+        "order": "alice:0",
+        "status": "filled",
+        "filled": 4,
+        "cost_cents": 240
+      },
+      "alice_filled": 4,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 2,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 28025.486875000013,
+      "actual_alice_lead_ms": 28152.565584000004,
+      "observation_stop_ms": 78734.292625,
+      "alice_observed": {
+        "registered_observed_ms": 75112.696834,
+        "registration_position": 0,
+        "registration_height": 126,
+        "locked_observed_ms": 75782.980667,
+        "lock_height": 127,
+        "shares_ready_observed_ms": 76541.587084,
+        "processed_observed_ms": 77169.39287499999
+      },
+      "submit_errors": [
+        {
+          "tag": "bob-0",
+          "node": "node-6",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-4",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        }
+      ],
+      "assigned_adversarial_nodes": [
+        "node-4",
+        "node-6"
+      ],
+      "peak_sampled_nodes_rss_kib": 516528,
+      "node_cpu_before_audit_s": 103.39999999999999,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 0,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-2",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-3",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-4",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-5",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-6",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-7",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-8",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        }
+      ],
+      "assigned_model_count": 2,
+      "nodes_with_non_normal_choices": [
+        "node-4",
+        "node-6"
+      ],
+      "non_normal_choice_count": 8,
+      "unexpected_node_exits": [],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [
+        {
+          "tag": "bob-0",
+          "node": "node-6",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-4",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        }
+      ],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": true,
+      "binary_relation": "alice_before_bob",
+      "registered_total": 2,
+      "processed_total": 2,
+      "round_registered": true,
+      "alice_processed": true,
+      "alice_locked": true,
+      "active_share_counts": {},
+      "stop_stage": "alice_processed",
+      "alice_no_result_at_stop": false,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 2,
+        "node-2": 2,
+        "node-3": 2,
+        "node-4": 1,
+        "node-5": 2,
+        "node-6": 1,
+        "node-7": 2,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "attempt_batch": "primary",
+      "source_run": "025-online",
+      "snapshot_available": true,
+      "snapshot_height": 131,
+      "registration_pair": "both",
+      "alice_position_at_snapshot": 0,
+      "bob_position_at_snapshot": 1,
+      "binary_relation_at_snapshot": "alice_before_bob",
+      "registered_ids": [
+        "e085dbcb4133b8b4afe85c81bb81e32b697b525d623c802e5fd22644bf02c6f1",
+        "dbb1dc4d643b01b70c6e6d4f2dd4a66a97290ec81236d53f5bdc4e713666750b"
+      ],
+      "processed_order_refs": [
+        "alice:0",
+        "bob:0"
+      ],
+      "executed_prefix_ids": [
+        "e085dbcb4133b8b4afe85c81bb81e32b697b525d623c802e5fd22644bf02c6f1",
+        "dbb1dc4d643b01b70c6e6d4f2dd4a66a97290ec81236d53f5bdc4e713666750b"
+      ],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 2,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-8",
+        "node-3",
+        "node-7",
+        "node-2",
+        "node-4",
+        "node-6"
+      ],
+      "evidence_at_snapshot": 2,
+      "evidenced_nodes_at_snapshot": [
+        "node-4",
+        "node-6"
+      ],
+      "alice_evidenced_nodes_at_snapshot": [
+        "node-4",
+        "node-6"
+      ],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 131,
+      "evidence_at_later_audit": 2,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 2
+    },
+    {
+      "kind": "honest-wait-control",
+      "fraction": 25,
+      "run": "025-online-wait-control",
+      "assigned_model_nodes": [],
+      "within_fault_bound": true,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": true,
+      "alice_position": 0,
+      "bob_position": 1,
+      "bob_before_alice": false,
+      "alice_result": {
+        "order": "alice:0",
+        "status": "filled",
+        "filled": 4,
+        "cost_cents": 240
+      },
+      "alice_filled": 4,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 0,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 28028.626125000017,
+      "actual_alice_lead_ms": 28178.546834000004,
+      "observation_stop_ms": 78645.10395900001,
+      "alice_observed": {
+        "registered_observed_ms": 75234.46866699996,
+        "registration_position": 0,
+        "registration_height": 126,
+        "locked_observed_ms": 75890.26775,
+        "lock_height": 127,
+        "shares_ready_observed_ms": 76567.44591700002,
+        "processed_observed_ms": 77071.530125
+      },
+      "submit_errors": [],
+      "assigned_adversarial_nodes": [],
+      "peak_sampled_nodes_rss_kib": 511712,
+      "node_cpu_before_audit_s": 98.26999999999998,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 0,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-2",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-3",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-4",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-5",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-6",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-7",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-8",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        }
+      ],
+      "assigned_model_count": 0,
+      "nodes_with_non_normal_choices": [],
+      "non_normal_choice_count": 0,
+      "unexpected_node_exits": [],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": true,
+      "binary_relation": "alice_before_bob",
+      "registered_total": 2,
+      "processed_total": 2,
+      "round_registered": true,
+      "alice_processed": true,
+      "alice_locked": true,
+      "active_share_counts": {},
+      "stop_stage": "alice_processed",
+      "alice_no_result_at_stop": false,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 2,
+        "node-2": 2,
+        "node-3": 2,
+        "node-4": 2,
+        "node-5": 2,
+        "node-6": 2,
+        "node-7": 2,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "paired_with": "025-online",
+      "matched_wait_nodes": [
+        "node-4",
+        "node-6"
+      ],
+      "valid_strategy_comparison": true,
+      "attempt_batch": "primary",
+      "source_run": "025-online-wait-control",
+      "snapshot_available": true,
+      "snapshot_height": 131,
+      "registration_pair": "both",
+      "alice_position_at_snapshot": 0,
+      "bob_position_at_snapshot": 1,
+      "binary_relation_at_snapshot": "alice_before_bob",
+      "registered_ids": [
+        "84d89c705b8a4da2a147f9d089025c6a6512e97c445f22666e38dda785fe59da",
+        "3dcb7e038768f01f4953ca54716a4b46d2289461aee732478042f068953b399a"
+      ],
+      "processed_order_refs": [
+        "alice:0",
+        "bob:0"
+      ],
+      "executed_prefix_ids": [
+        "84d89c705b8a4da2a147f9d089025c6a6512e97c445f22666e38dda785fe59da",
+        "3dcb7e038768f01f4953ca54716a4b46d2289461aee732478042f068953b399a"
+      ],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 2,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-3",
+        "node-2",
+        "node-5",
+        "node-7",
+        "node-8",
+        "node-6"
+      ],
+      "evidence_at_snapshot": 0,
+      "evidenced_nodes_at_snapshot": [],
+      "alice_evidenced_nodes_at_snapshot": [],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 131,
+      "evidence_at_later_audit": 0,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 0
+    },
+    {
+      "kind": "live-independent-model",
+      "fraction": 50,
+      "run": "050-online",
+      "assigned_model_nodes": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "within_fault_bound": false,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": true,
+      "alice_position": 0,
+      "bob_position": 1,
+      "bob_before_alice": false,
+      "alice_result": {
+        "order": "alice:0",
+        "status": "filled",
+        "filled": 4,
+        "cost_cents": 240
+      },
+      "alice_filled": 4,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 4,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 6270.593166000026,
+      "actual_alice_lead_ms": 6396.6557919999905,
+      "observation_stop_ms": 79129.52116600002,
+      "alice_observed": {
+        "registered_observed_ms": 75748.71074999998,
+        "registration_position": 0,
+        "registration_height": 126,
+        "locked_observed_ms": 76409.83695799997,
+        "lock_height": 127,
+        "shares_ready_observed_ms": 76925.731708,
+        "processed_observed_ms": 77608.604791
+      },
+      "submit_errors": [
+        {
+          "tag": "bob-0",
+          "node": "node-6",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-1",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-4",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        }
+      ],
+      "assigned_adversarial_nodes": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "peak_sampled_nodes_rss_kib": 521488,
+      "node_cpu_before_audit_s": 96.88,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 1,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-2",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-3",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-4",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-5",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-6",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-7",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 2,
+          "non_normal_decision_fraction": 0.6666666666666666,
+          "actions": {
+            "admission:delay": 1,
+            "admission:normal": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 1
+        },
+        {
+          "actor": "node-8",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        }
+      ],
+      "assigned_model_count": 4,
+      "nodes_with_non_normal_choices": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "non_normal_choice_count": 14,
+      "unexpected_node_exits": [
+        6
+      ],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [
+        {
+          "tag": "bob-0",
+          "node": "node-6",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-1",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-4",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        }
+      ],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": false,
+      "binary_relation": "alice_before_bob",
+      "registered_total": 2,
+      "processed_total": 2,
+      "round_registered": true,
+      "alice_processed": true,
+      "alice_locked": true,
+      "active_share_counts": {},
+      "stop_stage": "alice_processed",
+      "alice_no_result_at_stop": false,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 1,
+        "node-2": 2,
+        "node-3": 2,
+        "node-4": 1,
+        "node-5": 2,
+        "node-6": 1,
+        "node-7": 2,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "attempt_batch": "primary",
+      "source_run": "050-online",
+      "snapshot_available": true,
+      "snapshot_height": 131,
+      "registration_pair": "both",
+      "alice_position_at_snapshot": 0,
+      "bob_position_at_snapshot": 1,
+      "binary_relation_at_snapshot": "alice_before_bob",
+      "registered_ids": [
+        "5a3961ad9a060ed7f64158d4743793cf4b81db1aa68597bd9cfebffd9c98dfec",
+        "104729be994e8503ef4bf0be1ef04832a2274db6ec413c0a5cc9426305fa2917"
+      ],
+      "processed_order_refs": [
+        "alice:0",
+        "bob:0"
+      ],
+      "executed_prefix_ids": [
+        "5a3961ad9a060ed7f64158d4743793cf4b81db1aa68597bd9cfebffd9c98dfec",
+        "104729be994e8503ef4bf0be1ef04832a2274db6ec413c0a5cc9426305fa2917"
+      ],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 2,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-4",
+        "node-6",
+        "node-7",
+        "node-5",
+        "node-2",
+        "node-1"
+      ],
+      "evidence_at_snapshot": 4,
+      "evidenced_nodes_at_snapshot": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "alice_evidenced_nodes_at_snapshot": [
+        "node-1",
+        "node-4",
+        "node-6"
+      ],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 131,
+      "evidence_at_later_audit": 4,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 4
+    },
+    {
+      "kind": "honest-wait-control",
+      "fraction": 50,
+      "run": "050-online-wait-control",
+      "assigned_model_nodes": [],
+      "within_fault_bound": false,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": true,
+      "alice_position": 0,
+      "bob_position": 1,
+      "bob_before_alice": false,
+      "alice_result": {
+        "order": "alice:0",
+        "status": "filled",
+        "filled": 4,
+        "cost_cents": 240
+      },
+      "alice_filled": 4,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 0,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 6271.011583000018,
+      "actual_alice_lead_ms": 6396.5770840000005,
+      "observation_stop_ms": 77646.12004199995,
+      "alice_observed": {
+        "registered_observed_ms": 74295.23766699998,
+        "registration_position": 0,
+        "registration_height": 127,
+        "locked_observed_ms": 74875.54970799999,
+        "lock_height": 128,
+        "shares_ready_observed_ms": 75463.03420799995,
+        "processed_observed_ms": 76092.75333299996
+      },
+      "submit_errors": [],
+      "assigned_adversarial_nodes": [],
+      "peak_sampled_nodes_rss_kib": 523568,
+      "node_cpu_before_audit_s": 104.73,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 0,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-2",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-3",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-4",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-5",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-6",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-7",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        },
+        {
+          "actor": "node-8",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        }
+      ],
+      "assigned_model_count": 0,
+      "nodes_with_non_normal_choices": [],
+      "non_normal_choice_count": 0,
+      "unexpected_node_exits": [],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": true,
+      "binary_relation": "alice_before_bob",
+      "registered_total": 2,
+      "processed_total": 2,
+      "round_registered": true,
+      "alice_processed": true,
+      "alice_locked": true,
+      "active_share_counts": {},
+      "stop_stage": "alice_processed",
+      "alice_no_result_at_stop": false,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 2,
+        "node-2": 2,
+        "node-3": 2,
+        "node-4": 2,
+        "node-5": 2,
+        "node-6": 2,
+        "node-7": 2,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "paired_with": "050-online",
+      "matched_wait_nodes": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "valid_strategy_comparison": false,
+      "attempt_batch": "primary",
+      "source_run": "050-online-wait-control",
+      "snapshot_available": true,
+      "snapshot_height": 132,
+      "registration_pair": "both",
+      "alice_position_at_snapshot": 0,
+      "bob_position_at_snapshot": 1,
+      "binary_relation_at_snapshot": "alice_before_bob",
+      "registered_ids": [
+        "c60da0a211e3253e39a3f066c40364f666ee71cc6993fcfd424f374edacbb4f8",
+        "9ee7824bb06367b594d0bebb49abeaf500efc2182b2f63165f885333951b78aa"
+      ],
+      "processed_order_refs": [
+        "alice:0",
+        "bob:0"
+      ],
+      "executed_prefix_ids": [
+        "c60da0a211e3253e39a3f066c40364f666ee71cc6993fcfd424f374edacbb4f8",
+        "9ee7824bb06367b594d0bebb49abeaf500efc2182b2f63165f885333951b78aa"
+      ],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 2,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-7",
+        "node-5",
+        "node-1",
+        "node-4",
+        "node-8",
+        "node-3"
+      ],
+      "evidence_at_snapshot": 0,
+      "evidenced_nodes_at_snapshot": [],
+      "alice_evidenced_nodes_at_snapshot": [],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 132,
+      "evidence_at_later_audit": 0,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 0
+    },
+    {
+      "kind": "live-independent-model",
+      "fraction": 100,
+      "run": "100-online",
+      "assigned_model_nodes": [
+        "node-1",
+        "node-2",
+        "node-3",
+        "node-4",
+        "node-5",
+        "node-6",
+        "node-7",
+        "node-8"
+      ],
+      "within_fault_bound": false,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": false,
+      "alice_position": null,
+      "bob_position": null,
+      "bob_before_alice": null,
+      "alice_result": null,
+      "alice_filled": null,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 8,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 7176.047291000032,
+      "actual_alice_lead_ms": 7313.124291000008,
+      "observation_stop_ms": 76306.205708,
+      "alice_observed": {},
+      "submit_errors": [
+        {
+          "tag": "bob-0",
+          "node": "node-7",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-4",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-2",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-1",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-3",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-5",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-6",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        }
+      ],
+      "assigned_adversarial_nodes": [
+        "node-1",
+        "node-2",
+        "node-3",
+        "node-4",
+        "node-5",
+        "node-6",
+        "node-7",
+        "node-8"
+      ],
+      "peak_sampled_nodes_rss_kib": 513200,
+      "node_cpu_before_audit_s": 92.24,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 0,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "mode": "online-model",
+          "requests": 3,
+          "model_calls": 3,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 3,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-2",
+          "mode": "online-model",
+          "requests": 3,
+          "model_calls": 3,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 3,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-3",
+          "mode": "online-model",
+          "requests": 3,
+          "model_calls": 3,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 3,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-4",
+          "mode": "online-model",
+          "requests": 3,
+          "model_calls": 3,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 3,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-5",
+          "mode": "online-model",
+          "requests": 3,
+          "model_calls": 3,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 3,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-6",
+          "mode": "online-model",
+          "requests": 3,
+          "model_calls": 3,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 3,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-7",
+          "mode": "online-model",
+          "requests": 3,
+          "model_calls": 3,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 3,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-8",
+          "mode": "online-model",
+          "requests": 3,
+          "model_calls": 3,
+          "max_model_calls": 6,
+          "unique_decisions": 3,
+          "non_normal_decisions": 2,
+          "non_normal_decision_fraction": 0.6666666666666666,
+          "actions": {
+            "admission:delay": 1,
+            "admission:normal": 1,
+            "seal:select": 1
+          },
+          "failed_decisions": 0
+        }
+      ],
+      "assigned_model_count": 8,
+      "nodes_with_non_normal_choices": [
+        "node-1",
+        "node-2",
+        "node-3",
+        "node-4",
+        "node-5",
+        "node-6",
+        "node-7",
+        "node-8"
+      ],
+      "non_normal_choice_count": 23,
+      "unexpected_node_exits": [],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [
+        {
+          "tag": "bob-0",
+          "node": "node-7",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-4",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-2",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-1",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-3",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-5",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-6",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        }
+      ],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": true,
+      "binary_relation": null,
+      "registered_total": 0,
+      "processed_total": 0,
+      "round_registered": true,
+      "alice_processed": false,
+      "alice_locked": false,
+      "active_share_counts": {},
+      "stop_stage": "round_registered_alice_absent",
+      "alice_no_result_at_stop": true,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 1,
+        "node-2": 1,
+        "node-3": 1,
+        "node-4": 1,
+        "node-5": 1,
+        "node-6": 1,
+        "node-7": 1,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "attempt_batch": "primary",
+      "source_run": "100-online",
+      "snapshot_available": true,
+      "snapshot_height": 128,
+      "registration_pair": "neither",
+      "alice_position_at_snapshot": null,
+      "bob_position_at_snapshot": null,
+      "binary_relation_at_snapshot": null,
+      "registered_ids": [],
+      "processed_order_refs": [],
+      "executed_prefix_ids": [],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 0,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-2",
+        "node-3",
+        "node-5",
+        "node-6",
+        "node-1",
+        "node-7"
+      ],
+      "evidence_at_snapshot": 8,
+      "evidenced_nodes_at_snapshot": [
+        "node-1",
+        "node-2",
+        "node-3",
+        "node-4",
+        "node-5",
+        "node-6",
+        "node-7",
+        "node-8"
+      ],
+      "alice_evidenced_nodes_at_snapshot": [
+        "node-1",
+        "node-2",
+        "node-3",
+        "node-4",
+        "node-5",
+        "node-6",
+        "node-7",
+        "node-8"
+      ],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 129,
+      "evidence_at_later_audit": 8,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 8
+    },
+    {
+      "kind": "honest-wait-control",
+      "fraction": 100,
+      "run": "100-online-wait-control",
+      "assigned_model_nodes": [],
+      "within_fault_bound": false,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": true,
+      "alice_position": 0,
+      "bob_position": 1,
+      "bob_before_alice": false,
+      "alice_result": {
+        "order": "alice:0",
+        "status": "filled",
+        "filled": 4,
+        "cost_cents": 240
+      },
+      "alice_filled": 4,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 0,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 7184.35108299991,
+      "actual_alice_lead_ms": 7324.2314169999645,
+      "observation_stop_ms": 81488.42358399997,
+      "alice_observed": {
+        "registered_observed_ms": 75995.183709,
+        "registration_position": 0,
+        "registration_height": 126,
+        "locked_observed_ms": 76592.361084,
+        "lock_height": 127,
+        "shares_ready_observed_ms": 77898.02774999998,
+        "processed_observed_ms": 79877.77674999995
+      },
+      "submit_errors": [],
+      "assigned_adversarial_nodes": [],
+      "peak_sampled_nodes_rss_kib": 514160,
+      "node_cpu_before_audit_s": 105.08000000000001,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 0,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        },
+        {
+          "actor": "node-2",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        },
+        {
+          "actor": "node-3",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        },
+        {
+          "actor": "node-4",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        },
+        {
+          "actor": "node-5",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        },
+        {
+          "actor": "node-6",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        },
+        {
+          "actor": "node-7",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        },
+        {
+          "actor": "node-8",
+          "backend": "latency-matched-honest",
+          "requests": 4,
+          "unmatched": 1
+        }
+      ],
+      "assigned_model_count": 0,
+      "nodes_with_non_normal_choices": [],
+      "non_normal_choice_count": 0,
+      "unexpected_node_exits": [],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": true,
+      "binary_relation": "alice_before_bob",
+      "registered_total": 2,
+      "processed_total": 2,
+      "round_registered": true,
+      "alice_processed": true,
+      "alice_locked": true,
+      "active_share_counts": {},
+      "stop_stage": "alice_processed",
+      "alice_no_result_at_stop": false,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 2,
+        "node-2": 2,
+        "node-3": 2,
+        "node-4": 2,
+        "node-5": 2,
+        "node-6": 2,
+        "node-7": 2,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "paired_with": "100-online",
+      "matched_wait_nodes": [
+        "node-1",
+        "node-2",
+        "node-3",
+        "node-4",
+        "node-5",
+        "node-6",
+        "node-7",
+        "node-8"
+      ],
+      "valid_strategy_comparison": true,
+      "attempt_batch": "primary",
+      "source_run": "100-online-wait-control",
+      "snapshot_available": true,
+      "snapshot_height": 134,
+      "registration_pair": "both",
+      "alice_position_at_snapshot": 0,
+      "bob_position_at_snapshot": 1,
+      "binary_relation_at_snapshot": "alice_before_bob",
+      "registered_ids": [
+        "cbb31280e3a8c3a08aa8d92bfd703e7a408e6fc8d318471b1d6f9a94535d57d4",
+        "cbecad8679d063495541133d660d5e48160e36c8b80cf604689add39ffe723d2"
+      ],
+      "processed_order_refs": [
+        "alice:0",
+        "bob:0"
+      ],
+      "executed_prefix_ids": [
+        "cbb31280e3a8c3a08aa8d92bfd703e7a408e6fc8d318471b1d6f9a94535d57d4",
+        "cbecad8679d063495541133d660d5e48160e36c8b80cf604689add39ffe723d2"
+      ],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 2,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-7",
+        "node-4",
+        "node-6",
+        "node-1",
+        "node-3",
+        "node-2"
+      ],
+      "evidence_at_snapshot": 0,
+      "evidenced_nodes_at_snapshot": [],
+      "alice_evidenced_nodes_at_snapshot": [],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 134,
+      "evidence_at_later_audit": 0,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 0
+    },
+    {
+      "kind": "live-independent-model",
+      "fraction": 50,
+      "run": "retry50/050-online",
+      "assigned_model_nodes": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "within_fault_bound": false,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": true,
+      "alice_position": 0,
+      "bob_position": 1,
+      "bob_before_alice": false,
+      "alice_result": {
+        "order": "alice:0",
+        "status": "filled",
+        "filled": 4,
+        "cost_cents": 240
+      },
+      "alice_filled": 4,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": true,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": false,
+          "bob_in_committed_list": false
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 4,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 11887.512915999998,
+      "actual_alice_lead_ms": 12026.458249999998,
+      "observation_stop_ms": 79257.77404199999,
+      "alice_observed": {
+        "registered_observed_ms": 75428.538708,
+        "registration_position": 0,
+        "registration_height": 127,
+        "locked_observed_ms": 76006.41283300001,
+        "lock_height": 128,
+        "shares_ready_observed_ms": 76914.20941699999,
+        "processed_observed_ms": 77669.91595799998
+      },
+      "submit_errors": [
+        {
+          "tag": "bob-0",
+          "node": "node-7",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-6",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-4",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-1",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        }
+      ],
+      "assigned_adversarial_nodes": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "peak_sampled_nodes_rss_kib": 515584,
+      "node_cpu_before_audit_s": 96.45999999999998,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 0,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-2",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-3",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-4",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-5",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-6",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-7",
+          "mode": "online-model",
+          "requests": 4,
+          "model_calls": 4,
+          "max_model_calls": 6,
+          "unique_decisions": 4,
+          "non_normal_decisions": 4,
+          "non_normal_decision_fraction": 1.0,
+          "actions": {
+            "admission:delay": 1,
+            "admission:refuse": 1,
+            "seal:select": 1,
+            "shares:withhold": 1
+          },
+          "failed_decisions": 0
+        },
+        {
+          "actor": "node-8",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        }
+      ],
+      "assigned_model_count": 4,
+      "nodes_with_non_normal_choices": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "non_normal_choice_count": 16,
+      "unexpected_node_exits": [],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [
+        {
+          "tag": "bob-0",
+          "node": "node-7",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-6",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-4",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        },
+        {
+          "tag": "bob-0",
+          "node": "node-1",
+          "error": "{\"error\":\"agent refused admission\"}\n"
+        }
+      ],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": true,
+      "binary_relation": "alice_before_bob",
+      "registered_total": 2,
+      "processed_total": 2,
+      "round_registered": true,
+      "alice_processed": true,
+      "alice_locked": true,
+      "active_share_counts": {},
+      "stop_stage": "alice_processed",
+      "alice_no_result_at_stop": false,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 1,
+        "node-2": 2,
+        "node-3": 2,
+        "node-4": 1,
+        "node-5": 2,
+        "node-6": 1,
+        "node-7": 1,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "attempt_batch": "retry50",
+      "source_run": "050-online",
+      "rerun_reason": "One bounded complete rerun of fraction50 after a provider failure; the original attempted row is retained.",
+      "snapshot_available": true,
+      "snapshot_height": 132,
+      "registration_pair": "both",
+      "alice_position_at_snapshot": 0,
+      "bob_position_at_snapshot": 1,
+      "binary_relation_at_snapshot": "alice_before_bob",
+      "registered_ids": [
+        "58300c035d874b100d3f8d18526fa58b21f8319d6a7d1dde755ff28f30f76c79",
+        "7f6a8d71ff995d7f60d7503542719536d7b7f2d4da29e5ff213adbe7d943d367"
+      ],
+      "processed_order_refs": [
+        "alice:0",
+        "bob:0"
+      ],
+      "executed_prefix_ids": [
+        "58300c035d874b100d3f8d18526fa58b21f8319d6a7d1dde755ff28f30f76c79",
+        "7f6a8d71ff995d7f60d7503542719536d7b7f2d4da29e5ff213adbe7d943d367"
+      ],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 2,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-3",
+        "node-7",
+        "node-5",
+        "node-8",
+        "node-1",
+        "node-4"
+      ],
+      "evidence_at_snapshot": 4,
+      "evidenced_nodes_at_snapshot": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "alice_evidenced_nodes_at_snapshot": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 132,
+      "evidence_at_later_audit": 4,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 4
+    },
+    {
+      "kind": "honest-wait-control",
+      "fraction": 50,
+      "run": "retry50/050-online-wait-control",
+      "assigned_model_nodes": [],
+      "within_fault_bound": false,
+      "protocol_scope": "base-protocol",
+      "alice_promises": 8,
+      "alice_receipt_verified": true,
+      "alice_quorum": true,
+      "alice_registered": true,
+      "alice_position": 0,
+      "bob_position": 1,
+      "bob_before_alice": false,
+      "alice_result": {
+        "order": "alice:0",
+        "status": "filled",
+        "filled": 4,
+        "cost_cents": 240
+      },
+      "alice_filled": 4,
+      "ordering": "identity-placeholder",
+      "node_list_effects": [
+        {
+          "node": "node-1",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-2",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-3",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-4",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-5",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-6",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-7",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": true,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        },
+        {
+          "node": "node-8",
+          "assigned_adversarial": false,
+          "committed_list": true,
+          "selected": false,
+          "alice_in_committed_list": true,
+          "bob_in_committed_list": true
+        }
+      ],
+      "evidence_count": 0,
+      "audit_verified": true,
+      "bob_plan": {
+        "quantity": 10,
+        "release_delay_ms": 0
+      },
+      "bob_model_elapsed_ms": 11888.13850000001,
+      "actual_alice_lead_ms": 12011.651083999992,
+      "observation_stop_ms": 78217.294625,
+      "alice_observed": {
+        "registered_observed_ms": 74707.889,
+        "registration_position": 0,
+        "registration_height": 125,
+        "locked_observed_ms": 75335.167334,
+        "lock_height": 126,
+        "shares_ready_observed_ms": 76004.65787499999,
+        "processed_observed_ms": 76617.27858399999
+      },
+      "submit_errors": [],
+      "assigned_adversarial_nodes": [],
+      "peak_sampled_nodes_rss_kib": 509952,
+      "node_cpu_before_audit_s": 98.01,
+      "http_request_bytes_only": 18768,
+      "model_or_action_failures": 0,
+      "node_agents": [
+        {
+          "actor": "node-1",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-2",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-3",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-4",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-5",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        },
+        {
+          "actor": "node-6",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-7",
+          "backend": "latency-matched-honest",
+          "requests": 3,
+          "unmatched": 0
+        },
+        {
+          "actor": "node-8",
+          "plan": {
+            "admission": "normal",
+            "delay_ms": 0,
+            "seal": "normal",
+            "shares": "normal",
+            "target_owner": "*"
+          },
+          "requests": 4,
+          "unique_decisions": 4,
+          "non_normal_decisions": 0,
+          "non_normal_decision_fraction": 0.0,
+          "actions": {
+            "admission:normal": 2,
+            "seal:normal": 1,
+            "shares:normal": 1
+          }
+        }
+      ],
+      "assigned_model_count": 0,
+      "nodes_with_non_normal_choices": [],
+      "non_normal_choice_count": 0,
+      "unexpected_node_exits": [],
+      "state_fallbacks": 0,
+      "expected_agent_refusals": [],
+      "protocol_rejections": [],
+      "other_submit_failures": [],
+      "experiment_execution_valid": true,
+      "binary_relation": "alice_before_bob",
+      "registered_total": 2,
+      "processed_total": 2,
+      "round_registered": true,
+      "alice_processed": true,
+      "alice_locked": true,
+      "active_share_counts": {},
+      "stop_stage": "alice_processed",
+      "alice_no_result_at_stop": false,
+      "configured_deadline_ms": 125000.0,
+      "returned_promises_by_node": {
+        "node-1": 2,
+        "node-2": 2,
+        "node-3": 2,
+        "node-4": 2,
+        "node-5": 2,
+        "node-6": 2,
+        "node-7": 2,
+        "node-8": 2
+      },
+      "observation_reached_deadline": false,
+      "paired_with": "retry50/050-online",
+      "matched_wait_nodes": [
+        "node-1",
+        "node-4",
+        "node-6",
+        "node-7"
+      ],
+      "valid_strategy_comparison": true,
+      "attempt_batch": "retry50",
+      "source_run": "050-online-wait-control",
+      "rerun_reason": "One bounded complete rerun of fraction50 after a provider failure; the original attempted row is retained.",
+      "snapshot_available": true,
+      "snapshot_height": 130,
+      "registration_pair": "both",
+      "alice_position_at_snapshot": 0,
+      "bob_position_at_snapshot": 1,
+      "binary_relation_at_snapshot": "alice_before_bob",
+      "registered_ids": [
+        "5b9ccb6f79736a0d0b695a59a57f0328d8faed9708423b441d5dfcdd55d748c3",
+        "fec0a53204c1ab032410c679ffe9f826dd9bc294b0dc0bb664b7535077c35f85"
+      ],
+      "processed_order_refs": [
+        "alice:0",
+        "bob:0"
+      ],
+      "executed_prefix_ids": [
+        "5b9ccb6f79736a0d0b695a59a57f0328d8faed9708423b441d5dfcdd55d748c3",
+        "fec0a53204c1ab032410c679ffe9f826dd9bc294b0dc0bb664b7535077c35f85"
+      ],
+      "executed_prefix_matches_registration": true,
+      "results_match_completed_services": true,
+      "pending_queue_matches_registration": true,
+      "active_lock_matches_queue_prefix": true,
+      "execution_checked_orders": 2,
+      "execution_matches_registered_prefix": true,
+      "selected_nodes": [
+        "node-3",
+        "node-1",
+        "node-7",
+        "node-4",
+        "node-2",
+        "node-6"
+      ],
+      "evidence_at_snapshot": 0,
+      "evidenced_nodes_at_snapshot": [],
+      "alice_evidenced_nodes_at_snapshot": [],
+      "active_share_counts_at_snapshot": {},
+      "receipt_reverification": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_height": 131,
+      "evidence_at_later_audit": 0,
+      "audit_status": "real commit, block replay, threshold openings and independent accounting verified",
+      "audit_status_verified": true,
+      "evidence_snapshot_and_later_audit_match": true,
+      "evidenced_node_count_at_snapshot": 0
+    }
+  ],
+  "provider": {
+    "actual_calls": 69,
+    "completed_calls": 68,
+    "non_completed_calls": 1,
+    "usage": {
+      "input_tokens": 65414,
+      "output_tokens": 4235,
+      "total_tokens": 69649
+    },
+    "summed_elapsed_ms": 507981.7156189997,
+    "timing_note": "Summed parallel provider call durations are not experiment wall time."
+  },
+  "raw_path": "runs/base-pair-ai-20261023",
+  "additional_raw_path": "runs/base-pair-ai-20261023-retry50",
+  "additional_attempt_metadata": {
+    "retry50": {
+      "schema": 2,
+      "experiment": "base-binary-pair",
+      "protocol_scope": "base-protocol",
+      "n": 8,
+      "f": 2,
+      "q": 6,
+      "t": 3,
+      "fractions": [
+        50
+      ],
+      "seed": 20261023,
+      "mode": "online",
+      "model": "gpt-6.1-sol",
+      "source_sha256": {
+        "internal/live/agent.go": "ac496a0572ce7239f42ac02244a426f2d8aec4dea71fc9a9e2b622ae569f95a0",
+        "internal/live/agent_online_test.go": "a638ee74b485aa60d4c28780f33ebac8eba08e8a74c1e6a80859889d0edc9166",
+        "internal/live/agent_test.go": "f7b4b3f6bebd525b9a73991ef6617d0b0d745e2886ca03b2664edc55de29c9d5",
+        "internal/live/audit.go": "a4ff4ce264a1a5a9f53a81601ee86b2d21189e5f62322df83a66aca3fa449322",
+        "internal/live/bootstrap.go": "76a3e7b3c72e6a687f0d0c59a8cecbe2ea04dc1fd92c79976816eb362dd43e34",
+        "internal/live/cli.go": "5acd1d672a7dcd4e31ea2b8896171e836c353cc7dee107fa3003fb9dac4294d2",
+        "internal/live/machine.go": "1a3c11207528fd8e03d5e963533337175da12c0a7463874caa4bc3bf99b9371f",
+        "internal/live/measure.go": "2a5fef438da6fda006886756e0727af15005c417532cee6207b9c7ddf4520224",
+        "internal/live/measure_test.go": "e9b90e750dee60a162d02093ececbd500e2aa239c784deb0caa2c97a28bfd19a",
+        "internal/live/network_integration_test.go": "70ae80c053356b6504b82a36f5eb4b578982eeee6d9bf2db0169b7aabcbc97f6",
+        "internal/live/node.go": "805176f471d58c07d7af8ebb37003ea3b8d4e9ae0d4fc3f245f35034ff8fd8fe",
+        "internal/live/ordering.go": "5b57aeae1e648bbbd2dc31e7365cfc656342d5aca4de28422c8f0fecca9a3c38",
+        "internal/live/ordering_audit.go": "9646681f8bcfd26c2a4f26ed3d9c1b2f268762fa23747426d4820163058fefff",
+        "internal/live/ordering_test.go": "f9c6d33f403cce2557a7b46e860a6c755fa7af7ca3d25f5f3bf5d09f0c1fa76f",
+        "internal/live/state.go": "97694d70146918d5a9c49ab05ae4f5661ada60a8313585359f84b4f887cc6d8e",
+        "internal/live/state_test.go": "8a4cb1ecf7c2b09aec9b36b709ad8cf47862aec7c3813a5a5c53dc2bc6daecb6",
+        "internal/live/types.go": "53ec35fed202d60c4f27709c309f0f78c44b8ebb193681607f33ce66c524eb90",
+        "internal/consensus/application.go": "c71c9d89ac828e2f8aaae2edbfe7e4c0f67beb0bb1bf1bc516a23421d158ab42",
+        "internal/consensus/application_test.go": "d2f99ff8219f6a2edfb0b0eb703a4099084ef45190b299980bf1253f79c3a101",
+        "internal/consensus/integration_test.go": "43395b90ceaa6557da7534caa622d78da39783e9ef589a472687f35de260bd96",
+        "internal/consensus/network.go": "09831a045c6c952f74b365ea5054fc9e14ef8b0f1be2ea861e89c324fdefac9b",
+        "internal/consensus/network_test.go": "2542fc373c293de6cf5e5c35300ffbd16fd9e11b32ffde73f84455238eea039b",
+        "protocol/crypto.go": "50bb64a55668c74071ee166c6d9b79181ddddf3062bfebe072e4e7b8b21229c3",
+        "protocol/market.go": "4ef12b8cb620a992750ec7b2f6106985aac9c23e50031dfb99941c77f0327fcb",
+        "protocol/market_audit.go": "83e6896b0a82afdd0ec95dba4b982607758353b1c92132e7903325f588272d50",
+        "protocol/market_audit_test.go": "2fd794e2902f0e64ad7279319f4c06ea52104f8371949a70880250aa212c8551",
+        "protocol/protocol_test.go": "b64fb9001d54e76c2d9ac6a836125d9b10e325d8949ee48df26f105504a76d08",
+        "protocol/report_audit.go": "73c9252f08cc9ae072d3a2e8814ca61dcd4788f5fb395c44c52f72a4d135a6cc",
+        "protocol/report_audit_test.go": "d1d7061d6bc9a4f0a259413d60a363be6688d70eeb86d2bb917678bf8c5d6ccd",
+        "protocol/simulator.go": "60cb339da807b194ca29c5612cd9182fd4d9ee8f495dd8cb7f92121d2c2d6646",
+        "protocol/types.go": "ff1690acd87721826271bba254151a6668d3f624aec4c4668dfdfdfec64fc76f",
+        "threshold/dkg.go": "87d8bda251843a12d5f2fadac1682513fefcfe2b6bb06e534b9dde1bfa69c0ba",
+        "threshold/dkg_test.go": "193af4adbd09e67c3441e49aab6f50854daa1fb0b39510810580d1d0c7735fcd",
+        "threshold/threshold.go": "0caab6057dc5f5f69465095841fe6106dfd89a358731fe802c89e640c3a895f4",
+        "threshold/threshold_test.go": "c342c28ff4b825e56ff05b03f8cc2354aa5e1ee3e44f267561a7a9bd3efc34f2",
+        "harness/agent_experiment.py": "c401441c118dbd300f0989a6f9b8c919589f86da11435ab5b3d1e1f7f62636af",
+        "harness/base_pair_experiment.py": "a449455f222ceba36e9a5e2b47f60a45940c8919af6dd618b8faefe1d72d1b0e",
+        "harness/chatgpt_model.py": "b3adf0a2983ae560a59fa14ca708750d4dfca00ea91b6b24bb1791420e999a1e",
+        "harness/online_agents.py": "1513d6cbcc0b9f0fc3db69759dafeae4107eba5bfc53789051b4ab4e30ec388d",
+        "harness/online_experiment.py": "d4d722da5484ab551847b360a6d5b3469b13790a364227c0592dcf04eb2f4be0",
+        "harness/pinocchio_harness.py": "ffb62b98ff64c89891ceef01a84a33b38b6a24b78c3800c485225cead93c66a8",
+        "harness/role_agents.py": "30f50e8e2823c4732d870a7a7b0e5b6f653c97895dee15ef663375576b2292ee",
+        "harness/smoke_harness.py": "8791c6d7b736d1d7c9e772899cf5de84037dec592bab94e46dca3bdb1819eb23",
+        "harness/test_agent_experiment.py": "9dabe29f937a994454bc295aab11d941d08e55554284efbecd6c839093c9b076",
+        "harness/test_base_pair_experiment.py": "7a4e89ad3581a219c51158b3bc4bf28152e7befc226b3bdee43d0cd35a91a63c",
+        "harness/test_chatgpt_model.py": "bedc5b8d5011e2c974b16293451cc57574fb70d4e44e9b2adeeee062fcb2f6a3",
+        "harness/test_harness.py": "2a9ebffea4eda02cdf413e7947deaaf9802e301df7db49ec1ef78a23e15f5c56",
+        "harness/test_online_agents.py": "f6e7886f60f1c34de2d0bbaca06a74c67562bef67a409d2a64230c4f47e78b6a",
+        "harness/test_online_experiment.py": "98d95f22e4503719953263e1e7357eb49e09c4828840abf3915b9373a19014a8",
+        "harness/test_role_agents.py": "f47ec82a0d422c43bb8caad8f2a7b929ba3876b98c78caf28ba1f51c042ec1f7"
+      },
+      "binary_sha256": "5c492af91b21339b67616557e2e38b54a9eb3704d3894043d88c9c542a91d663",
+      "window_blocks": 120,
+      "prepare_blocks": 60,
+      "deadline_s": 125.0,
+      "scope": "Only bounded application-level decisions; consensus votes, keys and protocol rules are unchanged.",
+      "ordering_limit": "Public owner/nonce/ID fixes within-round order if both orders register; this does not test earliest-arrival fairness.",
+      "sample_limit": "One sample per fraction; assigned model proportion is not observed lying proportion."
+    }
+  },
+  "interpretation_limits": [
+    "One live sample per assigned fraction, not an attack probability.",
+    "Assigned model capability is separate from actual abnormal choices and signed violation evidence.",
+    "If both orders register in this round, identity ordering fixes Alice before Bob; no arrival-fairness claim.",
+    "Application-level choices only: no modified consensus voting or secret-share collusion.",
+    "Snapshot and later audit heights/evidence counts may differ; neither is silently substituted.",
+    "A stalled or excluded order has no pairwise order; zero executed orders is a vacuous prefix check.",
+    "Independent wait controls do not reproduce exact consensus scheduling."
+  ]
+}

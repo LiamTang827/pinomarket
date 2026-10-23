@@ -1,6 +1,0 @@
-=== RUN   TestLiveNetworkProcessesRestartAndOmission
-    network_integration_test.go:297: one validator offline: {"app_hash":"696801cbc70bdae7a58e802c13378d37bf0ed58724d2e8bee71aed9545015a4d","commit_height":35,"commit_signatures":4,"evidence":0,"height":34,"market":{"cash_cents":{"alice":760,"bob":820,"carol":820,"seller":600},"yes_shares":{"alice":4,"bob":3,"carol":3,"seller":0},"locked_seller_inventory":0,"listing_cancelled":false},"processed":3,"registered":3,"services":2,"status":"real commit, block replay, threshold openings and independent accounting verified"}
-    network_integration_test.go:358: process restarts, two admission rounds and signed omission evidence: {"app_hash":"10ce19a5345eb5362827a81fdb74ddc8bcad39e357bd8f379582228d15f3ecee","commit_height":74,"commit_signatures":4,"evidence":1,"height":73,"market":{"cash_cents":{"alice":760,"bob":820,"carol":820,"seller":600},"yes_shares":{"alice":4,"bob":3,"carol":3,"seller":0},"locked_seller_inventory":0,"listing_cancelled":false},"processed":4,"registered":4,"services":3,"status":"real commit, block replay, threshold openings and independent accounting verified"}
---- PASS: TestLiveNetworkProcessesRestartAndOmission (80.65s)
-PASS
-ok  	github.com/LiamTang827/pinocchio-market/internal/live	81.626s

@@ -1,0 +1,25 @@
+{
+  "scope": "Base-protocol correction functional regression; not a fairness or performance result",
+  "go_all_packages": "passed",
+  "python_tests_passed": 44,
+  "removed_configuration_rejected": true,
+  "sparse_union_not_postponed_regression": "passed",
+  "base_network": {
+    "nodes": 8,
+    "faults": 2,
+    "quorum": 6,
+    "threshold": 3,
+    "scripted_omission_nodes": 2,
+    "alice_promises": 8,
+    "alice_registered": true,
+    "alice_processed": true,
+    "alice_filled": 4,
+    "signed_omission_evidence_count": 4,
+    "audit_verified": true,
+    "ordering": "original deterministic identity placeholder; no arrival fairness guarantee"
+  },
+  "raw": "runs/scope-correction-regression-20261023",
+  "real_model_calls": 0,
+  "binary_sha256": "5c492af91b21339b67616557e2e38b54a9eb3704d3894043d88c9c542a91d663",
+  "withdrawn_reports": "Old ordering-dependent results are not evidence about the base protocol."
+}

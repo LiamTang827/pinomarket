@@ -1,5 +1,37 @@
 # Changelog
 
+## Repository documentation — 2026-10-24
+
+- Reorganize the English and Chinese homepages around the research question, protocol flow, quick start, experiment results, and code map.
+- Separate inclusion, locked order, and fill outcomes; document the limits of current adversarial samples and the lack of economic incentives.
+- Link the presentation report, methods, source data, and prior-mechanism attribution.
+- Run Python harness unit tests alongside Go checks in GitHub Actions.
+
+## Frozen-protocol binary-pair experiment — 2026-10-23
+
+- Add a live-model node-ratio experiment and focused classification tests without changing the protocol or executable.
+- Record inclusion separately from relative order and processing, distinguish model failures from deliberate deviations, and pair runs with honest waiting controls.
+- Preserve the original failed 50% attempt alongside one bounded complete rerun and its control; verify protocol fingerprints and public receipts.
+
+## Scope correction — 2026-10-23
+
+- Remove the unsolicited ordering extension, signed sequence controls and dependent experiment entry points.
+- Restore the base deterministic placeholder; list frequency does not grant or remove ordering eligibility.
+- Withdraw dependent experiment conclusions and preserve their source/data in a local archive. Adapt node agents to admission, list and share decisions only.
+
+
+## Live node-model pilot — 2026-10-23
+
+- Call independent bounded models at actual admission, list-preparation, and service events, with opaque trader labels and per-node histories.
+- Add validated list choices, bounded callback timeouts, and optional asynchronous list preparation; later admissions are included normally.
+- Add an independent live Bob decision, recorded explanations and failures, and matched-wait honest controls. Keep these results separate from precompiled-policy runs.
+
+## Independent role-agent experiments — 2026-10-23
+
+- Add private per-node Unix-socket decisions for admission, complete lists, and decryption shares; preserve the core consensus state machine.
+- Add isolated GPT policy planning and reference agents, bounded Bob strategies, an eight-node experiment matrix, exact receipt verification, protocol audits, and CPU/RSS sampling.
+- Separate model latency from timed execution and label beyond-fault-bound stress cases explicitly.
+
 ## Direct ChatGPT connection verified — 2026-10-23
 
 - Complete real user authorization, protected credential storage and account-specific model discovery.
@@ -31,7 +63,9 @@
 - Support per-node lifecycle and fault restarts, structured measurement/audit results, action logs and owned-process cleanup.
 - Add unit tests, an opt-in real five-node smoke test and a Chinese model integration guide.
 
-## Unreleased — 2026-10-20
+## Withdrawn scope expansion — 2026-10-20
+
+The entries below describe a removed extension, not the current base protocol. Its experiment conclusions are withdrawn.
 
 - Add optional median-receipts reference ordering from signed, durable local admission observations, with explicit sparse-evidence fallback and independent ordering audit.
 - Add network measure and paired local normal/fault experiment orchestration with raw-metric aggregation and incomplete-work accounting.

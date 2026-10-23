@@ -1,0 +1,975 @@
+{
+  "expected_rows": 9,
+  "recorded_rows": 9,
+  "complete_expected_matrix": true,
+  "frozen_protocol_file_count": 35,
+  "protocol_checks": [
+    {
+      "path": "internal/consensus/application.go",
+      "sha256": "c71c9d89ac828e2f8aaae2edbfe7e4c0f67beb0bb1bf1bc516a23421d158ab42",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/consensus/application_test.go",
+      "sha256": "d2f99ff8219f6a2edfb0b0eb703a4099084ef45190b299980bf1253f79c3a101",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/consensus/integration_test.go",
+      "sha256": "43395b90ceaa6557da7534caa622d78da39783e9ef589a472687f35de260bd96",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/consensus/network.go",
+      "sha256": "09831a045c6c952f74b365ea5054fc9e14ef8b0f1be2ea861e89c324fdefac9b",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/consensus/network_test.go",
+      "sha256": "2542fc373c293de6cf5e5c35300ffbd16fd9e11b32ffde73f84455238eea039b",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/agent.go",
+      "sha256": "ac496a0572ce7239f42ac02244a426f2d8aec4dea71fc9a9e2b622ae569f95a0",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/agent_online_test.go",
+      "sha256": "a638ee74b485aa60d4c28780f33ebac8eba08e8a74c1e6a80859889d0edc9166",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/agent_test.go",
+      "sha256": "f7b4b3f6bebd525b9a73991ef6617d0b0d745e2886ca03b2664edc55de29c9d5",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/audit.go",
+      "sha256": "a4ff4ce264a1a5a9f53a81601ee86b2d21189e5f62322df83a66aca3fa449322",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/bootstrap.go",
+      "sha256": "76a3e7b3c72e6a687f0d0c59a8cecbe2ea04dc1fd92c79976816eb362dd43e34",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/cli.go",
+      "sha256": "5acd1d672a7dcd4e31ea2b8896171e836c353cc7dee107fa3003fb9dac4294d2",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/machine.go",
+      "sha256": "1a3c11207528fd8e03d5e963533337175da12c0a7463874caa4bc3bf99b9371f",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/measure.go",
+      "sha256": "2a5fef438da6fda006886756e0727af15005c417532cee6207b9c7ddf4520224",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/measure_test.go",
+      "sha256": "e9b90e750dee60a162d02093ececbd500e2aa239c784deb0caa2c97a28bfd19a",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/network_integration_test.go",
+      "sha256": "70ae80c053356b6504b82a36f5eb4b578982eeee6d9bf2db0169b7aabcbc97f6",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/node.go",
+      "sha256": "805176f471d58c07d7af8ebb37003ea3b8d4e9ae0d4fc3f245f35034ff8fd8fe",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/ordering.go",
+      "sha256": "5b57aeae1e648bbbd2dc31e7365cfc656342d5aca4de28422c8f0fecca9a3c38",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/ordering_audit.go",
+      "sha256": "9646681f8bcfd26c2a4f26ed3d9c1b2f268762fa23747426d4820163058fefff",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/ordering_test.go",
+      "sha256": "f9c6d33f403cce2557a7b46e860a6c755fa7af7ca3d25f5f3bf5d09f0c1fa76f",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/state.go",
+      "sha256": "97694d70146918d5a9c49ab05ae4f5661ada60a8313585359f84b4f887cc6d8e",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/state_test.go",
+      "sha256": "8a4cb1ecf7c2b09aec9b36b709ad8cf47862aec7c3813a5a5c53dc2bc6daecb6",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "internal/live/types.go",
+      "sha256": "53ec35fed202d60c4f27709c309f0f78c44b8ebb193681607f33ce66c524eb90",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/crypto.go",
+      "sha256": "50bb64a55668c74071ee166c6d9b79181ddddf3062bfebe072e4e7b8b21229c3",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/market.go",
+      "sha256": "4ef12b8cb620a992750ec7b2f6106985aac9c23e50031dfb99941c77f0327fcb",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/market_audit.go",
+      "sha256": "83e6896b0a82afdd0ec95dba4b982607758353b1c92132e7903325f588272d50",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/market_audit_test.go",
+      "sha256": "2fd794e2902f0e64ad7279319f4c06ea52104f8371949a70880250aa212c8551",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/protocol_test.go",
+      "sha256": "b64fb9001d54e76c2d9ac6a836125d9b10e325d8949ee48df26f105504a76d08",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/report_audit.go",
+      "sha256": "73c9252f08cc9ae072d3a2e8814ca61dcd4788f5fb395c44c52f72a4d135a6cc",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/report_audit_test.go",
+      "sha256": "d1d7061d6bc9a4f0a259413d60a363be6688d70eeb86d2bb917678bf8c5d6ccd",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/simulator.go",
+      "sha256": "60cb339da807b194ca29c5612cd9182fd4d9ee8f495dd8cb7f92121d2c2d6646",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "protocol/types.go",
+      "sha256": "ff1690acd87721826271bba254151a6668d3f624aec4c4668dfdfdfec64fc76f",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "threshold/dkg.go",
+      "sha256": "87d8bda251843a12d5f2fadac1682513fefcfe2b6bb06e534b9dde1bfa69c0ba",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "threshold/dkg_test.go",
+      "sha256": "193af4adbd09e67c3441e49aab6f50854daa1fb0b39510810580d1d0c7735fcd",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "threshold/threshold.go",
+      "sha256": "0caab6057dc5f5f69465095841fe6106dfd89a358731fe802c89e640c3a895f4",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    },
+    {
+      "path": "threshold/threshold_test.go",
+      "sha256": "c342c28ff4b825e56ff05b03f8cc2354aa5e1ee3e44f267561a7a9bd3efc34f2",
+      "actual_repo_matches": true,
+      "stage_matches": true,
+      "run_start_matches": true
+    }
+  ],
+  "all_frozen_protocol_checks_match": true,
+  "binary_sha256_verified": "5c492af91b21339b67616557e2e38b54a9eb3704d3894043d88c9c542a91d663",
+  "runs": [
+    {
+      "run": "000-online",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 131,
+        "registration_pair": "both",
+        "alice_position_at_snapshot": 0,
+        "bob_position_at_snapshot": 1,
+        "binary_relation_at_snapshot": "alice_before_bob",
+        "registered_ids": [
+          "1e729dc189fa40e8b1d373e8b07f4c98b89d5962446a286f7a9ed68a618322a1",
+          "e7559498248b5bdd3f2eb66c0d83c4ec1aa3a6eb78ddb809621cf9d09c6a3230"
+        ],
+        "processed_order_refs": [
+          "alice:0",
+          "bob:0"
+        ],
+        "executed_prefix_ids": [
+          "1e729dc189fa40e8b1d373e8b07f4c98b89d5962446a286f7a9ed68a618322a1",
+          "e7559498248b5bdd3f2eb66c0d83c4ec1aa3a6eb78ddb809621cf9d09c6a3230"
+        ],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 2,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-6",
+          "node-5",
+          "node-4",
+          "node-7",
+          "node-3",
+          "node-8"
+        ],
+        "evidence_at_snapshot": 0,
+        "evidenced_nodes_at_snapshot": [],
+        "alice_evidenced_nodes_at_snapshot": [],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": true,
+      "framework_error": null,
+      "model_or_action_failures": 0,
+      "evidence_at_later_audit": 0
+    },
+    {
+      "run": "025-online",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 131,
+        "registration_pair": "both",
+        "alice_position_at_snapshot": 0,
+        "bob_position_at_snapshot": 1,
+        "binary_relation_at_snapshot": "alice_before_bob",
+        "registered_ids": [
+          "e085dbcb4133b8b4afe85c81bb81e32b697b525d623c802e5fd22644bf02c6f1",
+          "dbb1dc4d643b01b70c6e6d4f2dd4a66a97290ec81236d53f5bdc4e713666750b"
+        ],
+        "processed_order_refs": [
+          "alice:0",
+          "bob:0"
+        ],
+        "executed_prefix_ids": [
+          "e085dbcb4133b8b4afe85c81bb81e32b697b525d623c802e5fd22644bf02c6f1",
+          "dbb1dc4d643b01b70c6e6d4f2dd4a66a97290ec81236d53f5bdc4e713666750b"
+        ],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 2,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-8",
+          "node-3",
+          "node-7",
+          "node-2",
+          "node-4",
+          "node-6"
+        ],
+        "evidence_at_snapshot": 2,
+        "evidenced_nodes_at_snapshot": [
+          "node-4",
+          "node-6"
+        ],
+        "alice_evidenced_nodes_at_snapshot": [
+          "node-4",
+          "node-6"
+        ],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": true,
+      "framework_error": null,
+      "model_or_action_failures": 0,
+      "evidence_at_later_audit": 2
+    },
+    {
+      "run": "025-online-wait-control",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 131,
+        "registration_pair": "both",
+        "alice_position_at_snapshot": 0,
+        "bob_position_at_snapshot": 1,
+        "binary_relation_at_snapshot": "alice_before_bob",
+        "registered_ids": [
+          "84d89c705b8a4da2a147f9d089025c6a6512e97c445f22666e38dda785fe59da",
+          "3dcb7e038768f01f4953ca54716a4b46d2289461aee732478042f068953b399a"
+        ],
+        "processed_order_refs": [
+          "alice:0",
+          "bob:0"
+        ],
+        "executed_prefix_ids": [
+          "84d89c705b8a4da2a147f9d089025c6a6512e97c445f22666e38dda785fe59da",
+          "3dcb7e038768f01f4953ca54716a4b46d2289461aee732478042f068953b399a"
+        ],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 2,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-3",
+          "node-2",
+          "node-5",
+          "node-7",
+          "node-8",
+          "node-6"
+        ],
+        "evidence_at_snapshot": 0,
+        "evidenced_nodes_at_snapshot": [],
+        "alice_evidenced_nodes_at_snapshot": [],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": true,
+      "framework_error": null,
+      "model_or_action_failures": 0,
+      "evidence_at_later_audit": 0
+    },
+    {
+      "run": "050-online",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 131,
+        "registration_pair": "both",
+        "alice_position_at_snapshot": 0,
+        "bob_position_at_snapshot": 1,
+        "binary_relation_at_snapshot": "alice_before_bob",
+        "registered_ids": [
+          "5a3961ad9a060ed7f64158d4743793cf4b81db1aa68597bd9cfebffd9c98dfec",
+          "104729be994e8503ef4bf0be1ef04832a2274db6ec413c0a5cc9426305fa2917"
+        ],
+        "processed_order_refs": [
+          "alice:0",
+          "bob:0"
+        ],
+        "executed_prefix_ids": [
+          "5a3961ad9a060ed7f64158d4743793cf4b81db1aa68597bd9cfebffd9c98dfec",
+          "104729be994e8503ef4bf0be1ef04832a2274db6ec413c0a5cc9426305fa2917"
+        ],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 2,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-4",
+          "node-6",
+          "node-7",
+          "node-5",
+          "node-2",
+          "node-1"
+        ],
+        "evidence_at_snapshot": 4,
+        "evidenced_nodes_at_snapshot": [
+          "node-1",
+          "node-4",
+          "node-6",
+          "node-7"
+        ],
+        "alice_evidenced_nodes_at_snapshot": [
+          "node-1",
+          "node-4",
+          "node-6"
+        ],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": false,
+      "framework_error": null,
+      "model_or_action_failures": 1,
+      "evidence_at_later_audit": 4
+    },
+    {
+      "run": "050-online-wait-control",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 132,
+        "registration_pair": "both",
+        "alice_position_at_snapshot": 0,
+        "bob_position_at_snapshot": 1,
+        "binary_relation_at_snapshot": "alice_before_bob",
+        "registered_ids": [
+          "c60da0a211e3253e39a3f066c40364f666ee71cc6993fcfd424f374edacbb4f8",
+          "9ee7824bb06367b594d0bebb49abeaf500efc2182b2f63165f885333951b78aa"
+        ],
+        "processed_order_refs": [
+          "alice:0",
+          "bob:0"
+        ],
+        "executed_prefix_ids": [
+          "c60da0a211e3253e39a3f066c40364f666ee71cc6993fcfd424f374edacbb4f8",
+          "9ee7824bb06367b594d0bebb49abeaf500efc2182b2f63165f885333951b78aa"
+        ],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 2,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-7",
+          "node-5",
+          "node-1",
+          "node-4",
+          "node-8",
+          "node-3"
+        ],
+        "evidence_at_snapshot": 0,
+        "evidenced_nodes_at_snapshot": [],
+        "alice_evidenced_nodes_at_snapshot": [],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": true,
+      "framework_error": null,
+      "model_or_action_failures": 0,
+      "evidence_at_later_audit": 0
+    },
+    {
+      "run": "100-online",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 128,
+        "registration_pair": "neither",
+        "alice_position_at_snapshot": null,
+        "bob_position_at_snapshot": null,
+        "binary_relation_at_snapshot": null,
+        "registered_ids": [],
+        "processed_order_refs": [],
+        "executed_prefix_ids": [],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 0,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-2",
+          "node-3",
+          "node-5",
+          "node-6",
+          "node-1",
+          "node-7"
+        ],
+        "evidence_at_snapshot": 8,
+        "evidenced_nodes_at_snapshot": [
+          "node-1",
+          "node-2",
+          "node-3",
+          "node-4",
+          "node-5",
+          "node-6",
+          "node-7",
+          "node-8"
+        ],
+        "alice_evidenced_nodes_at_snapshot": [
+          "node-1",
+          "node-2",
+          "node-3",
+          "node-4",
+          "node-5",
+          "node-6",
+          "node-7",
+          "node-8"
+        ],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": true,
+      "framework_error": null,
+      "model_or_action_failures": 0,
+      "evidence_at_later_audit": 8
+    },
+    {
+      "run": "100-online-wait-control",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 134,
+        "registration_pair": "both",
+        "alice_position_at_snapshot": 0,
+        "bob_position_at_snapshot": 1,
+        "binary_relation_at_snapshot": "alice_before_bob",
+        "registered_ids": [
+          "cbb31280e3a8c3a08aa8d92bfd703e7a408e6fc8d318471b1d6f9a94535d57d4",
+          "cbecad8679d063495541133d660d5e48160e36c8b80cf604689add39ffe723d2"
+        ],
+        "processed_order_refs": [
+          "alice:0",
+          "bob:0"
+        ],
+        "executed_prefix_ids": [
+          "cbb31280e3a8c3a08aa8d92bfd703e7a408e6fc8d318471b1d6f9a94535d57d4",
+          "cbecad8679d063495541133d660d5e48160e36c8b80cf604689add39ffe723d2"
+        ],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 2,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-7",
+          "node-4",
+          "node-6",
+          "node-1",
+          "node-3",
+          "node-2"
+        ],
+        "evidence_at_snapshot": 0,
+        "evidenced_nodes_at_snapshot": [],
+        "alice_evidenced_nodes_at_snapshot": [],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": true,
+      "framework_error": null,
+      "model_or_action_failures": 0,
+      "evidence_at_later_audit": 0
+    },
+    {
+      "run": "retry50/050-online",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 132,
+        "registration_pair": "both",
+        "alice_position_at_snapshot": 0,
+        "bob_position_at_snapshot": 1,
+        "binary_relation_at_snapshot": "alice_before_bob",
+        "registered_ids": [
+          "58300c035d874b100d3f8d18526fa58b21f8319d6a7d1dde755ff28f30f76c79",
+          "7f6a8d71ff995d7f60d7503542719536d7b7f2d4da29e5ff213adbe7d943d367"
+        ],
+        "processed_order_refs": [
+          "alice:0",
+          "bob:0"
+        ],
+        "executed_prefix_ids": [
+          "58300c035d874b100d3f8d18526fa58b21f8319d6a7d1dde755ff28f30f76c79",
+          "7f6a8d71ff995d7f60d7503542719536d7b7f2d4da29e5ff213adbe7d943d367"
+        ],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 2,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-3",
+          "node-7",
+          "node-5",
+          "node-8",
+          "node-1",
+          "node-4"
+        ],
+        "evidence_at_snapshot": 4,
+        "evidenced_nodes_at_snapshot": [
+          "node-1",
+          "node-4",
+          "node-6",
+          "node-7"
+        ],
+        "alice_evidenced_nodes_at_snapshot": [
+          "node-1",
+          "node-4",
+          "node-6",
+          "node-7"
+        ],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": true,
+      "framework_error": null,
+      "model_or_action_failures": 0,
+      "evidence_at_later_audit": 4
+    },
+    {
+      "run": "retry50/050-online-wait-control",
+      "receipt": {
+        "available": true,
+        "origin": "saved-alice-receipt",
+        "verified": true,
+        "quorum": true,
+        "promises": 8
+      },
+      "audit_status_verified": true,
+      "snapshot": {
+        "snapshot_available": true,
+        "snapshot_height": 130,
+        "registration_pair": "both",
+        "alice_position_at_snapshot": 0,
+        "bob_position_at_snapshot": 1,
+        "binary_relation_at_snapshot": "alice_before_bob",
+        "registered_ids": [
+          "5b9ccb6f79736a0d0b695a59a57f0328d8faed9708423b441d5dfcdd55d748c3",
+          "fec0a53204c1ab032410c679ffe9f826dd9bc294b0dc0bb664b7535077c35f85"
+        ],
+        "processed_order_refs": [
+          "alice:0",
+          "bob:0"
+        ],
+        "executed_prefix_ids": [
+          "5b9ccb6f79736a0d0b695a59a57f0328d8faed9708423b441d5dfcdd55d748c3",
+          "fec0a53204c1ab032410c679ffe9f826dd9bc294b0dc0bb664b7535077c35f85"
+        ],
+        "executed_prefix_matches_registration": true,
+        "results_match_completed_services": true,
+        "pending_queue_matches_registration": true,
+        "active_lock_matches_queue_prefix": true,
+        "execution_checked_orders": 2,
+        "execution_matches_registered_prefix": true,
+        "selected_nodes": [
+          "node-3",
+          "node-1",
+          "node-7",
+          "node-4",
+          "node-2",
+          "node-6"
+        ],
+        "evidence_at_snapshot": 0,
+        "evidenced_nodes_at_snapshot": [],
+        "alice_evidenced_nodes_at_snapshot": [],
+        "active_share_counts_at_snapshot": {}
+      },
+      "experiment_execution_valid": true,
+      "framework_error": null,
+      "model_or_action_failures": 0,
+      "evidence_at_later_audit": 0
+    }
+  ],
+  "raw_sha256": {
+    "000-online/result.json": "78aaddb05b882a6ba8400893ea15e6e6959bc7bc5b7118ecc835cc07855128e7",
+    "000-online/state-public.json": "f62983e560e4a73e5253cb81b5fa820764ef5e1ab70e618f2f8141dac89ea65c",
+    "000-online/audit.json": "1bee3221d7797e339bb190c34e536b626d880bdd00d27db49d7597cc51cdf223",
+    "000-online/alice-receipt.json": "90123d97363b3eec16c8e4ef949a94bf8d7b61148032c4e45d64bb4211a0d709",
+    "000-online/transfers.json": "618de6942118a088ed8024bbc83a2e387c63faeeed5f2c2ac6fc93bd45108355",
+    "000-online/agents-summary.json": "7f682601c08e74cc2b8f52d0cb066c5c902b042967dd4bcc06ba6562bcc9764e",
+    "000-online/resources.json": "260926ff0ff1e7144ccdf04297a5bfe67f03b9d591e1db1111774dffaa9be309",
+    "000-online/start-barrier.json": "22d803931b1d6ed78f2fe0a2da565c9eff21c8912c4d5a641d04e29c904a8d06",
+    "000-online/bob-plan.json": "8b79f6354a6f895863ff8a80ec24dd27edec23370f34c3e4246c816e7d61fe11",
+    "000-online/bob-decisions.jsonl": "2b99263aeae29d3ac2aa483475a66ed2e787406e704f086ebc3c97809da979f4",
+    "000-online/node-1-decisions.jsonl": "5d1baf55bb56d2265aeba2ada39d171a71285c428ff5b01f1024df30c58fd9ff",
+    "000-online/node-2-decisions.jsonl": "d165a0db701633cd1107984722be9a64fe2ee6f83f0a5082a55a06cc8f6f9985",
+    "000-online/node-3-decisions.jsonl": "87dfe01d07a377ff319b3a54a5873f1feee0b821237b4749a9db823077af4f1b",
+    "000-online/node-4-decisions.jsonl": "364783bb4d66cd68ed3dfff064356ba1a8c7c75b690ba4cd4074a8d0d47dccf6",
+    "000-online/node-5-decisions.jsonl": "8233477b11c05d1224f5a0b2cc8868846d629119e18fb37b3fde8ce77fe4bb6c",
+    "000-online/node-6-decisions.jsonl": "03bd7aa7cc3a318b80a278b6b009a77d1ce76fc04b2df7054a685b052c3d79c2",
+    "000-online/node-7-decisions.jsonl": "a4ddf1d0b952511855a3b2d3d4b17de6d2a6afaa14de43444c97661cb1409bd3",
+    "000-online/node-8-decisions.jsonl": "b3c0170f692b0ef3a9e15715cc7b9d0e7359dc9fb4cb7c08b159a6d071a16dee",
+    "025-online/result.json": "9d52a2907fa79e8502d7b1cafd91967048e8da0e382574516aa3ae5ca33875b4",
+    "025-online/state-public.json": "17a086155c32be47fa87763a77569e2bd6c1f43e18119d1851404dda1ce8d2c6",
+    "025-online/audit.json": "9da534f63eac89d7ef33e7d343d64a4ddda5f84be951b818defb3b9dc448003c",
+    "025-online/alice-receipt.json": "3a641d78213b3c3c91a3321f81222bfa3e9cbe8fe96320bdadf6a12a914744e7",
+    "025-online/transfers.json": "e98ff557edc43b1121dc7142ce0b1a9cb20704b82df3c9bfde19cf59c679cca7",
+    "025-online/agents-summary.json": "573e7d5189fc40fe0a43c70c2bb4109306f84ebc63d3ccc34731873c887dd046",
+    "025-online/resources.json": "0a84a90f09f66fa656139577b9fc923731ba294a328f8f87063657c08050571c",
+    "025-online/start-barrier.json": "22d803931b1d6ed78f2fe0a2da565c9eff21c8912c4d5a641d04e29c904a8d06",
+    "025-online/bob-plan.json": "e4b33e3ba5c2773913b46fadbfaf5c5e35071f998e925417ec49f9336e4ad2ba",
+    "025-online/bob-decisions.jsonl": "e7ebddc9e70cc790533d4d68e0519bdf3f812e6c090cd53ff56f3dfabbbc23a7",
+    "025-online/node-1-decisions.jsonl": "e220137d8fa45060cd9b9eaa311a64a0447765056252677a29062ab90aef5052",
+    "025-online/node-2-decisions.jsonl": "e81c4d984eb17ca56485938747b1121b0c49ff975edd3af14c4a73a0ecd21374",
+    "025-online/node-3-decisions.jsonl": "43125ad60c050a03616d1242b725b0ce2cd2472802c1ac1103fc736e690d9d28",
+    "025-online/node-4-decisions.jsonl": "53f03a48557ce37400970ede19a98f8186f107dfbe33762c9f08c2e36174e7cf",
+    "025-online/node-5-decisions.jsonl": "6e2bb155a63505e9785527216a84225e25c3c4829a0822dc18c5e08e5ea69e70",
+    "025-online/node-6-decisions.jsonl": "cd2a31d8ba10cfaf51a25d2dbb26de47c88fa426204be9da3b4b1fce22dba805",
+    "025-online/node-7-decisions.jsonl": "de372ec350aa0b8f9bf61e476fc6285e339770e958e7db1dc3ae9e8caf648895",
+    "025-online/node-8-decisions.jsonl": "2e391b3e837cd5533469a64057aa6d00b826b869ae2070eb9e9c05dcacc906b9",
+    "025-online-wait-control/result.json": "b8e9a6ee484e01bb1feadbbc451a81eda5e140b0e9452c47dfdb347af28f421c",
+    "025-online-wait-control/state-public.json": "13a3b3b5c9b43058a21bd2aeefc92e64cb85ffc1e871c54907171888840f2f81",
+    "025-online-wait-control/audit.json": "d6a17a007881ab4cd953d6ecd86e9ca194697eb0222423a473f17b05b08c0a51",
+    "025-online-wait-control/alice-receipt.json": "3d7bc74787846c7a2c16e45e149da93813fe44b8d69e8fc76f6e9f0f6b86fb11",
+    "025-online-wait-control/transfers.json": "c9c0e19f54f3f41eafcf119b43b523815d3d28515fb5e8a0a1ea3f1be3be8ce6",
+    "025-online-wait-control/agents-summary.json": "13b4dd20a8d42dc77e0b3e91a4e5bd749653fa801f24e528d555dc63f124e769",
+    "025-online-wait-control/resources.json": "79de1047ca122344fa6395de6a25fdaaebed4b8078a1fabf3fc5d7782660bde4",
+    "025-online-wait-control/start-barrier.json": "22d803931b1d6ed78f2fe0a2da565c9eff21c8912c4d5a641d04e29c904a8d06",
+    "025-online-wait-control/bob-plan.json": "8faabae9041abb0f725a720ddf3dd4ccac10adb2dfa7d9bfd158f2a54e3a6bac",
+    "025-online-wait-control/bob-decisions.jsonl": "7b3c9d1ade3429dd5345b7997aa77d312e0965ef5889f59da7e9a68ffa2b9b6b",
+    "025-online-wait-control/node-1-decisions.jsonl": "ca992e46e76fbe67349e945e4c3593a0084c4a14d725614389915663d8623a2c",
+    "025-online-wait-control/node-2-decisions.jsonl": "4a5bfd2b23d668ed3c73d0ce23cd2d5ce6b9beb02b98d2c50002f9eee51e3ef4",
+    "025-online-wait-control/node-3-decisions.jsonl": "87c70154903ad23d2147865bc24ef7af254ec4db5953bd423a4fc2bd3da6d216",
+    "025-online-wait-control/node-4-decisions.jsonl": "7170d0a5c813dc3058755cc36a37da7b0a02472091df2b4f8b35e88e259a5f52",
+    "025-online-wait-control/node-5-decisions.jsonl": "49fcb7f2b9631f30e64026f74306d059cf0ec7a3b9f6b4efd05651131c47737f",
+    "025-online-wait-control/node-6-decisions.jsonl": "de9f2c73b6979703b09b89dd39719b7119f4294aaad1c15684cebefafde39a16",
+    "025-online-wait-control/node-7-decisions.jsonl": "7b23e924af2952c9ee2a0ad32646daffc951c2a7a6f3520f51fbe4d7f2cf6066",
+    "025-online-wait-control/node-8-decisions.jsonl": "a2a6fcde6582e49380879b574da243e7fc22cd24d97950f2761cb1608853732b",
+    "050-online/result.json": "1d6ff9e8efa17d5e1bcc8dda22b5e1d5cdcb23deecf8ee1280fef5408897088b",
+    "050-online/state-public.json": "84d03231fb7f86a7f77935e26c569c72c23f734b3a46c4da6e7b8a09d310e867",
+    "050-online/audit.json": "9d2f0d25ba006af266b221021b9addaf92a67e56f90d1edf2115e2562cf671ca",
+    "050-online/alice-receipt.json": "c2c3fce980a90fbad23631f264cf21742fb3c2ea925f304d41fc4b77c89a402a",
+    "050-online/transfers.json": "90df811270496dd1db7687aca58d66f635e5c34322c2e7939dd8e79c61640f02",
+    "050-online/agents-summary.json": "7bec0198ec492966942305057bef86d46ca78e17ea46cae942dc8df31cc1e2f4",
+    "050-online/resources.json": "0ea72077ba7a7dff81f7bd1d885b6eae71850876a8a1ffd5c5951673b1b5f0e9",
+    "050-online/start-barrier.json": "22d803931b1d6ed78f2fe0a2da565c9eff21c8912c4d5a641d04e29c904a8d06",
+    "050-online/bob-plan.json": "5260ac489110acb060f212e6b099362cba18d84da80b664767626ca2283b8ecc",
+    "050-online/bob-decisions.jsonl": "d7364b194556d78315a0a42ff3e1beea842c78ff20814ccf5356cff422f9d1ac",
+    "050-online/node-1-decisions.jsonl": "c79ebb873a65b9f9d994579e7a184e5404edc352b7c5ed01e2b27eab5ac427c5",
+    "050-online/node-2-decisions.jsonl": "ae31056e29c3ba0602af2d8aa6d107f4d06b733e66b65b8c5525b48821542d2b",
+    "050-online/node-3-decisions.jsonl": "f58b58951960109e219499909744d43c25ad3fcceee053fc1ca4631212047773",
+    "050-online/node-4-decisions.jsonl": "3c9099847abb247f4297021e16a78d6b09881456bc1cbb7ad80577e023e6eb67",
+    "050-online/node-5-decisions.jsonl": "e91ed66bb04fc5f90686dcd6c7f0b0abcc06fe4fcbaba7347ffcde33f043a961",
+    "050-online/node-6-decisions.jsonl": "045fed1d3c142b4a5d36f952f923d6dc40471096e371ec39d2ff35a28b4b443e",
+    "050-online/node-7-decisions.jsonl": "f84f3b1bc5e9374030daf5655f86591439c0349989405dc11b58c02f1036e2f0",
+    "050-online/node-8-decisions.jsonl": "a3d110ce8c419d68a0765453b1bd7bc96fcc2a40878bd6820e378cd605c15432",
+    "050-online-wait-control/result.json": "0b1efa68edcc88cb23d4177a45747ff5d5300b6b734a2f63ba38648d1dbcbdc4",
+    "050-online-wait-control/state-public.json": "57afc9b879d72c8b7302e59c0c4f96d26f25728945fad5287533c9ffd8f77221",
+    "050-online-wait-control/audit.json": "a9a6a9a086374872be368b35ccc75fed21243469dcc7918e44097cce07a82eb5",
+    "050-online-wait-control/alice-receipt.json": "bc7c4012693e64956bf275bf44aea99ef0428ddf18c466a31c88fe4fc001a12a",
+    "050-online-wait-control/transfers.json": "5d54c3a51e5d46d648cf334c0d086ce0211b06269bf9fd247d29954a53a7d01b",
+    "050-online-wait-control/agents-summary.json": "8a4c57d27e58a0b0f694572733ed8839d6df62b87a400b8dcc18a5da031040c0",
+    "050-online-wait-control/resources.json": "5924b0f665eb27b5214b94bb1c05fe64693062ebfea5e0b81eb0d5a755887a40",
+    "050-online-wait-control/start-barrier.json": "22d803931b1d6ed78f2fe0a2da565c9eff21c8912c4d5a641d04e29c904a8d06",
+    "050-online-wait-control/bob-plan.json": "699dbb7281ffd0ed8de1ae2c580123984d05ec22bf3203370d0953d6b9f8630a",
+    "050-online-wait-control/bob-decisions.jsonl": "7b3c9d1ade3429dd5345b7997aa77d312e0965ef5889f59da7e9a68ffa2b9b6b",
+    "050-online-wait-control/node-1-decisions.jsonl": "9bb3f5ec48bb3ad778e8022cf328ed943375c4a150f0456624d0f5c89eb83b18",
+    "050-online-wait-control/node-2-decisions.jsonl": "c4c37d360e50cca35bd2e11a7159596cdd01dbd95af2e5a7418ddd78b3535a1c",
+    "050-online-wait-control/node-3-decisions.jsonl": "9dbeb9dbc2689ca9c8514f9881e22a8fe2e883be8748c0c96185cbe27349d269",
+    "050-online-wait-control/node-4-decisions.jsonl": "8e2408b0797bb9dcc3430850262140eb9b87bed47076df4a12d510bf9b800ff5",
+    "050-online-wait-control/node-5-decisions.jsonl": "368ca75af08cb59b36ab071eb64a5e30d406d5e971ab701e69bdce2f3ae2dc4e",
+    "050-online-wait-control/node-6-decisions.jsonl": "1e4ff62d50fa8e65d664cc28b611f10c6c61e140191451f04eac435a9557cf18",
+    "050-online-wait-control/node-7-decisions.jsonl": "6f22a5a38a5b26b18e7bc3f489bb9f8ad3665317e3cea8424a8e17e03c1d7320",
+    "050-online-wait-control/node-8-decisions.jsonl": "96eaadc98c7631fccfdc995f6f26065f71df221c84187a1eb01457a185f0ffd3",
+    "100-online/result.json": "1ae076254341027c6d468c4aa170f627aa80a918c1fea4daa56f32143629d49d",
+    "100-online/state-public.json": "fcb379e596e2f78b9dda5278c4a3bd13549225c973521010302250df9765781f",
+    "100-online/audit.json": "2b3715c6a12ce083e9d423f9ff0ce54e22e216ac28d7fd8352f0f49bca8473a3",
+    "100-online/alice-receipt.json": "18b7acc71f95e21717f6202c059caebff4b69b94f3b33f8854ba5fc36a93a599",
+    "100-online/transfers.json": "e23054da4c8990a774e0c51ccec3391d103edd8ff93208af7f9d1d8ca6eec390",
+    "100-online/agents-summary.json": "18ea8bb96e309c6221250ec016d6e8da0de1b718641a13766924a0ba77db1dcb",
+    "100-online/resources.json": "f12df5a1f924406087aa49077c13c66dc01b8c4703d7c9284ffbc64184a255f6",
+    "100-online/start-barrier.json": "22d803931b1d6ed78f2fe0a2da565c9eff21c8912c4d5a641d04e29c904a8d06",
+    "100-online/bob-plan.json": "8d9b7c9e216a5d0f2be8e6b6b03ed701fea945968ff7974536876d7f968816bf",
+    "100-online/bob-decisions.jsonl": "c06dc2dd67c374704dfb30c3bbc3ec53aaacd0f6765cdec8c34ecd14e075bc26",
+    "100-online/node-1-decisions.jsonl": "0ec1194d6d55d75a54d0baf72a416ffadeb13f5ac97e66fb88bfc69db56ae623",
+    "100-online/node-2-decisions.jsonl": "36ce2383a5d7e95a4097c9bd759f9cd55f9cac250c18989ae5bda250f0c0da07",
+    "100-online/node-3-decisions.jsonl": "d8466032300172ce4c9e8df7f62aa4ae6e8f3d7046a5f3c6b260702cf14ead13",
+    "100-online/node-4-decisions.jsonl": "0e0203b1c128542276699bc7171c0c66e144381b79fca9df3ce4c1909bf33dd5",
+    "100-online/node-5-decisions.jsonl": "9190915d34627a0e8f05492477b301f69f22312dcf1cca58fff0714d17ef94e1",
+    "100-online/node-6-decisions.jsonl": "22f7e5b6ff74b088006622a1659caaabf3667e65e2cd52ee96fcead1244cd64d",
+    "100-online/node-7-decisions.jsonl": "ff65ae0c04b2716f2535198a9be34c348d80c1c372a8b89482e8058a96909e4f",
+    "100-online/node-8-decisions.jsonl": "a2ce099a7a2ad264641f6b44243413c72f3ca5ae0da70709f2251c3ae5c12b62",
+    "100-online-wait-control/result.json": "46854bc754158c287933b3132b4a6cdab4785ac66ef1c17446776718266c6c5c",
+    "100-online-wait-control/state-public.json": "0feae4b3682fb1f058a8ecdcc83f610877bd7d5aa2e28ed3de68f768d49c799a",
+    "100-online-wait-control/audit.json": "965792355c9ce227c1a4c54bc3b18bc79c1ec0458fb46b49042fc61b9e8f8481",
+    "100-online-wait-control/alice-receipt.json": "682715e82a2f59bb4b9a29809dbe6bcc4c95d591ca3c7456ee17b6307e88496a",
+    "100-online-wait-control/transfers.json": "280e62f9caea20468188924875858e90d4ae355ee6e9ac589631a48fb26d4d11",
+    "100-online-wait-control/agents-summary.json": "e9f2ec84274a3bd8400f026956ec19f1a8d6d968edaf254d2ecde91097709e52",
+    "100-online-wait-control/resources.json": "8ff06ecf35078f329648c2c9aed990c3070ff7f4d269d465453478f5e6343c18",
+    "100-online-wait-control/start-barrier.json": "6552a7e5222ee31396e1d93ccb514d17f6050ca873b282456c58411ec4791dfb",
+    "100-online-wait-control/bob-plan.json": "1016badfbf69fdc4e0dbb2a42980cfa53ce4f64bb8712532ce1a594cf69a4f58",
+    "100-online-wait-control/bob-decisions.jsonl": "7b3c9d1ade3429dd5345b7997aa77d312e0965ef5889f59da7e9a68ffa2b9b6b",
+    "100-online-wait-control/node-1-decisions.jsonl": "42cc8500bc870e67f4d602d6399226c654c70f301a74536e8f83abaebfd206e1",
+    "100-online-wait-control/node-2-decisions.jsonl": "a4ecf34c1b68d4a978eeb2ab67149bd61e938dc33f4de6be929d481e1914432d",
+    "100-online-wait-control/node-3-decisions.jsonl": "f9cfb2ca11473ba9f4e5989280f08e841cdf68dc946ca6a8a554fe0bd4d7f91e",
+    "100-online-wait-control/node-4-decisions.jsonl": "82f1b3fea1e3efba0b393e6b373cacfbaab9a5935930fa7d23b15ef2ee4164b4",
+    "100-online-wait-control/node-5-decisions.jsonl": "559f2ddf6799860a056231325bb0adff4c6b747ca2605ddc9fcd2724260e2bc8",
+    "100-online-wait-control/node-6-decisions.jsonl": "7b94e627c3a62b0874f118ba8cb46a0dfd7abb5ed33233c18239a94f141d0b80",
+    "100-online-wait-control/node-7-decisions.jsonl": "2300747e8c740a65ddec125d17b3de3a68ad2cb8466dfb6c9a26e426d1faee5c",
+    "100-online-wait-control/node-8-decisions.jsonl": "d852ba35d0a6766d231416141dfb23fac2fa62ead479ca6790f2b421f34bbe69",
+    "retry50/050-online/result.json": "18231e6bd4a157c294b1a5ac74f92d8d817f470c75461b94506d247cbf8dc670",
+    "retry50/050-online/state-public.json": "9530e12be50df79c90e176cd86a3f71467f8282b6c647fe6704726bf4681b979",
+    "retry50/050-online/audit.json": "2e46ce71dbad2dc2a457cab48fb9b5cf951a18f17e41f54590674540ce9b0773",
+    "retry50/050-online/alice-receipt.json": "7a087b48b8e3e8a404228a6f95b6eed90d12c43a3344b294ccdd4faa6f14cb66",
+    "retry50/050-online/transfers.json": "565607dd7dacaa1f7ef403567452063416f82f814117ddf703dd7f888c8c1041",
+    "retry50/050-online/agents-summary.json": "6bd9fdd5679aaeb2f30b60786a571bbdb7459b53ae370e092a0f3b8886cff48d",
+    "retry50/050-online/resources.json": "a2aee53601c818a12b618654641204400139082234f34d5bf99a3d56631e3165",
+    "retry50/050-online/start-barrier.json": "22d803931b1d6ed78f2fe0a2da565c9eff21c8912c4d5a641d04e29c904a8d06",
+    "retry50/050-online/bob-plan.json": "25f84ea61b7df803db56b16dd76347b5800a058ae8b43ba55cb46edfd20717cb",
+    "retry50/050-online/bob-decisions.jsonl": "0d4ed3fef0487025082f92d7cb140df2fce1c9b497d5c9080906a07e14381cdc",
+    "retry50/050-online/node-1-decisions.jsonl": "d0d6fa90acf954e0240283efdb4b8ea08ab1308e996e26670fc3881d0d71bab8",
+    "retry50/050-online/node-2-decisions.jsonl": "235a1c1e5f245df19aae12232767c8eff3f206d9fe2cdb868cf465dd9d918c36",
+    "retry50/050-online/node-3-decisions.jsonl": "4d19c89478ccd85b256b55afa7bcc164d522e1245925bfe414236bfeed4caaf5",
+    "retry50/050-online/node-4-decisions.jsonl": "2e7858af8ac865a497c15617f4f28ccf3ac4385394c3ea643ce5383ff3fa6ca9",
+    "retry50/050-online/node-5-decisions.jsonl": "bd541722ebe4841e42f15837e2262286b7769ececf5c521a020b37cbbc9e6b60",
+    "retry50/050-online/node-6-decisions.jsonl": "9b700c27d1e1f46407efac86d742da0d4d4ff40a9a6ffc52e8e75718174b5b3c",
+    "retry50/050-online/node-7-decisions.jsonl": "533ba6718566bef04bef7dd49025b2de1ad9f88d638f87f93e43eec36a5c3a8a",
+    "retry50/050-online/node-8-decisions.jsonl": "a70da3a3b654a040e0f06b05248131229a537b5031439a2b994976769b43a3c1",
+    "retry50/050-online-wait-control/result.json": "753ddac8ab596db0b3cff75a1e5ba823defd61a2960b13c01631ef94da187ae7",
+    "retry50/050-online-wait-control/state-public.json": "5dfd8c673929a101d5d19a4dc0fc44441aa18f3f6a7c23e592282525e750bcff",
+    "retry50/050-online-wait-control/audit.json": "19e7c875af7a55d6d45e6a451560f384bb1f595170f0d75eaa549b6822eb38ad",
+    "retry50/050-online-wait-control/alice-receipt.json": "8fb402295b190abe67e3a280a84b22745bdb6d9b4e34116ae2371240b4863260",
+    "retry50/050-online-wait-control/transfers.json": "739ee439b75639c8e03a9aae02c4e6430bf1b8c50e62bac78c9c56ecefad5fb8",
+    "retry50/050-online-wait-control/agents-summary.json": "01a0e2ccdcf14d137ea10637e0ce72ae6c63614eae14850c91388ab2749febc4",
+    "retry50/050-online-wait-control/resources.json": "8927f4f85cec5e388389cd86b4f42d87a66425122ab93b9412c0c3af3aa55fa9",
+    "retry50/050-online-wait-control/start-barrier.json": "6552a7e5222ee31396e1d93ccb514d17f6050ca873b282456c58411ec4791dfb",
+    "retry50/050-online-wait-control/bob-plan.json": "994d5d4fcf0e1a57b6cc6b8e88b8fea04d6d37433ab0e1c6ebac1df3a1582c0d",
+    "retry50/050-online-wait-control/bob-decisions.jsonl": "7b3c9d1ade3429dd5345b7997aa77d312e0965ef5889f59da7e9a68ffa2b9b6b",
+    "retry50/050-online-wait-control/node-1-decisions.jsonl": "3e10855bdaf13618fb94fa82675d7021c98a9988065ed9a54b10980ec9082b52",
+    "retry50/050-online-wait-control/node-2-decisions.jsonl": "1695415337f2af0f72eca6017f40c31eaf7ea3a9ae69aa5e912f16d9f7f85f95",
+    "retry50/050-online-wait-control/node-3-decisions.jsonl": "2214771a0d1709636f8f519f43193cf3fb87662d2550d6ec0ba1cc024e262ce9",
+    "retry50/050-online-wait-control/node-4-decisions.jsonl": "9361dd0b4b10566c35757f64b465285426386203b8866f02a4315e3289245e1d",
+    "retry50/050-online-wait-control/node-5-decisions.jsonl": "3b50b3e6756753e9f3544876f0cef7187458558f5dbeb19f337965fe4d4ee384",
+    "retry50/050-online-wait-control/node-6-decisions.jsonl": "f596ee9dcecdd62f72f79d8e7832352f41f648ec3ab7e5da9b23110f273ba801",
+    "retry50/050-online-wait-control/node-7-decisions.jsonl": "2996d17543d9f9fb389e3ca9b1c9592188ca843c5b876a402e53c4c451e08c8c",
+    "retry50/050-online-wait-control/node-8-decisions.jsonl": "5c2b1bfb9e949a7ecb335d690e8c430b33eda3f051e2f90d0764169e2ffbf3b9",
+    "000-online-bob-model-calls.jsonl": "3bfa42f0722721d255ccfe5d15e5897d80d6a6134532a773054cdbf4a546cca6",
+    "025-online-bob-model-calls.jsonl": "802871a5ed0cab0f1f93209948e17e0d0360ddcb2dd46e11682885e469f5c09e",
+    "025-online-node-4-model-calls.jsonl": "a5ae2d1d3c19499865c7d40c9664c0d0163d851285d8e41b19b30143c911f050",
+    "025-online-node-6-model-calls.jsonl": "c7009495477105fbd707447a3eba63bbf0ea26c33dac0f6b7e95f444aa08c4b0",
+    "050-online-bob-model-calls.jsonl": "28abffd7d0f2226a639cf08a3d6ba87bc21f40e4d1cc3f8a6dda6fe22a57e9d1",
+    "050-online-node-1-model-calls.jsonl": "2dae470b89b5706319056766d1a57ef832bb4d0c8d4973fc0020b8b9c1f1c0ed",
+    "050-online-node-4-model-calls.jsonl": "f27618f164cce682dc41ee759442dc635cfc3ee318f99de5873d5c11a1d72199",
+    "050-online-node-6-model-calls.jsonl": "d6a045a9e708b558c27d0098edd46e34290a1ecce171c71316abc6ea8c2b310b",
+    "050-online-node-7-model-calls.jsonl": "bf6bf4682f9c66f7f0a4f022a7c040295e5bcb9137cabea1240c432ed88f8e24",
+    "100-online-bob-model-calls.jsonl": "8e084930ea5c5761a0ac45e873aeceb579bb88b07426fd21e8de5a989dbe671b",
+    "100-online-node-1-model-calls.jsonl": "55b2159433b873b0abb2be2c36239e5696ce44f2f8b06fbc03c44551b653ff6a",
+    "100-online-node-2-model-calls.jsonl": "0e8e2550f53edf9014623f6f58b042d144f529c1c7f03aba122925147b9e980b",
+    "100-online-node-3-model-calls.jsonl": "873060bd0114e8e06b5b16f61f39a27cd46b370a415184d0beebafcc345b415c",
+    "100-online-node-4-model-calls.jsonl": "be3ed130c175aaa918ba1c0b71129e030ac5828ca7566c38d523591595f852ce",
+    "100-online-node-5-model-calls.jsonl": "9a07f45e8a5d434f8b32147c1cb5cea72fb2f84683a4c4c2b3c79bcfd7e87049",
+    "100-online-node-6-model-calls.jsonl": "dea9f84d10b4e686a45e303033bf5ee982d23a098c22ccd78d387135b8078b2c",
+    "100-online-node-7-model-calls.jsonl": "c7fa2ccd3cf8235aef3188a7bf98a2472b74524278700c74f2ad69f2b86f2c0a",
+    "100-online-node-8-model-calls.jsonl": "4f98bcc08663b472b85a47b4fc610aa43c1647f962da063e6c8b80b53e1dbb70",
+    "metadata.json": "f3cfac2c6cc16046814c6e78d647b969f957dc5277f3ec7d5a4b80d8a51dc772",
+    "progress.json": "72205584749188598f8e880eeddbfd97047107e20894d37339668f210b86b4f3",
+    "summary.json": "61111b017fc14576c500de6c450585e9bb3587bbd9e5a1ee57c7a8a29e9588cc",
+    "retry50/050-online-bob-model-calls.jsonl": "d39044f610ed1012735d9dff9874d27edaf1594792b059d788ef1458a4e4987d",
+    "retry50/050-online-node-1-model-calls.jsonl": "76ae4abcc473fb5bad96a5aac4701fdba5a5c5f47818717b79cb4c4456fb6cf8",
+    "retry50/050-online-node-4-model-calls.jsonl": "6ff7a7324342e7a1c6aa6a9c0a11f9ac6724bf4e88a2fafc924bbc6ccbc217d5",
+    "retry50/050-online-node-6-model-calls.jsonl": "1a4cb5b32e2cf9d750425866a966e579eebc037642ddd4d77250f18a81c91b2d",
+    "retry50/050-online-node-7-model-calls.jsonl": "3399af49c0ae957968f7e199fca486bd910d375ac55f4e42333c301f76eb4ba4",
+    "retry50/metadata.json": "d162fd8a336a5ceedf0dc11f9dfbf03bfd61e0a948fb1e240f896507a3871c5a",
+    "retry50/progress.json": "3b4e8c218fb7b195c853cd31b6c41f8b16ef02a7e3120f9fc99c731b5c991e52",
+    "retry50/summary.json": "34b6f75719c50d3b0adddd09d9b0272046ac23213b5241c032d412b088538580"
+  },
+  "provider": {
+    "actual_calls": 69,
+    "completed_calls": 68,
+    "non_completed_calls": 1,
+    "usage": {
+      "input_tokens": 65414,
+      "output_tokens": 4235,
+      "total_tokens": 69649
+    },
+    "summed_elapsed_ms": 507981.7156189997,
+    "timing_note": "Summed parallel provider call durations are not experiment wall time."
+  },
+  "contains_private_configs_or_keys": false,
+  "real_model_requests_by_curator": 0
+}
