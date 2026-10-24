@@ -1,5 +1,12 @@
 # Changelog
 
+## Symbolic protocol cost analysis — 2026-10-25
+
+- Derive submission, complete receipt dissemination, full-list, share-batch, control and evidence costs from actual message formats.
+- Separate the backend cost function and explicitly conditional closed-form bounds from the current CometBFT implementation.
+- Account for all supplied decryption shares, repeated configuration verification, retries, candidate filtering and retained state costs.
+- Keep symbolic analysis separate from the finite local measurement report; no protocol code or experiments changed.
+
 ## Local overhead measurement — 2026-10-25
 
 - Add passive per-route HTTP body counters and a local metrics endpoint, keeping protocol and observer traffic separate.

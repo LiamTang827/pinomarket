@@ -94,6 +94,17 @@ Interpretation limits:
 
 [Stage report (中文)](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [Detailed report (中文)](docs/experiments/2026-10-23/base-pair/REPORT.zh-CN.md) · [Method and reproduction (中文)](docs/BASE_PAIR_EXPERIMENT.zh-CN.md) · [Results](docs/experiments/2026-10-23/base-pair/results.json)
 
+## Symbolic communication and computation analysis
+
+Let $n$ be the node count, $b$ the nonconflicting orders all processed in an isolated round, and $L=O(\ell+\lambda)$ the encrypted packet length. If each signed receipt is forwarded to each target only once:
+
+$$
+C_{\mathrm{direct,round}}^{(1)}=O(n^2bL),\qquad
+\overline C_{\mathrm{direct}}^{(1)}=O(n^2L).
+$$
+
+These terms cover submission, returned promises, and one complete receipt dissemination. Lists, shares, consensus, retries, and evidence are additional. The [derivation (中文)](docs/COMPLEXITY.zh-CN.md) provides stage formulas, a conditional bound for an explicitly assumed broadcast backend, and computational costs for encryption, list verification, and threshold opening.
+
 ## New: communication and computation costs
 
 Instrumentation now separates application HTTP bodies, consensus sent-packet bytes, node CPU/RSS, observed stage latency, and 14 local API timings. Two normal runs at five nodes and two at eight nodes each processed six orders and passed audit. Raw counters, operation samples, and failed collection attempts remain available.

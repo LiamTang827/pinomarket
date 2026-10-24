@@ -94,6 +94,17 @@ cd pinomarket
 
 [中文阶段报告](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [详细报告](docs/experiments/2026-10-23/base-pair/REPORT.zh-CN.md) · [方法与复现](docs/BASE_PAIR_EXPERIMENT.zh-CN.md) · [结果数据](docs/experiments/2026-10-23/base-pair/results.json)
 
+## 通信与计算复杂度：公式推导
+
+设 $n$ 为节点数，$b$ 为本轮无冲突且全部处理的订单数，$L=O(\ell+\lambda)$ 为完整密文包长度。在每份承诺收据只向每个目标传播一次的模型下：
+
+$$
+C_{\text{直接,轮}}^{(1)}=O(n^2bL),\qquad
+\overline C_{\text{直接}}^{(1)}=O(n^2L).
+$$
+
+这两式计算提交、返回承诺与一次完整收据传播。完整名单、份额、共识、重试及证据须另计。[完整公式推导](docs/COMPLEXITY.zh-CN.md)给出逐阶段公式、共识后端条件下的合并上界，以及用户加密、名单验证和门限打开的计算成本。
+
 ## 新增：通信与计算开销
 
 已加入应用 HTTP 正文字节、共识发送包字节、节点 CPU/RSS、阶段延迟和 14 项实际 API 耗时统计。五节点、八节点各两次正常样本，每组六笔订单，全部处理并通过审计。原始计数、逐操作样本和失败记录均保留。
