@@ -1,6 +1,6 @@
 # pinomarket
 
-**English** · [简体中文](README.zh-CN.md) · [Experiment report (中文)](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [Protocol guide](docs/LIVE_PROTOCOL.md)
+**English** · [简体中文](README.zh-CN.md) · [Experiment report (中文)](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [Protocol guide](docs/LIVE_PROTOCOL.md) · [Overhead report (中文)](docs/experiments/2026-10-25/performance/REPORT.zh-CN.md)
 
 **Make promises checkable. Make markets replayable.**
 
@@ -93,6 +93,18 @@ Interpretation limits:
 - Each fraction has one planned online sample. A provider failure required one complete 50% rerun; the original record remains available. These runs do not estimate attack success rates or throughput limits.
 
 [Stage report (中文)](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [Detailed report (中文)](docs/experiments/2026-10-23/base-pair/REPORT.zh-CN.md) · [Method and reproduction (中文)](docs/BASE_PAIR_EXPERIMENT.zh-CN.md) · [Results](docs/experiments/2026-10-23/base-pair/results.json)
+
+## New: communication and computation costs
+
+Instrumentation now separates application HTTP bodies, consensus sent-packet bytes, node CPU/RSS, observed stage latency, and 14 local API timings. Two normal runs at five nodes and two at eight nodes each processed six orders and passed audit. Raw counters, operation samples, and failed collection attempts remain available.
+
+These finite workloads include empty-block consensus and repeated gossip. They establish neither saturation throughput nor the incremental cost of a particular mechanism. See the [results (中文)](docs/experiments/2026-10-25/performance/REPORT.zh-CN.md) and [measurement definitions/reproduction (中文)](docs/PERFORMANCE.zh-CN.md).
+
+```sh
+python3 harness/performance_experiment.py \
+  --binary "$PWD/bin/pinocchio" --out "$PWD/runs/performance-new" \
+  --nodes 5,8 --orders 6 --repeats 2
+```
 
 ## Runtime modes and code map
 

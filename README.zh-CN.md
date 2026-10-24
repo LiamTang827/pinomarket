@@ -1,6 +1,6 @@
 # pinomarket
 
-[English](README.md) · **简体中文** · [实验报告](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [协议说明](docs/LIVE_PROTOCOL.zh-CN.md)
+[English](README.md) · **简体中文** · [实验报告](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [协议说明](docs/LIVE_PROTOCOL.zh-CN.md) · [开销报告](docs/experiments/2026-10-25/performance/REPORT.zh-CN.md)
 
 **让节点的承诺可检查，让订单的处理过程可重放。**
 
@@ -93,6 +93,18 @@ cd pinomarket
 - 每档仅一个预定在线样本；50% 因接口错误完整补跑一次，原失败记录保留。不能估计攻击成功率或吞吐上限。
 
 [中文阶段报告](docs/experiments/2026-10-23/base-pair/BRIEF.zh-CN.md) · [详细报告](docs/experiments/2026-10-23/base-pair/REPORT.zh-CN.md) · [方法与复现](docs/BASE_PAIR_EXPERIMENT.zh-CN.md) · [结果数据](docs/experiments/2026-10-23/base-pair/results.json)
+
+## 新增：通信与计算开销
+
+已加入应用 HTTP 正文字节、共识发送包字节、节点 CPU/RSS、阶段延迟和 14 项实际 API 耗时统计。五节点、八节点各两次正常样本，每组六笔订单，全部处理并通过审计。原始计数、逐操作样本和失败记录均保留。
+
+这是一轮有限负载测量，包含空块共识与重复传播；不等于吞吐上限或新增机制的净成本。参见[结果报告](docs/experiments/2026-10-25/performance/REPORT.zh-CN.md)和[统计口径与复现](docs/PERFORMANCE.zh-CN.md)。
+
+```sh
+python3 harness/performance_experiment.py \
+  --binary "$PWD/bin/pinocchio" --out "$PWD/runs/performance-new" \
+  --nodes 5,8 --orders 6 --repeats 2
+```
 
 ## 两种运行模式与代码地图
 

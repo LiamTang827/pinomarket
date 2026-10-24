@@ -1,5 +1,13 @@
 # Changelog
 
+## Local overhead measurement — 2026-10-25
+
+- Add passive per-route HTTP body counters and a local metrics endpoint, keeping protocol and observer traffic separate.
+- Measure CometBFT sent-packet counter deltas, node CPU/RSS and observed stages; preserve counter continuity checks, failures and raw samples.
+- Add actual cryptographic/API timing samples after stopping validator processes; retain nested-validation costs and operation details.
+- Record four audited six-order local samples at five/eight nodes, one validation pilot, and four pre-workload collection failures.
+- Document repeated receipt gossip, observation overhead and the limits of finite-load/per-order normalization.
+
 ## Repository documentation — 2026-10-24
 
 - Reorganize the English and Chinese homepages around the research question, protocol flow, quick start, experiment results, and code map.

@@ -1,0 +1,919 @@
+{
+  "schema": 1,
+  "date": "2026-10-25",
+  "experiment": "finite-local-overhead-no-model",
+  "hardware": {
+    "cpu": "Apple M2",
+    "memory_bytes": 17179869184,
+    "arch": "arm64"
+  },
+  "main_runs": [
+    {
+      "run": "n5-normal-01",
+      "nodes": 5,
+      "repeat": 1,
+      "mode": "normal",
+      "valid": true,
+      "submitted": 6,
+      "processed": 6,
+      "filled_orders": 6,
+      "interval_s": 21.639611541,
+      "p2p_mconnection_sent_bytes": 3737012,
+      "protocol_http_body_bytes": 2466515,
+      "observer_http_body_bytes": 6519967,
+      "measured_layered_protocol_bytes": 6203527,
+      "finite_run_bytes_per_processed_order": 1033921.1666666666,
+      "gossip_completed_requests": 1660,
+      "node_cpu_seconds": 17.790000000000003,
+      "peak_sampled_aggregate_node_rss_mib": 304.265625,
+      "submission_to_processing_observed_median_ms": 18676.226666999995,
+      "observed_processed_tps": 0.2772693025765254,
+      "audit_verified": true,
+      "all_nodes_processed": true,
+      "snapshot_before_ms": 8.289541999999983,
+      "snapshot_after_ms": 12.107707999998496,
+      "orders": [
+        {
+          "id": "128b54d5b1d2b6fabd55b006baf8f4e7dd08ea9a656362585a18ae68a34e8e40",
+          "ref": "alice:0",
+          "prepare_command_ms": 35.1720000000002,
+          "submission_started_at_ms": 660.199,
+          "submission_command_ms": 37.284290999999826,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 15.336333,
+          "registered_observed_at_ms": 15561.987040999998,
+          "locked_observed_at_ms": 16063.156540999998,
+          "shares_ready_observed_at_ms": 16566.851208,
+          "processed_observed_at_ms": 17571.474833,
+          "result": {
+            "order": "alice:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 16911.275833
+        },
+        {
+          "id": "21901eb9951b32f50be381275927e6689b014e1fed427a33f458a1a753b92ae1",
+          "ref": "bob:0",
+          "prepare_command_ms": 33.27866600000018,
+          "submission_started_at_ms": 730.9852079999998,
+          "submission_command_ms": 67.85241700000017,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 22.435917,
+          "registered_observed_at_ms": 15561.987040999998,
+          "locked_observed_at_ms": 18072.562291000002,
+          "shares_ready_observed_at_ms": 18575.144083,
+          "processed_observed_at_ms": 19580.002999999997,
+          "result": {
+            "order": "bob:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 18849.017792
+        },
+        {
+          "id": "a72b0da4ff0414e94bfc95ec4e507155361f03b723649480a6d8524902219052",
+          "ref": "carol:0",
+          "prepare_command_ms": 34.03216699999989,
+          "submission_started_at_ms": 833.087125,
+          "submission_command_ms": 70.74587499999961,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 16.192708,
+          "registered_observed_at_ms": 15561.987040999998,
+          "locked_observed_at_ms": 20081.855416,
+          "shares_ready_observed_at_ms": 20605.526041,
+          "processed_observed_at_ms": 21593.733041,
+          "result": {
+            "order": "carol:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 20760.645916
+        },
+        {
+          "id": "15143549e4c60f1d2f195a331c503022ed101f5c4d5d0aa1270dffb0b1956fa9",
+          "ref": "alice:1",
+          "prepare_command_ms": 72.69045800000029,
+          "submission_started_at_ms": 976.8012499999999,
+          "submission_command_ms": 65.6607909999999,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 20.050709,
+          "registered_observed_at_ms": 15561.987040999998,
+          "locked_observed_at_ms": 16063.156540999998,
+          "shares_ready_observed_at_ms": 16566.851208,
+          "processed_observed_at_ms": 17571.474833,
+          "result": {
+            "order": "alice:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 16594.673583
+        },
+        {
+          "id": "01547ef94ec9bbc414108d76e06497613940873c52d4cfe35014c72196e88f14",
+          "ref": "bob:1",
+          "prepare_command_ms": 33.967667000000205,
+          "submission_started_at_ms": 1076.567458,
+          "submission_command_ms": 71.40949999999975,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 22.730166,
+          "registered_observed_at_ms": 15561.987040999998,
+          "locked_observed_at_ms": 18072.562291000002,
+          "shares_ready_observed_at_ms": 18575.144083,
+          "processed_observed_at_ms": 19580.002999999997,
+          "result": {
+            "order": "bob:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 18503.435541999996
+        },
+        {
+          "id": "db1e61be3fca62e286a04d8a7907c40a7c82e8e263166b7e4ae31d7f057cee01",
+          "ref": "carol:1",
+          "prepare_command_ms": 80.89699999999978,
+          "submission_started_at_ms": 1229.158375,
+          "submission_command_ms": 68.4929159999997,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 29.917583,
+          "registered_observed_at_ms": 15561.987040999998,
+          "locked_observed_at_ms": 20081.855416,
+          "shares_ready_observed_at_ms": 20605.526041,
+          "processed_observed_at_ms": 21593.733041,
+          "result": {
+            "order": "carol:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 20364.574666
+        }
+      ],
+      "http_routes": {
+        "/submit": {
+          "requests": 30,
+          "request_body_bytes": 34410,
+          "response_body_bytes": 8400,
+          "failures": 0,
+          "handler_ms_total": 522.634836,
+          "status_codes": {
+            "200": 30
+          }
+        },
+        "/gossip": {
+          "requests": 1660,
+          "request_body_bytes": 2403688,
+          "response_body_bytes": 19920,
+          "failures": 0,
+          "handler_ms_total": 6245.498110999997,
+          "status_codes": {
+            "200": 1660
+          }
+        },
+        "/open": {
+          "requests": 1,
+          "request_body_bytes": 0,
+          "response_body_bytes": 97,
+          "failures": 0,
+          "handler_ms_total": 1.608458,
+          "status_codes": {
+            "202": 1
+          }
+        },
+        "/state": {
+          "requests": 228,
+          "request_body_bytes": 0,
+          "response_body_bytes": 6519967,
+          "failures": 0,
+          "handler_ms_total": 134.733795,
+          "status_codes": {
+            "200": 228
+          }
+        },
+        "/health": {
+          "requests": 0,
+          "request_body_bytes": 0,
+          "response_body_bytes": 0,
+          "failures": 0,
+          "handler_ms_total": 0.0,
+          "status_codes": {
+            "200": 0
+          }
+        }
+      }
+    },
+    {
+      "run": "n5-normal-02",
+      "nodes": 5,
+      "repeat": 2,
+      "mode": "normal",
+      "valid": true,
+      "submitted": 6,
+      "processed": 6,
+      "filled_orders": 6,
+      "interval_s": 22.632361542,
+      "p2p_mconnection_sent_bytes": 3964304,
+      "protocol_http_body_bytes": 2554187,
+      "observer_http_body_bytes": 7068197,
+      "measured_layered_protocol_bytes": 6518491,
+      "finite_run_bytes_per_processed_order": 1086415.1666666667,
+      "gossip_completed_requests": 1720,
+      "node_cpu_seconds": 19.54,
+      "peak_sampled_aggregate_node_rss_mib": 311.171875,
+      "submission_to_processing_observed_median_ms": 19303.678250499994,
+      "observed_processed_tps": 0.2651071117287297,
+      "audit_verified": true,
+      "all_nodes_processed": true,
+      "snapshot_before_ms": 4.831875000000707,
+      "snapshot_after_ms": 4.437541999998018,
+      "orders": [
+        {
+          "id": "356070ebd57fb8875265b1a5f60da5b8dc0192360373af4655afd6734ac050ca",
+          "ref": "alice:0",
+          "prepare_command_ms": 36.02370900000196,
+          "submission_started_at_ms": 982.1808750000009,
+          "submission_command_ms": 65.78624999999874,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 21.743666,
+          "registered_observed_at_ms": 16069.672792000003,
+          "locked_observed_at_ms": 16584.230083,
+          "shares_ready_observed_at_ms": 18073.648833000003,
+          "processed_observed_at_ms": 18575.172875000004,
+          "result": {
+            "order": "alice:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 17592.992000000002
+        },
+        {
+          "id": "9103d04937350f786a3a522b439fff21fa9c341dccf3f7f055ac0921573211b6",
+          "ref": "bob:0",
+          "prepare_command_ms": 33.108833000000004,
+          "submission_started_at_ms": 1081.2075830000013,
+          "submission_command_ms": 67.5339589999985,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 19.523667,
+          "registered_observed_at_ms": 16069.672792000003,
+          "locked_observed_at_ms": 19080.605083,
+          "shares_ready_observed_at_ms": 19578.160583,
+          "processed_observed_at_ms": 20578.888791999998,
+          "result": {
+            "order": "bob:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 19497.681208999995
+        },
+        {
+          "id": "b1b867ccdd0dbfa0a8c9585f8ce0d8cf407b5931bf263b41ecf8b2415b0ffd08",
+          "ref": "carol:0",
+          "prepare_command_ms": 33.26825000000255,
+          "submission_started_at_ms": 1182.2876670000007,
+          "submission_command_ms": 74.62962500000003,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 15.975875,
+          "registered_observed_at_ms": 16069.672792000003,
+          "locked_observed_at_ms": 21084.003583,
+          "shares_ready_observed_at_ms": 21593.125833,
+          "processed_observed_at_ms": 22585.925499999998,
+          "result": {
+            "order": "carol:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 21403.637832999997
+        },
+        {
+          "id": "05a092a863dc0af1b2caae5a1ebcd9b02ec8d5a3cfcdbd60ae70e03587a30fa1",
+          "ref": "alice:1",
+          "prepare_command_ms": 46.62620800000283,
+          "submission_started_at_ms": 1303.8893330000008,
+          "submission_command_ms": 127.69662499999868,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 49.739334,
+          "registered_observed_at_ms": 16069.672792000003,
+          "locked_observed_at_ms": 16584.230083,
+          "shares_ready_observed_at_ms": 18073.648833000003,
+          "processed_observed_at_ms": 18575.172875000004,
+          "result": {
+            "order": "alice:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 17271.283542000005
+        },
+        {
+          "id": "5324feec6b80b01b7652c5f096b7c0ed4a7ab5c83ad141d27c9dc6a03598a5dc",
+          "ref": "bob:1",
+          "prepare_command_ms": 37.30320900000095,
+          "submission_started_at_ms": 1469.213500000002,
+          "submission_command_ms": 176.1856669999986,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 100.77,
+          "registered_observed_at_ms": 16069.672792000003,
+          "locked_observed_at_ms": 19080.605083,
+          "shares_ready_observed_at_ms": 19578.160583,
+          "processed_observed_at_ms": 20578.888791999998,
+          "result": {
+            "order": "bob:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 19109.675291999996
+        },
+        {
+          "id": "f8f8d5f0931c04de89f501f32ae5e603ee9af775498f04d2f484be7e2f11c5ab",
+          "ref": "carol:1",
+          "prepare_command_ms": 68.01395800000165,
+          "submission_started_at_ms": 1713.6093330000008,
+          "submission_command_ms": 123.57637499999896,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 5,
+          "receipt_quorum_ms": 38.163958,
+          "registered_observed_at_ms": 16069.672792000003,
+          "locked_observed_at_ms": 21084.003583,
+          "shares_ready_observed_at_ms": 21593.125833,
+          "processed_observed_at_ms": 22585.925499999998,
+          "result": {
+            "order": "carol:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 20872.316166999997
+        }
+      ],
+      "http_routes": {
+        "/submit": {
+          "requests": 30,
+          "request_body_bytes": 34410,
+          "response_body_bytes": 8400,
+          "failures": 0,
+          "handler_ms_total": 1059.465165,
+          "status_codes": {
+            "200": 30
+          }
+        },
+        "/gossip": {
+          "requests": 1720,
+          "request_body_bytes": 2490640,
+          "response_body_bytes": 20640,
+          "failures": 0,
+          "handler_ms_total": 6076.574799000002,
+          "status_codes": {
+            "200": 1720
+          }
+        },
+        "/open": {
+          "requests": 1,
+          "request_body_bytes": 0,
+          "response_body_bytes": 97,
+          "failures": 0,
+          "handler_ms_total": 1.598916,
+          "status_codes": {
+            "202": 1
+          }
+        },
+        "/state": {
+          "requests": 241,
+          "request_body_bytes": 0,
+          "response_body_bytes": 7068197,
+          "failures": 0,
+          "handler_ms_total": 135.317212,
+          "status_codes": {
+            "200": 241
+          }
+        },
+        "/health": {
+          "requests": 0,
+          "request_body_bytes": 0,
+          "response_body_bytes": 0,
+          "failures": 0,
+          "handler_ms_total": 0.0,
+          "status_codes": {
+            "200": 0
+          }
+        }
+      }
+    },
+    {
+      "run": "n8-normal-01",
+      "nodes": 8,
+      "repeat": 1,
+      "mode": "normal",
+      "valid": true,
+      "submitted": 6,
+      "processed": 6,
+      "filled_orders": 6,
+      "interval_s": 24.696047874999998,
+      "p2p_mconnection_sent_bytes": 17515221,
+      "protocol_http_body_bytes": 7835891,
+      "observer_http_body_bytes": 17725406,
+      "measured_layered_protocol_bytes": 25351112,
+      "finite_run_bytes_per_processed_order": 4225185.333333333,
+      "gossip_completed_requests": 5320,
+      "node_cpu_seconds": 44.85000000000001,
+      "peak_sampled_aggregate_node_rss_mib": 535.65625,
+      "submission_to_processing_observed_median_ms": 20590.224917,
+      "observed_processed_tps": 0.2429538536031851,
+      "audit_verified": true,
+      "all_nodes_processed": true,
+      "snapshot_before_ms": 7.633583000000499,
+      "snapshot_after_ms": 7.842374999995627,
+      "orders": [
+        {
+          "id": "9b7bb514f97e2ecdadb3439a3ea44fda78d06cafa2cd82ec85760c3236f1ca67",
+          "ref": "alice:0",
+          "prepare_command_ms": 35.35325,
+          "submission_started_at_ms": 973.8473750000054,
+          "submission_command_ms": 131.13254199999608,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 31.168125,
+          "registered_observed_at_ms": 17608.287957999997,
+          "locked_observed_at_ms": 18608.218666999997,
+          "shares_ready_observed_at_ms": 19145.809667,
+          "processed_observed_at_ms": 20123.057957999998,
+          "result": {
+            "order": "alice:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 19149.210582999993
+        },
+        {
+          "id": "a4a93f255907ea63a5bf69fbdee8b8845530aff0fc428bf36d38b200792fe179",
+          "ref": "bob:0",
+          "prepare_command_ms": 86.82316599999496,
+          "submission_started_at_ms": 1192.052541999999,
+          "submission_command_ms": 179.73491600000102,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 104.816584,
+          "registered_observed_at_ms": 17608.287957999997,
+          "locked_observed_at_ms": 20616.875416999996,
+          "shares_ready_observed_at_ms": 21613.931708000004,
+          "processed_observed_at_ms": 22113.783292,
+          "result": {
+            "order": "bob:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 20921.730750000002
+        },
+        {
+          "id": "13498bf857f73a0db936fce90e18a11af3821c40eebebfe55477f820f973265d",
+          "ref": "carol:0",
+          "prepare_command_ms": 76.40620800000164,
+          "submission_started_at_ms": 1448.5957079999991,
+          "submission_command_ms": 121.9574170000044,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 50.145292,
+          "registered_observed_at_ms": 17608.287957999997,
+          "locked_observed_at_ms": 23116.142042,
+          "shares_ready_observed_at_ms": 23660.376917,
+          "processed_observed_at_ms": 24624.419707999998,
+          "result": {
+            "order": "carol:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 23175.823999999997
+        },
+        {
+          "id": "82ff8cd97f3f75bac766a295d4f86786d74a7c575aaab388af8af08695dd5608",
+          "ref": "alice:1",
+          "prepare_command_ms": 131.43458299999367,
+          "submission_started_at_ms": 1702.1749170000007,
+          "submission_command_ms": 73.63658300000247,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 39.480166,
+          "registered_observed_at_ms": 17608.287957999997,
+          "locked_observed_at_ms": 18608.218666999997,
+          "shares_ready_observed_at_ms": 19145.809667,
+          "processed_observed_at_ms": 20123.057957999998,
+          "result": {
+            "order": "alice:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 18420.883040999997
+        },
+        {
+          "id": "6751f9496087e09af6316ad48a250c7cf529e014f41911f3f3cb5f0046adf82d",
+          "ref": "bob:1",
+          "prepare_command_ms": 78.88591700000092,
+          "submission_started_at_ms": 1855.0642080000016,
+          "submission_command_ms": 122.51195900000062,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 81.353708,
+          "registered_observed_at_ms": 17608.287957999997,
+          "locked_observed_at_ms": 20616.875416999996,
+          "shares_ready_observed_at_ms": 21613.931708000004,
+          "processed_observed_at_ms": 22113.783292,
+          "result": {
+            "order": "bob:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 20258.719083999997
+        },
+        {
+          "id": "51e663ef7762334092e6a3482c4a14783eb2b52f9e8e07c629989f5778843d5b",
+          "ref": "carol:1",
+          "prepare_command_ms": 34.203249999997354,
+          "submission_started_at_ms": 2012.1130830000027,
+          "submission_command_ms": 182.6590000000008,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 83.725,
+          "registered_observed_at_ms": 17608.287957999997,
+          "locked_observed_at_ms": 23116.142042,
+          "shares_ready_observed_at_ms": 23660.376917,
+          "processed_observed_at_ms": 24624.419707999998,
+          "result": {
+            "order": "carol:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 22612.306624999994
+        }
+      ],
+      "http_routes": {
+        "/submit": {
+          "requests": 48,
+          "request_body_bytes": 55056,
+          "response_body_bytes": 13440,
+          "failures": 0,
+          "handler_ms_total": 2728.628164,
+          "status_codes": {
+            "200": 48
+          }
+        },
+        "/gossip": {
+          "requests": 5320,
+          "request_body_bytes": 7703458,
+          "response_body_bytes": 63840,
+          "failures": 0,
+          "handler_ms_total": 36859.205124,
+          "status_codes": {
+            "200": 5320
+          }
+        },
+        "/open": {
+          "requests": 1,
+          "request_body_bytes": 0,
+          "response_body_bytes": 97,
+          "failures": 0,
+          "handler_ms_total": 1.656084,
+          "status_codes": {
+            "202": 1
+          }
+        },
+        "/state": {
+          "requests": 411,
+          "request_body_bytes": 0,
+          "response_body_bytes": 17725406,
+          "failures": 0,
+          "handler_ms_total": 363.797373,
+          "status_codes": {
+            "200": 411
+          }
+        },
+        "/health": {
+          "requests": 0,
+          "request_body_bytes": 0,
+          "response_body_bytes": 0,
+          "failures": 0,
+          "handler_ms_total": 0.0,
+          "status_codes": {
+            "200": 0
+          }
+        }
+      }
+    },
+    {
+      "run": "n8-normal-02",
+      "nodes": 8,
+      "repeat": 2,
+      "mode": "normal",
+      "valid": true,
+      "submitted": 6,
+      "processed": 6,
+      "filled_orders": 6,
+      "interval_s": 25.167367458,
+      "p2p_mconnection_sent_bytes": 17642770,
+      "protocol_http_body_bytes": 7917553,
+      "observer_http_body_bytes": 18477355,
+      "measured_layered_protocol_bytes": 25560323,
+      "finite_run_bytes_per_processed_order": 4260053.833333333,
+      "gossip_completed_requests": 5376,
+      "node_cpu_seconds": 45.809999999999995,
+      "peak_sampled_aggregate_node_rss_mib": 542.1875,
+      "submission_to_processing_observed_median_ms": 20419.304688000004,
+      "observed_processed_tps": 0.2384039574267339,
+      "audit_verified": true,
+      "all_nodes_processed": true,
+      "snapshot_before_ms": 7.421415999999681,
+      "snapshot_after_ms": 8.397083000005523,
+      "orders": [
+        {
+          "id": "8d83d04bf443d21b6457bb6a2d24af98cdabf852cbd7bbcfb7cdc44de57f98f2",
+          "ref": "alice:0",
+          "prepare_command_ms": 75.45529199998668,
+          "submission_started_at_ms": 1124.1427920000006,
+          "submission_command_ms": 66.74758299999439,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 29.388417,
+          "registered_observed_at_ms": 17600.54375,
+          "locked_observed_at_ms": 18582.964833000005,
+          "shares_ready_observed_at_ms": 19139.026292,
+          "processed_observed_at_ms": 20092.054332999993,
+          "result": {
+            "order": "alice:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 18967.911540999994
+        },
+        {
+          "id": "621fa9a9de901511738e62f12f28ab3dfe5b03d3b7353b45cfbd61b36e8e0ea4",
+          "ref": "bob:0",
+          "prepare_command_ms": 34.5509160000006,
+          "submission_started_at_ms": 1225.7042499999925,
+          "submission_command_ms": 128.49095800000055,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 52.478917,
+          "registered_observed_at_ms": 17600.54375,
+          "locked_observed_at_ms": 20599.979750000002,
+          "shares_ready_observed_at_ms": 21596.934832999992,
+          "processed_observed_at_ms": 22099.162792000003,
+          "result": {
+            "order": "bob:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 20873.45854200001
+        },
+        {
+          "id": "8dc8859785a51035768c4866621bba8e26b4170629523f01edc3a5a43b845b56",
+          "ref": "carol:0",
+          "prepare_command_ms": 78.34870799999294,
+          "submission_started_at_ms": 1433.009791999993,
+          "submission_command_ms": 135.5180830000079,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 62.230208,
+          "registered_observed_at_ms": 17600.54375,
+          "locked_observed_at_ms": 23104.58812499999,
+          "shares_ready_observed_at_ms": 24170.096875,
+          "processed_observed_at_ms": 25119.437167,
+          "result": {
+            "order": "carol:0",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 23686.427375000007
+        },
+        {
+          "id": "5fbb066b968260ee501799af9e55f7adfbac107b9d5e9d2c2fcf4b3baf578321",
+          "ref": "alice:1",
+          "prepare_command_ms": 140.80312500000502,
+          "submission_started_at_ms": 1709.7433750000023,
+          "submission_command_ms": 343.85687499999995,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 242.763292,
+          "registered_observed_at_ms": 17600.54375,
+          "locked_observed_at_ms": 18582.964833000005,
+          "shares_ready_observed_at_ms": 19139.026292,
+          "processed_observed_at_ms": 20092.054332999993,
+          "result": {
+            "order": "alice:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 18382.31095799999
+        },
+        {
+          "id": "c10613eed2ae12e4e410491ebe015f81df46240382119ae4a5c1d4e751ee31cf",
+          "ref": "bob:1",
+          "prepare_command_ms": 80.23904200000231,
+          "submission_started_at_ms": 2134.011958000002,
+          "submission_command_ms": 76.82604199999332,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 23.479625,
+          "registered_observed_at_ms": 17600.54375,
+          "locked_observed_at_ms": 20599.979750000002,
+          "shares_ready_observed_at_ms": 21596.934832999992,
+          "processed_observed_at_ms": 22099.162792000003,
+          "result": {
+            "order": "bob:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 19965.150834
+        },
+        {
+          "id": "000a584c5c5dd1fe87fa38097cb485cafb55987430a3b239e283f78d9bb03cdf",
+          "ref": "carol:1",
+          "prepare_command_ms": 76.01470800000243,
+          "submission_started_at_ms": 2287.189708,
+          "submission_command_ms": 132.25274999999192,
+          "submit_exit_code": 0,
+          "quorum_obtained": true,
+          "promise_count": 8,
+          "receipt_quorum_ms": 68.729333,
+          "registered_observed_at_ms": 17600.54375,
+          "locked_observed_at_ms": 23104.58812499999,
+          "shares_ready_observed_at_ms": 24170.096875,
+          "processed_observed_at_ms": 25119.437167,
+          "result": {
+            "order": "carol:1",
+            "status": "filled",
+            "filled": 1,
+            "cost_cents": 60
+          },
+          "submit_to_processed_observed_ms": 22832.247459
+        }
+      ],
+      "http_routes": {
+        "/submit": {
+          "requests": 48,
+          "request_body_bytes": 55056,
+          "response_body_bytes": 13440,
+          "failures": 0,
+          "handler_ms_total": 3358.8314990000003,
+          "status_codes": {
+            "200": 48
+          }
+        },
+        "/gossip": {
+          "requests": 5376,
+          "request_body_bytes": 7784448,
+          "response_body_bytes": 64512,
+          "failures": 0,
+          "handler_ms_total": 37182.385908,
+          "status_codes": {
+            "200": 5376
+          }
+        },
+        "/open": {
+          "requests": 1,
+          "request_body_bytes": 0,
+          "response_body_bytes": 97,
+          "failures": 0,
+          "handler_ms_total": 1.680875,
+          "status_codes": {
+            "202": 1
+          }
+        },
+        "/state": {
+          "requests": 420,
+          "request_body_bytes": 0,
+          "response_body_bytes": 18477355,
+          "failures": 0,
+          "handler_ms_total": 452.06720199999995,
+          "status_codes": {
+            "200": 420
+          }
+        },
+        "/health": {
+          "requests": 0,
+          "request_body_bytes": 0,
+          "response_body_bytes": 0,
+          "failures": 0,
+          "handler_ms_total": 0.0,
+          "status_codes": {
+            "200": 0
+          }
+        }
+      }
+    }
+  ],
+  "additional_attempts": {
+    "validation_pilot": {
+      "valid": true,
+      "nodes": 5,
+      "processed": 6,
+      "included_in_main_comparison": false
+    },
+    "pre_workload_failures": [
+      {
+        "run": "n5-normal-01",
+        "valid": false,
+        "errors": [
+          "RemoteDisconnected: Remote end closed connection without response"
+        ],
+        "protocol_orders_submitted": 0,
+        "included_in_main_comparison": false
+      },
+      {
+        "run": "n5-normal-02",
+        "valid": false,
+        "errors": [
+          "RemoteDisconnected: Remote end closed connection without response"
+        ],
+        "protocol_orders_submitted": 0,
+        "included_in_main_comparison": false
+      },
+      {
+        "run": "n8-normal-01",
+        "valid": false,
+        "errors": [
+          "RemoteDisconnected: Remote end closed connection without response"
+        ],
+        "protocol_orders_submitted": 0,
+        "included_in_main_comparison": false
+      },
+      {
+        "run": "n8-normal-02",
+        "valid": false,
+        "errors": [
+          "RemoteDisconnected: Remote end closed connection without response"
+        ],
+        "protocol_orders_submitted": 0,
+        "included_in_main_comparison": false
+      }
+    ]
+  },
+  "attempt_accounting": {
+    "total_network_launches": 9,
+    "main_valid_runs": 4,
+    "valid_pilot": 1,
+    "pre_workload_collection_failures": 4
+  },
+  "limitations": [
+    "Local multiprocess finite workload, no AI calls, no saturation throughput or asymptotic bound.",
+    "Initialization/DKG and startup excluded; audit and compute benchmark performed after final interval snapshots.",
+    "P2P counts delimited protobuf MConnection packets sent, not SecretConnection/TCP/IP wire bytes; ~100ms flowrate boundary quantization.",
+    "Protocol HTTP request+response bodies are distinct from P2P; headers, framing, local RPC, model and observer traffic are not included in layered protocol sum.",
+    "Cumulative completed HTTP handlers can cross interval boundaries. Snapshots are sampled, not simultaneous, and include background empty-block consensus and periodic repeated gossip.",
+    "No idle-baseline subtraction. Per-order bytes are finite-run normalization, not a per-transaction complexity proof.",
+    "ps CPU is cumulative node-process time; sampled RSS is not exact peak; host contention, observation overhead and protocol waiting remain.",
+    "Queue capacity grows as n*orders to keep equal pernode quota. Service capacity2; actual block scheduling can differ between runs.",
+    "Stage times are first node-1 client poll observations; measurement waits for all nodes to process. Prepare/submit command times include CLI startup and are not isolated crypto timings."
+  ]
+}
