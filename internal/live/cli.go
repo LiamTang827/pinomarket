@@ -166,7 +166,7 @@ func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt,
 }
 func RunCLI(args []string) error {
 	if len(args) == 0 {
-		fmt.Println("network init|node|ready|open|prepare|submit|verify-receipt|measure|wait|status|audit (use -h after command)")
+		fmt.Println("network init|node|ready|open|prepare|submit|verify-receipt|measure|benchmark|wait|status|audit (use -h after command)")
 		return nil
 	}
 	fs := flag.NewFlagSet("network "+args[0], flag.ContinueOnError)
@@ -198,6 +198,7 @@ func RunCLI(args []string) error {
 	withhold := fs.Bool("withhold-shares", false, "fault: do not release own shares")
 	delay := fs.Int("delay-ms", 0, "delay incoming submissions")
 	count := fs.Int("count", 3, "measure: number of purchases across alice, bob and carol")
+	samples := fs.Int("samples", 30, "benchmark: warmed samples per local operation")
 	timeout := fs.Duration("timeout", 60*time.Second, "client operation deadline")
 	if err := fs.Parse(args[1:]); err != nil {
 		return err
@@ -239,6 +240,8 @@ func RunCLI(args []string) error {
 			return err
 		}
 		fmt.Println(string(JSON(map[string]any{"verified": true, "promises": count, "quorum": count >= m.Policy.Quorum})))
+	case "benchmark":
+		return BenchmarkCompute(ctx, m, *dir, *samples, *out)
 	case "measure":
 		if *out == "" {
 			return errors.New("measure requires a new -out directory")

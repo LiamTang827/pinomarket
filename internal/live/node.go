@@ -68,6 +68,7 @@ type liveNode struct {
 	admissionMu sync.Mutex // serializes live local observation, choice, and durable promise
 	journal     admissionJournal
 	agent       *nodeAgent
+	telemetry   *nodeTelemetry
 }
 
 // RunNode runs one independent application, HTTP transport and CometBFT process.
@@ -122,7 +123,7 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	}
 	// Keep retrying consensus transactions bounded; a missing quorum must not
 	// prevent the worker or HTTP server from responding to shutdown.
-	n := &liveNode{cfg: cfg, options: options, peer: peer, private: private, machine: machine, rpc: rpc, httpClient: &http.Client{Timeout: 2 * time.Second}, journalPath: filepath.Join(cfg.CometDir, "app", "admission.json")}
+	n := &liveNode{cfg: cfg, options: options, peer: peer, private: private, machine: machine, rpc: rpc, httpClient: &http.Client{Timeout: 2 * time.Second}, journalPath: filepath.Join(cfg.CometDir, "app", "admission.json"), telemetry: newNodeTelemetry(peer.ID)}
 	if options.AgentSocket != "" {
 		timeout := options.AgentTimeoutMS
 		if timeout == 0 {
@@ -153,12 +154,7 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	}()
 	runCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
-	mux := http.NewServeMux()
-	mux.HandleFunc("/health", n.health)
-	mux.HandleFunc("/state", n.state)
-	mux.HandleFunc("/submit", n.submit)
-	mux.HandleFunc("/gossip", n.gossip)
-	mux.HandleFunc("/open", n.open)
+	mux := n.routes()
 	writeTimeout := 65 * time.Second
 	if n.agent != nil {
 		writeTimeout = 125 * time.Second
