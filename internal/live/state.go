@@ -143,11 +143,14 @@ func (s *State) Apply(m Manifest, t SignedTx, height int64) error {
 		refs := map[string]map[string]bool{}
 		for _, l := range selected {
 			for _, p := range l.Packets {
-				packets[p.ID()] = p
+				id := p.ID()
+				if preferRegistrationPacket(p, packets[id]) {
+					packets[id] = p
+				}
 				if refs[p.Ref()] == nil {
 					refs[p.Ref()] = map[string]bool{}
 				}
-				refs[p.Ref()][p.ID()] = true
+				refs[p.Ref()][id] = true
 			}
 		}
 		ids := []string{}

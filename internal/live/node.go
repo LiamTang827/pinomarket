@@ -27,13 +27,10 @@ import (
 // NodeOptions intentionally injects protocol faults in local experiments.
 // A node still possesses only its own signing key and threshold secret share.
 type NodeOptions struct {
-	Refuse             bool
-	OmitList           bool
-	WithholdShares     bool
-	DelayMS            int
-	AgentSocket        string
-	AgentTimeoutMS     int
-	AgentPrepareBlocks int64
+	Refuse         bool
+	OmitList       bool
+	WithholdShares bool
+	DelayMS        int
 }
 
 // Gossip contains public signed receipts; it carries no private key material.
@@ -56,19 +53,19 @@ type admissionJournal struct {
 }
 
 type liveNode struct {
-	cfg         NodeConfig
-	options     NodeOptions
-	peer        Peer
-	private     ed25519.PrivateKey
-	machine     *Machine
-	rpc         *rpchttp.HTTP
-	httpClient  *http.Client
-	journalPath string
-	mu          sync.Mutex
-	admissionMu sync.Mutex // serializes live local observation, choice, and durable promise
-	journal     admissionJournal
-	agent       *nodeAgent
-	telemetry   *nodeTelemetry
+	cfg            NodeConfig
+	options        NodeOptions
+	peer           Peer
+	private        ed25519.PrivateKey
+	machine        *Machine
+	rpc            *rpchttp.HTTP
+	httpClient     *http.Client
+	journalPath    string
+	mu             sync.Mutex
+	journal        admissionJournal
+	ingressFailure error // fail closed after uncertain software-journal persistence
+	aion           *aionRuntime
+	telemetry      *nodeTelemetry
 }
 
 // RunNode runs one independent application, HTTP transport and CometBFT process.
@@ -89,6 +86,12 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	if !bytes.Equal(private.Public().(ed25519.PublicKey), peer.Key) {
 		return errors.New("local signing key does not match manifest member")
 	}
+	if cfg.Manifest.Policy.Ingress == IngressSoftware {
+		key := ed25519.PrivateKey(cfg.IngressPrivate)
+		if len(key) != ed25519.PrivateKeySize || !bytes.Equal(key.Public().(ed25519.PublicKey), peer.IngressKey) {
+			return errors.New("software ingress private key does not match manifest member")
+		}
+	}
 	if cfg.Share.Index != cfg.Index || cfg.Share.ConfigID != cfg.Manifest.Crypto.ID || len(cfg.Share.Value) == 0 || len(cfg.Share.Value) > 32 {
 		return errors.New("local threshold share does not match manifest configuration/index")
 	}
@@ -97,9 +100,6 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	}
 	if options.DelayMS < 0 || options.DelayMS > 60000 {
 		return errors.New("delay must be between 0 and 60000 milliseconds")
-	}
-	if options.AgentTimeoutMS < 0 || options.AgentTimeoutMS > 55000 || options.AgentPrepareBlocks < 0 {
-		return errors.New("agent timeout must be 0..55000ms and prepare blocks nonnegative")
 	}
 	listenAddress, err := localAddress(peer.API)
 	if err != nil {
@@ -124,15 +124,8 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	// Keep retrying consensus transactions bounded; a missing quorum must not
 	// prevent the worker or HTTP server from responding to shutdown.
 	n := &liveNode{cfg: cfg, options: options, peer: peer, private: private, machine: machine, rpc: rpc, httpClient: &http.Client{Timeout: 2 * time.Second}, journalPath: filepath.Join(cfg.CometDir, "app", "admission.json"), telemetry: newNodeTelemetry(peer.ID)}
-	if options.AgentSocket != "" {
-		timeout := options.AgentTimeoutMS
-		if timeout == 0 {
-			timeout = 2000
-		}
-		n.agent, err = newNodeAgent(options.AgentSocket, time.Duration(timeout)*time.Millisecond)
-		if err != nil {
-			return err
-		}
+	if cfg.Manifest.Policy.Ordering == OrderingAion {
+		n.aion = newAionRuntime(ed25519.PrivateKey(cfg.IngressPrivate), filepath.Join(cfg.CometDir, "app", "aion-delay.json"))
 	}
 	if err := n.loadJournal(); err != nil {
 		return err
@@ -155,11 +148,7 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	runCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	mux := n.routes()
-	writeTimeout := 65 * time.Second
-	if n.agent != nil {
-		writeTimeout = 125 * time.Second
-	}
-	server := &http.Server{Handler: mux, ReadHeaderTimeout: 3 * time.Second, ReadTimeout: 5 * time.Second, WriteTimeout: writeTimeout, IdleTimeout: 15 * time.Second, MaxHeaderBytes: 16 * 1024, BaseContext: func(net.Listener) context.Context { return runCtx }}
+	server := &http.Server{Handler: mux, ReadHeaderTimeout: 3 * time.Second, ReadTimeout: 5 * time.Second, WriteTimeout: 65 * time.Second, IdleTimeout: 15 * time.Second, MaxHeaderBytes: 16 * 1024, BaseContext: func(net.Listener) context.Context { return runCtx }}
 	errorsC := make(chan error, 2)
 	go func() {
 		if err := server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -253,7 +242,22 @@ func (n *liveNode) loadJournal() error {
 				return errors.New("conflicting commands in local admission journal")
 			}
 			refs[g.Packet.Ref()] = id
+			if n.cfg.Manifest.Policy.Ingress == IngressSoftware {
+				receipt, ok := n.journal.Receipts[Hash(g.Promise)]
+				if !ok || Hash(receipt) != Hash(g) {
+					return errors.New("protected admission missing matching public receipt")
+				}
+			}
 
+		}
+		if n.cfg.Manifest.Policy.Ingress == IngressSoftware {
+			records := make([]IngressRecord, 0, len(round.Accepted))
+			for _, g := range round.Accepted {
+				records = append(records, *g.Promise.Ingress)
+			}
+			if _, err := ValidateIngressRecords(n.cfg.Manifest, n.peer.ID, number, records); err != nil {
+				return fmt.Errorf("restore software ingress journal: %w", err)
+			}
 		}
 		if round.Sealed != nil {
 			if err := round.Sealed.Validate(n.cfg.Manifest, n.cfg.Manifest.Policy.QueueCapacity); err != nil {
@@ -261,6 +265,17 @@ func (n *liveNode) loadJournal() error {
 			}
 			if round.Sealed.Node != n.peer.ID || round.Sealed.Round != number {
 				return errors.New("invalid sealed local final list")
+			}
+			if n.cfg.Manifest.Policy.Ingress == IngressSoftware {
+				if len(round.Sealed.Promises) != len(round.Accepted) {
+					return errors.New("sealed software ingress list differs from accepted journal")
+				}
+				for _, promise := range round.Sealed.Promises {
+					g, ok := round.Accepted[promise.ID]
+					if !ok || Hash(g.Promise) != Hash(promise) {
+						return errors.New("sealed software ingress promise differs from accepted journal")
+					}
+				}
 			}
 		}
 	}
@@ -270,6 +285,16 @@ func (n *liveNode) loadJournal() error {
 		}
 		if hash != Hash(g.Promise) {
 			return errors.New("invalid public receipt key")
+		}
+		if n.cfg.Manifest.Policy.Ingress == IngressSoftware && g.Promise.Node == n.peer.ID {
+			round := n.journal.Rounds[g.Promise.Round]
+			if round == nil {
+				return errors.New("local protected receipt has no accepted round")
+			}
+			accepted, ok := round.Accepted[g.Promise.ID]
+			if !ok || Hash(accepted) != Hash(g) {
+				return errors.New("local protected receipt differs from accepted journal")
+			}
 		}
 	}
 	for _, list := range n.journal.Lists {
@@ -281,13 +306,13 @@ func (n *liveNode) loadJournal() error {
 }
 
 func (n *liveNode) validateGossip(g Gossip) error {
-	if err := g.Packet.Validate(n.cfg.Manifest); err != nil {
+	if err := g.Packet.ValidateAdmission(n.cfg.Manifest); err != nil {
 		return err
 	}
 	if err := g.Promise.Validate(n.cfg.Manifest); err != nil {
 		return err
 	}
-	if g.Promise.ID != g.Packet.ID() || g.Promise.Round != g.Packet.Header.Round {
+	if !g.Promise.matches(g.Packet) {
 		return errors.New("receipt does not name its packet/round")
 	}
 	return nil
@@ -327,7 +352,7 @@ func (n *liveNode) health(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s := n.machine.Snapshot()
-	sendJSON(w, http.StatusOK, map[string]any{"ok": true, "node": n.peer.ID, "index": n.cfg.Index, "height": s.Height, "context": s.Context})
+	sendJSON(w, http.StatusOK, map[string]any{"ok": true, "node": n.peer.ID, "index": n.cfg.Index, "height": s.Height, "context": s.Context, "ingress": n.cfg.Manifest.Policy.Ingress, "ordering": n.cfg.Manifest.Policy.Ordering, "hardware_attested": false})
 }
 func (n *liveNode) state(w http.ResponseWriter, r *http.Request) {
 	if !method(w, r, http.MethodGet) {
@@ -357,48 +382,11 @@ func (n *liveNode) submit(w http.ResponseWriter, r *http.Request) {
 		sendError(w, http.StatusBadRequest, err)
 		return
 	}
-	if err := packet.Validate(n.cfg.Manifest); err != nil {
+	if err := packet.ValidateAdmission(n.cfg.Manifest); err != nil {
 		sendError(w, http.StatusBadRequest, err)
 		return
 	}
-	// This transport mutex is distinct from protocol-state locks. Serialize the
-	// local snapshot, model response, and promise so concurrent submissions cannot
-	// act on stale admission observations. Model IO holds no state lock.
-	n.admissionMu.Lock()
-	defer n.admissionMu.Unlock()
-	if err := r.Context().Err(); err != nil {
-		return
-	}
-	// A previously persisted promise is returned verbatim without a new decision.
-	n.mu.Lock()
-	local := n.journal.Rounds[packet.Header.Round]
-	if local != nil {
-		if old, ok := local.Accepted[packet.ID()]; ok {
-			n.mu.Unlock()
-			sendJSON(w, http.StatusOK, old.Promise)
-			return
-		}
-	}
-	n.mu.Unlock()
-	decision, err := n.decideAgent(r.Context(), "admission", &packet, nil)
-	if err != nil {
-		sendError(w, http.StatusServiceUnavailable, err)
-		return
-	}
-	if decision.Action == "refuse" {
-		sendError(w, http.StatusServiceUnavailable, errors.New("agent refused admission"))
-		return
-	}
-	if decision.Action == "delay" {
-		timer := time.NewTimer(time.Duration(decision.DelayMS) * time.Millisecond)
-		defer timer.Stop()
-		select {
-		case <-r.Context().Done():
-			return
-		case <-timer.C:
-		}
-	}
-	promise, err := n.acceptDecision(packet, decision)
+	promise, err := n.accept(packet)
 	if err != nil {
 		sendError(w, http.StatusConflict, err)
 		return
@@ -409,27 +397,26 @@ func (n *liveNode) submit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (n *liveNode) accept(packet Packet) (Promise, error) {
-	return n.acceptDecision(packet, AgentDecision{Action: "normal"})
-}
-
-func (n *liveNode) acceptDecision(packet Packet, decision AgentDecision) (Promise, error) {
 	// Hold the committed-state read lock through durable admission, preventing
 	// a concurrent block commit from crossing the close height mid-promise.
 	n.machine.mu.RLock()
 	defer n.machine.mu.RUnlock()
 	n.mu.Lock()
 	defer n.mu.Unlock()
+	if n.ingressFailure != nil {
+		return Promise{}, n.ingressFailure
+	}
 	id := packet.ID()
 	local := n.journal.Rounds[packet.Header.Round]
 	if local != nil {
 		if old, ok := local.Accepted[id]; ok {
+			if !old.Promise.matches(packet) {
+				return Promise{}, errors.New("packet already admitted with different timing evidence")
+			}
 			return old.Promise, nil
 		}
 	}
 	s := n.machine.state
-	if decision.Action != "normal" && decision.Action != "delay" {
-		return Promise{}, errors.New("unsupported admission action")
-	}
 	if s.Round == nil || s.Round.Registered || packet.Header.Round != s.Round.Number || s.Height >= s.Round.CloseHeight {
 		return Promise{}, errors.New("admission round is not open")
 	}
@@ -452,6 +439,32 @@ func (n *liveNode) acceptDecision(packet Packet, decision AgentDecision) (Promis
 		return Promise{}, errors.New("node admission capacity is exhausted")
 	}
 	promise := NewPromise(n.cfg.Manifest, n.peer.ID, packet.Header.Round, id, n.private)
+	if n.cfg.Manifest.Policy.Ingress == IngressSoftware {
+		var last *IngressRecord
+		for _, g := range local.Accepted {
+			if g.Promise.Ingress == nil {
+				return Promise{}, errors.New("missing ingress record in local journal")
+			}
+			if last == nil || g.Promise.Ingress.Sequence > last.Sequence {
+				last = g.Promise.Ingress
+			}
+		}
+		now := time.Now().UnixNano()
+		previous := ""
+		if last != nil {
+			if now < last.ReceivedUnixNano {
+				return Promise{}, errors.New("software ingress host clock moved backwards")
+			}
+			previous = Hash(*last)
+		}
+		record := NewIngressRecord(n.cfg.Manifest, n.peer.ID, packet.Header.Round, id, uint64(len(local.Accepted)+1), now, previous, ed25519.PrivateKey(n.cfg.IngressPrivate))
+		promise.Ingress = &record
+		promise.TimeProofID = packet.timeProofID()
+		promise.Signature = Sign(n.private, promise.body())
+		if err := promise.Validate(n.cfg.Manifest); err != nil {
+			return Promise{}, err
+		}
+	}
 
 	g := Gossip{packet, promise}
 	local.Accepted[id] = g
@@ -460,6 +473,9 @@ func (n *liveNode) acceptDecision(packet Packet, decision AgentDecision) (Promis
 	if err := AtomicJSON(n.journalPath, n.journal); err != nil {
 		delete(local.Accepted, id)
 		delete(n.journal.Receipts, hash)
+		if n.cfg.Manifest.Policy.Ingress == IngressSoftware {
+			n.ingressFailure = fmt.Errorf("software ingress persistence uncertain; restart and validate journal: %w", err)
+		}
 		return Promise{}, fmt.Errorf("persist admission: %w", err)
 	}
 	return promise, nil
@@ -536,12 +552,8 @@ func (n *liveNode) work(ctx context.Context) error {
 			return err
 		}
 		if round := s.Round; round != nil && !round.Registered {
-			if n.agent != nil && n.options.AgentPrepareBlocks > 0 && s.Height < round.CloseHeight && s.Height >= round.CloseHeight-n.options.AgentPrepareBlocks {
-				o := n.agentObservation("seal", nil, s)
-				n.agent.prepare(ctx, fmt.Sprintf("seal:%d", round.Number), o)
-			}
 			if s.Height > round.CloseHeight && !round.HasList(n.peer.ID) {
-				list, err := n.sealContext(ctx, round)
+				list, err := n.seal(round)
 				if err != nil {
 					return err
 				}
@@ -560,11 +572,7 @@ func (n *liveNode) work(ctx context.Context) error {
 			}{len(s.Services) + 1, s.Queue[0]})
 		}
 		if lock := s.Active; lock != nil && s.Height >= lock.Height {
-			decision, err := n.decideAgent(ctx, "shares", nil, s)
-			if err != nil {
-				return err
-			}
-			if !n.options.WithholdShares && decision.Action != "withhold" {
+			if !n.options.WithholdShares {
 				batch := ShareBatch{LockID: lock.ID, Shares: map[string]threshold.DecryptionShare{}}
 				for _, id := range lock.Items {
 					already := false
@@ -617,16 +625,12 @@ func (n *liveNode) work(ctx context.Context) error {
 }
 
 func (n *liveNode) seal(round *Round) (FinalList, error) {
-	return n.sealContext(context.Background(), round)
-}
-
-func (n *liveNode) sealContext(ctx context.Context, round *Round) (FinalList, error) {
-	decision, err := n.decideAgent(ctx, "seal", nil, nil)
-	if err != nil {
-		return FinalList{}, err
-	}
+	protected := n.cfg.Manifest.Policy.Ingress == IngressSoftware
 	n.mu.Lock()
 	defer n.mu.Unlock()
+	if n.ingressFailure != nil {
+		return FinalList{}, n.ingressFailure
+	}
 	local := n.journal.Rounds[round.Number]
 	if local == nil {
 		local = &admissionRound{Accepted: map[string]Gossip{}}
@@ -636,28 +640,31 @@ func (n *liveNode) sealContext(ctx context.Context, round *Round) (FinalList, er
 		return *local.Sealed, nil
 	}
 	list := FinalList{Context: n.cfg.Manifest.Context, Node: n.peer.ID, Round: round.Number, Packets: []Packet{}, Promises: []Promise{}}
-	if !n.options.OmitList && decision.Action != "omit" {
+	if protected || !n.options.OmitList {
 		ids := make([]string, 0, len(local.Accepted))
 		for id := range local.Accepted {
 			ids = append(ids, id)
 		}
 		sort.Strings(ids)
-		selected := map[string]bool{}
-		observed := map[string]bool{}
-		for _, id := range decision.IncludeIDs {
-			selected[id] = true
-		}
-		for _, id := range decision.snapshotIDs {
-			observed[id] = true
-		}
 		for _, id := range ids {
-			if decision.Action == "select" && observed[id] && !selected[id] {
-				continue
-			}
 			g := local.Accepted[id]
 			list.Packets = append(list.Packets, g.Packet)
 			list.Promises = append(list.Promises, g.Promise)
 		}
+	}
+	if protected {
+		records := make([]IngressRecord, 0, len(list.Promises))
+		for _, promise := range list.Promises {
+			if promise.Ingress == nil {
+				return FinalList{}, errors.New("cannot seal an unrecorded protected admission")
+			}
+			records = append(records, *promise.Ingress)
+		}
+		seal, err := NewIngressSeal(n.cfg.Manifest, n.peer.ID, round.Number, records, ed25519.PrivateKey(n.cfg.IngressPrivate))
+		if err != nil {
+			return FinalList{}, err
+		}
+		list.IngressSeal = &seal
 	}
 	list.Signature = Sign(n.private, list.body())
 	if err := list.Validate(n.cfg.Manifest, round.Capacity); err != nil {
@@ -666,6 +673,9 @@ func (n *liveNode) sealContext(ctx context.Context, round *Round) (FinalList, er
 	local.Sealed = &list
 	if err := AtomicJSON(n.journalPath, n.journal); err != nil {
 		local.Sealed = nil
+		if protected {
+			n.ingressFailure = fmt.Errorf("software ingress seal persistence uncertain; restart and validate journal: %w", err)
+		}
 		return FinalList{}, err
 	}
 	return list, nil

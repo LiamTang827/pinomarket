@@ -19,7 +19,7 @@ func TestBaseRegistrationDoesNotGateOrRankByObservationCount(t *testing.T) {
 	}
 	bad := s.Clone()
 	bad.Registrations[0].Items[0], bad.Registrations[0].Items[1] = b.ID(), a.ID()
-	if err := auditRegistrationOrder(f.manifest, bad.Registrations[0], map[string]bool{}); err == nil {
+	if err := auditRegistrationOrder(f.manifest, bad.Registrations[0], map[string]bool{}, bad.Orders); err == nil {
 		t.Fatal("auditor accepted a different order")
 	}
 }

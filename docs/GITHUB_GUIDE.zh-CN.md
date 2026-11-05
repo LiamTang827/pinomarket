@@ -51,4 +51,4 @@ git push
 
 ## 目前从哪里看起
 
-先看 README、[设计范围](SCOPE.md) 和[路线图](../ROADMAP.md)。目前已有 Go 协议模拟原型，请按 [中文运行说明](PROTOTYPE.zh-CN.md) 启动；真实门限加密和分布式共识尚未实现。
+先看[项目首页](../README.zh-CN.md)和[协议说明](LIVE_PROTOCOL.zh-CN.md)。首页的演示命令可以在本地启动节点，走完密文提交、排序、锁序、解密和审计。

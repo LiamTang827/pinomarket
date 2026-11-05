@@ -5,15 +5,17 @@ import (
 	"sort"
 )
 
-// Independently reconstruct the eligible union and deterministic placeholder
+// Independently reconstruct the eligible union and deterministic
 // order. Do not trust the stored queue or call the state's sorting function.
-func auditRegistrationOrder(_ Manifest, r Registration, used map[string]bool) error {
+func auditRegistrationOrder(m Manifest, r Registration, used map[string]bool, stored map[string]Packet) error {
 	packets := map[string]Packet{}
 	refs := map[string]map[string]bool{}
 	for _, list := range r.Lists {
 		for _, p := range list.Packets {
 			id := p.ID()
-			packets[id] = p
+			if preferRegistrationPacket(p, packets[id]) {
+				packets[id] = p
+			}
 			if refs[p.Ref()] == nil {
 				refs[p.Ref()] = map[string]bool{}
 			}
@@ -28,6 +30,12 @@ func auditRegistrationOrder(_ Manifest, r Registration, used map[string]bool) er
 	}
 	sort.Slice(ids, func(i, j int) bool {
 		a, b := packets[ids[i]], packets[ids[j]]
+		if m.Policy.Ordering == OrderingAion {
+			if a.TimeProof.Timestamp() != b.TimeProof.Timestamp() {
+				return a.TimeProof.Timestamp() < b.TimeProof.Timestamp()
+			}
+			return ids[i] < ids[j]
+		}
 		if a.Header.Owner != b.Header.Owner {
 			return a.Header.Owner < b.Header.Owner
 		}
@@ -41,7 +49,10 @@ func auditRegistrationOrder(_ Manifest, r Registration, used map[string]bool) er
 	}
 	for i, id := range ids {
 		if id != r.Items[i] {
-			return errors.New("registration violates deterministic placeholder order")
+			return errors.New("registration violates configured order")
+		}
+		if stored[id].timeProofID() != packets[id].timeProofID() {
+			return errors.New("registered packet does not carry the selected proof")
 		}
 	}
 	return nil

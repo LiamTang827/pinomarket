@@ -106,7 +106,7 @@ type SubmissionReceipt struct {
 // VerifyReceipt authenticates client-collected promises independently of whether
 // the packet was eventually registered. A valid partial receipt is not a quorum.
 func VerifyReceipt(m Manifest, receipt SubmissionReceipt) (int, error) {
-	if err := receipt.Packet.Validate(m); err != nil {
+	if err := receipt.Packet.ValidateAdmission(m); err != nil {
 		return 0, err
 	}
 	seen := map[string]bool{}
@@ -117,7 +117,7 @@ func VerifyReceipt(m Manifest, receipt SubmissionReceipt) (int, error) {
 		if seen[promise.Node] {
 			return 0, errors.New("duplicate receipt member")
 		}
-		if promise.ID != receipt.Packet.ID() || promise.Round != receipt.Packet.Header.Round {
+		if !promise.matches(receipt.Packet) {
 			return 0, errors.New("receipt promise does not match packet/round")
 		}
 		seen[promise.Node] = true
@@ -125,14 +125,46 @@ func VerifyReceipt(m Manifest, receipt SubmissionReceipt) (int, error) {
 	return len(seen), nil
 }
 
-func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt, error) {
-	out := SubmissionReceipt{Packet: p, Promises: []Promise{}, Errors: map[string]string{}, NodeResponseMS: map[string]float64{}}
+func certifyPacketTime(ctx context.Context, m Manifest, p Packet) (Packet, error) {
 	if err := p.Validate(m); err != nil {
-		return out, err
+		return p, err
 	}
+	if m.Policy.Ordering == OrderingAion && p.TimeProof == nil {
+		lastErr := errors.New("no configured time-proof origin")
+		for _, peer := range m.Peers {
+			var proof TimeProof
+			lastErr = RequestJSON(ctx, "POST", peer.API+"/aion/prove", p, &proof)
+			if lastErr == nil {
+				lastErr = proof.Validate(m, p)
+			}
+			if lastErr == nil {
+				p.TimeProof = &proof
+				break
+			}
+			if ctx.Err() != nil {
+				break
+			}
+		}
+		if p.TimeProof == nil {
+			return p, fmt.Errorf("certify packet time: %w", lastErr)
+		}
+	}
+	return p, p.ValidateAdmission(m)
+}
+
+func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt, error) {
+	started := time.Now()
+	certified, err := certifyPacketTime(ctx, m, p)
+	if err != nil {
+		return SubmissionReceipt{Packet: p}, err
+	}
+	return submitCertified(ctx, m, certified, started), nil
+}
+
+func submitCertified(ctx context.Context, m Manifest, p Packet, started time.Time) SubmissionReceipt {
+	out := SubmissionReceipt{Packet: p, Promises: []Promise{}, Errors: map[string]string{}, NodeResponseMS: map[string]float64{}}
 	var mu sync.Mutex
 	var wg sync.WaitGroup
-	started := time.Now()
 	for _, peer := range m.Peers {
 		wg.Add(1)
 		go func(peer Peer) {
@@ -141,7 +173,7 @@ func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt,
 			err := RequestJSON(ctx, "POST", peer.API+"/submit", p, &pr)
 			if err == nil {
 				err = pr.Validate(m)
-				if err == nil && (pr.Node != peer.ID || pr.ID != p.ID() || pr.Round != p.Header.Round) {
+				if err == nil && (pr.Node != peer.ID || !pr.matches(p)) {
 					err = errors.New("receipt does not match contacted member/order")
 				}
 			}
@@ -162,7 +194,7 @@ func SubmitPacket(ctx context.Context, m Manifest, p Packet) (SubmissionReceipt,
 	}
 	wg.Wait()
 	out.Quorum = len(out.Promises) >= m.Policy.Quorum
-	return out, nil
+	return out
 }
 func RunCLI(args []string) error {
 	if len(args) == 0 {
@@ -181,7 +213,11 @@ func RunCLI(args []string) error {
 	base := fs.Int("base-port", 26656, "Comet base P2P port (RPC=base+1, next node+10)")
 	api := fs.Int("api-port", 28000, "first application HTTP port")
 	interval := fs.Duration("block-interval", 500*time.Millisecond, "minimum block commit interval")
-	ordering := fs.String("ordering", OrderingIdentity, "init only: identity placeholder (deterministic execution, no arrival-time fairness)")
+	ordering := fs.String("ordering", OrderingIdentity, "init only: identity or aion")
+	ingress := fs.String("ingress", "", "init only: software to simulate protected admission records; empty keeps baseline (no real TEE/TNIC)")
+	clockSkew := fs.Int64("clock-skew-ms", 5, "aion: assumed clock skew bound in milliseconds")
+	delayVariation := fs.Int64("delay-variation-ms", 75, "aion: assumed delay variation bound in milliseconds")
+	maxDelay := fs.Int64("max-calibrated-delay-ms", 1000, "aion: maximum accepted delay estimate in milliseconds")
 	owner := fs.String("owner", "alice", "wallet name")
 	prepareRound := fs.Int("round", 0, "prepare only: encrypt for this round before admission opens")
 	kind := fs.String("kind", "buy", "buy or cancel")
@@ -190,25 +226,32 @@ func RunCLI(args []string) error {
 	nonce := fs.Int("nonce", 0, "unique wallet command number")
 	out := fs.String("out", "", "public receipt output file")
 	packetFile := fs.String("packet", "", "resend an existing packet or receipt file")
-	agentSocket := fs.String("agent-socket", "", "node-only private Unix socket for isolated policy decisions")
-	agentTimeout := fs.Int("agent-timeout-ms", 2000, "private policy response timeout, maximum 55000ms")
-	agentPrepare := fs.Int64("agent-prepare-blocks", 0, "start a live seal decision this many blocks before close; 0 disables prefetch")
 	refuse := fs.Bool("refuse", false, "fault: refuse admission")
 	omit := fs.Bool("omit-list", false, "fault: publish empty final list")
 	withhold := fs.Bool("withhold-shares", false, "fault: do not release own shares")
 	delay := fs.Int("delay-ms", 0, "delay incoming submissions")
 	count := fs.Int("count", 3, "measure: number of purchases across alice, bob and carol")
-	samples := fs.Int("samples", 30, "benchmark: warmed samples per local operation")
+	samples := fs.Int("samples", 30, "benchmark: warmed samples per local operation (identity baseline)")
 	timeout := fs.Duration("timeout", 60*time.Second, "client operation deadline")
 	if err := fs.Parse(args[1:]); err != nil {
 		return err
 	}
 	if args[0] == "init" {
-		m, err := InitNetwork(*dir, InitOptions{Nodes: *nodes, Threshold: *t, QueueCapacity: *capacity, ServiceCapacity: *service, BasePort: *base, APIPort: *api, WindowBlocks: *window, BlockInterval: *interval, Ordering: *ordering})
+		var aion *AionPolicy
+		if *ordering == OrderingAion {
+			aion = &AionPolicy{ClockSkewMS: *clockSkew, DelayVariationMS: *delayVariation, MaxDelayMS: *maxDelay}
+		}
+		m, err := InitNetwork(*dir, InitOptions{Nodes: *nodes, Threshold: *t, QueueCapacity: *capacity, ServiceCapacity: *service, BasePort: *base, APIPort: *api, WindowBlocks: *window, BlockInterval: *interval, Ordering: *ordering, Ingress: *ingress, Aion: aion})
 		if err != nil {
 			return err
 		}
 		fmt.Printf("Initialized %d independent validator configurations; q=%d t=%d\nContext: %s\nStart one 'network node -config %s/nodeN.json' process per node.\n", len(m.Peers), m.Policy.Quorum, m.Policy.Threshold, m.Context, *dir)
+		if m.Policy.Ingress == IngressSoftware {
+			fmt.Println("Ingress: SOFTWARE SIMULATION ONLY; host-readable keys and local clock, no hardware attestation.")
+		}
+		if m.Policy.Ordering == OrderingAion {
+			fmt.Println("Ordering: Aion-style certified timestamps within each registered round.")
+		}
 		return nil
 	}
 	if args[0] == "node" {
@@ -218,7 +261,7 @@ func RunCLI(args []string) error {
 		}
 		ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 		defer cancel()
-		return RunNode(ctx, cfg, NodeOptions{Refuse: *refuse, OmitList: *omit, WithholdShares: *withhold, DelayMS: *delay, AgentSocket: *agentSocket, AgentTimeoutMS: *agentTimeout, AgentPrepareBlocks: *agentPrepare})
+		return RunNode(ctx, cfg, NodeOptions{Refuse: *refuse, OmitList: *omit, WithholdShares: *withhold, DelayMS: *delay})
 	}
 	m, err := LoadManifest(*dir)
 	if err != nil {
@@ -295,15 +338,26 @@ func RunCLI(args []string) error {
 			fmt.Printf("Prepared encrypted order %s; packet=%s (not submitted)\n", packet.Ref(), packet.ID())
 			return nil
 		}
-		receipt, err := SubmitPacket(ctx, m, packet)
+		if *out != "" {
+			if _, err := os.Stat(*out); !os.IsNotExist(err) {
+				return errors.New("receipt output must be a new file")
+			}
+		}
+		started := time.Now()
+		packet, err = certifyPacketTime(ctx, m, packet)
 		if err != nil {
 			return err
 		}
-		if *out != "" {
-			if _, err = os.Stat(*out); err == nil {
-				return errors.New("receipt output already exists")
+		if *out != "" && packet.TimeProof != nil {
+			// Keep the exact evidence before any node can sign a promise for it.
+			// If interrupted, the file can be used as the next submit's -packet.
+			if err := AtomicJSON(*out, SubmissionReceipt{Packet: packet, Promises: []Promise{}}); err != nil {
+				return err
 			}
-			if err = AtomicJSON(*out, receipt); err != nil {
+		}
+		receipt := submitCertified(ctx, m, packet, started)
+		if *out != "" {
+			if err := AtomicJSON(*out, receipt); err != nil {
 				return err
 			}
 		}

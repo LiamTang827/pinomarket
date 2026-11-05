@@ -1,8 +1,8 @@
 # Third party software
 
-AOAB and the Isotaxis artifact are related-work references for experimental methodology. Their ordering protocols are not part of pinomarket. No upstream Rust source or plotting data is bundled.
+Aion is a design reference for latency calibration and timestamp endorsement. The local prototype implements its own timing flow.
 
-The v0.3 network path uses upstream implementations rather than custom implementations of consensus or threshold cryptography.
+The network path uses upstream implementations for consensus and threshold cryptography.
 
 - **CometBFT v0.38.26**: consensus, validator signatures, peer networking, WAL and block storage. Apache-2.0; source notices are retained in [LICENSE](docs/licenses/CometBFT-LICENSE) and [NOTICE](docs/licenses/CometBFT-NOTICE). Upstream: https://github.com/cometbft/cometbft/tree/v0.38.26.
 - **Shutter shlib v0.1.19**: `puredkg` and `shcrypto`. MIT. The threshold adapter and its crypto runtime dependencies are documented in [threshold/THIRD_PARTY.md](threshold/THIRD_PARTY.md), with license texts in `threshold/licenses/`.

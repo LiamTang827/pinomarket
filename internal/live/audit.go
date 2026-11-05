@@ -45,7 +45,7 @@ func AuditState(m Manifest, s *State) error {
 				return err
 			}
 		}
-		if err := auditRegistrationOrder(m, r, refs); err != nil {
+		if err := auditRegistrationOrder(m, r, refs, s.Orders); err != nil {
 			return err
 		}
 		for _, id := range r.Items {
@@ -53,7 +53,7 @@ func AuditState(m Manifest, s *State) error {
 			if !ok || p.ID() != id || p.Header.Round != r.Round || registered[id] || refs[p.Ref()] {
 				return errors.New("invalid registered order")
 			}
-			if err := p.Validate(m); err != nil {
+			if err := p.ValidateAdmission(m); err != nil {
 				return err
 			}
 			registered[id] = true

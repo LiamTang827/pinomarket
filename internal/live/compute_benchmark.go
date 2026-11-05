@@ -104,6 +104,9 @@ func BenchmarkCompute(ctx context.Context, m Manifest, dir string, samples int, 
 	if err := m.Validate(); err != nil {
 		return err
 	}
+	if m.Policy.Ingress != "" || m.Policy.Ordering == OrderingAion {
+		return errors.New("benchmark requires an identity baseline initialized without software ingress")
+	}
 	if err := os.MkdirAll(filepath.Dir(out), 0700); err != nil {
 		return err
 	}
@@ -115,7 +118,7 @@ func BenchmarkCompute(ctx context.Context, m Manifest, dir string, samples int, 
 	report := ComputeCosts{Schema: 1, Mode: "serial-local-api-wall-time", Context: m.Context, Nodes: m.Policy.Nodes, Threshold: m.Policy.Threshold, Samples: samples,
 		Runtime:      map[string]any{"go": runtime.Version(), "os": runtime.GOOS, "arch": runtime.GOARCH, "logical_cpus": runtime.NumCPU(), "gomaxprocs": runtime.GOMAXPROCS(0)},
 		FixtureSizes: map[string]int{}, Operations: map[string]OperationCost{},
-		Limitations: "Sequential warmed local API elapsed times, not isolated CPU cycles or a security/performance proof. Nested full APIs overlap and MUST NOT be summed; timings include repeated configuration/ciphertext/share validation, allocations and serialization where used by that API. Fixed small valid inputs and t shares. Fixture setup, DKG provisioning, disk/network/consensus and AI calls excluded from operation timings. No node workload runs concurrently in this runner phase; node background consensus may remain active."}
+		Limitations: "Sequential warmed local API elapsed times, not isolated CPU cycles or a security/performance proof. Nested full APIs overlap and MUST NOT be summed; timings include repeated configuration/ciphertext/share validation, allocations and serialization where used by that API. Fixed small valid inputs and t shares. Fixture setup, DKG provisioning and disk/network/consensus excluded from operation timings. No node workload runs concurrently in this runner phase; node background consensus may remain active."}
 	defer func() {
 		if runErr != nil {
 			report.Error = runErr.Error()
