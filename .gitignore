@@ -24,6 +24,10 @@ dist/
 build/
 coverage/
 
+# Foundry build output
+/evm/out/
+/evm/cache/
+
 # Generated runs and local data; curated fixtures should be committed separately
 runs/
 data/local/

@@ -21,6 +21,10 @@ bash scripts/network-demo.sh runs/first-demo
 
 Use a fresh run directory each time. The run directory also contains private keys. Share individual public receipts or audit results as needed.
 
+## Anvil MEV evaluation
+
+The local experiment compares plaintext swaps with encrypted orders executed by a signature-verified EVM batch. See the [evaluation and reproduction guide (Chinese)](docs/ANVIL_EVALUATION.zh-CN.md) for commands, receipt checks, and performance metrics.
+
 ## Code map
 
 | Location | Responsibility |

@@ -101,6 +101,12 @@ func AuditState(m Manifest, s *State) error {
 				return errors.New("published opening mismatch")
 			}
 			openingIndex++
+			if m.Policy.EVM {
+				if result != (protocol.Result{Order: opened.Order.Ref(), Status: "awaiting_evm"}) {
+					return errors.New("invalid EVM handoff result")
+				}
+				continue
+			}
 			orders = append(orders, opened.Order)
 			results = append(results, result)
 		}

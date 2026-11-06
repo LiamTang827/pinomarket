@@ -15,6 +15,7 @@ import (
 
 	"github.com/LiamTang827/pinomarket/protocol"
 	"github.com/LiamTang827/pinomarket/threshold"
+	"github.com/ethereum/go-ethereum/common"
 )
 
 const Domain = "pinocchio/live/v0.3"
@@ -29,6 +30,7 @@ type Policy struct {
 	WindowBlocks    int64       `json:"window_blocks"`
 	Ordering        string      `json:"ordering,omitempty"`
 	Ingress         string      `json:"ingress,omitempty"`
+	EVM             bool        `json:"evm,omitempty"`
 	Aion            *AionPolicy `json:"aion,omitempty"`
 }
 
@@ -54,6 +56,7 @@ type Peer struct {
 	RPC          string `json:"rpc"`
 	Key          []byte `json:"public_key"`
 	ValidatorKey []byte `json:"validator_public_key"`
+	EVMAddress   string `json:"evm_address,omitempty"`
 	IngressKey   []byte `json:"ingress_public_key,omitempty"`
 }
 type Manifest struct {
@@ -86,11 +89,21 @@ func (m Manifest) Validate() error {
 	}
 	seen := map[string]bool{}
 	keySeen := map[string]bool{}
+	evmSeen := map[common.Address]bool{}
 	for i, n := range m.Peers {
 		if n.Index != i || n.ID == "" || seen[n.ID] || len(n.Key) != ed25519.PublicKeySize || len(n.ValidatorKey) != ed25519.PublicKeySize || keySeen[string(n.Key)] {
 			return errors.New("invalid member keys")
 		}
 		seen[n.ID] = true
+		if p.EVM {
+			addr := common.HexToAddress(n.EVMAddress)
+			if !common.IsHexAddress(n.EVMAddress) || addr == (common.Address{}) || evmSeen[addr] {
+				return errors.New("invalid or duplicate EVM signer address")
+			}
+			evmSeen[addr] = true
+		} else if n.EVMAddress != "" {
+			return errors.New("EVM signer present without EVM policy")
+		}
 		keySeen[string(n.Key)] = true
 		if p.Ingress == IngressSoftware {
 			if len(n.IngressKey) != ed25519.PublicKeySize || bytes.Equal(n.IngressKey, n.Key) || keySeen["ingress:"+string(n.IngressKey)] {
@@ -130,6 +143,7 @@ type NodeConfig struct {
 	CometDir       string                `json:"comet_dir"`
 	Private        []byte                `json:"private_signing_key"`
 	Share          threshold.SecretShare `json:"threshold_secret_share"`
+	EVMPrivate     []byte                `json:"evm_private_key,omitempty"`
 	IngressPrivate []byte                `json:"software_ingress_private_key,omitempty"`
 }
 type Header struct {

@@ -3,6 +3,7 @@ package live
 import (
 	"bytes"
 	"context"
+	"crypto/ecdsa"
 	"crypto/ed25519"
 	"encoding/json"
 	"errors"
@@ -22,6 +23,8 @@ import (
 	"github.com/LiamTang827/pinomarket/threshold"
 	rpchttp "github.com/cometbft/cometbft/rpc/client/http"
 	cmttypes "github.com/cometbft/cometbft/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 // NodeOptions intentionally injects protocol faults in local experiments.
@@ -66,6 +69,7 @@ type liveNode struct {
 	ingressFailure error // fail closed after uncertain software-journal persistence
 	aion           *aionRuntime
 	telemetry      *nodeTelemetry
+	evmKey         *ecdsa.PrivateKey
 }
 
 // RunNode runs one independent application, HTTP transport and CometBFT process.
@@ -124,6 +128,13 @@ func RunNode(ctx context.Context, cfg NodeConfig, options NodeOptions) error {
 	// Keep retrying consensus transactions bounded; a missing quorum must not
 	// prevent the worker or HTTP server from responding to shutdown.
 	n := &liveNode{cfg: cfg, options: options, peer: peer, private: private, machine: machine, rpc: rpc, httpClient: &http.Client{Timeout: 2 * time.Second}, journalPath: filepath.Join(cfg.CometDir, "app", "admission.json"), telemetry: newNodeTelemetry(peer.ID)}
+	if cfg.Manifest.Policy.EVM {
+		key, err := crypto.ToECDSA(cfg.EVMPrivate)
+		if err != nil || crypto.PubkeyToAddress(key.PublicKey) != common.HexToAddress(peer.EVMAddress) {
+			return errors.New("EVM private key does not match manifest member")
+		}
+		n.evmKey = key
+	}
 	if cfg.Manifest.Policy.Ordering == OrderingAion {
 		n.aion = newAionRuntime(ed25519.PrivateKey(cfg.IngressPrivate), filepath.Join(cfg.CometDir, "app", "aion-delay.json"))
 	}

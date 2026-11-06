@@ -198,7 +198,7 @@ func submitCertified(ctx context.Context, m Manifest, p Packet, started time.Tim
 }
 func RunCLI(args []string) error {
 	if len(args) == 0 {
-		fmt.Println("network init|node|ready|open|prepare|submit|verify-receipt|measure|benchmark|wait|status|audit (use -h after command)")
+		fmt.Println("network init|node|ready|open|prepare|submit|verify-receipt|measure|benchmark|wait|status|audit|evm-config|evm-batch (use -h after command)")
 		return nil
 	}
 	fs := flag.NewFlagSet("network "+args[0], flag.ContinueOnError)
@@ -218,9 +218,12 @@ func RunCLI(args []string) error {
 	clockSkew := fs.Int64("clock-skew-ms", 5, "aion: assumed clock skew bound in milliseconds")
 	delayVariation := fs.Int64("delay-variation-ms", 75, "aion: assumed delay variation bound in milliseconds")
 	maxDelay := fs.Int64("max-calibrated-delay-ms", 1000, "aion: maximum accepted delay estimate in milliseconds")
+	evm := fs.Bool("evm", false, "init only: enable EVM service certificates")
+	batchNumber := fs.Int("number", 1, "evm-batch: completed service number")
+	listing := fs.String("listing", "yes-1", "market identifier or evm:<chain id>:<contract>")
 	owner := fs.String("owner", "alice", "wallet name")
 	prepareRound := fs.Int("round", 0, "prepare only: encrypt for this round before admission opens")
-	kind := fs.String("kind", "buy", "buy or cancel")
+	kind := fs.String("kind", "buy", "buy, sell (EVM), or cancel (local market)")
 	quantity := fs.Int64("quantity", 1, "share quantity")
 	limit := fs.Int64("limit", 60, "limit in cents")
 	nonce := fs.Int("nonce", 0, "unique wallet command number")
@@ -241,7 +244,7 @@ func RunCLI(args []string) error {
 		if *ordering == OrderingAion {
 			aion = &AionPolicy{ClockSkewMS: *clockSkew, DelayVariationMS: *delayVariation, MaxDelayMS: *maxDelay}
 		}
-		m, err := InitNetwork(*dir, InitOptions{Nodes: *nodes, Threshold: *t, QueueCapacity: *capacity, ServiceCapacity: *service, BasePort: *base, APIPort: *api, WindowBlocks: *window, BlockInterval: *interval, Ordering: *ordering, Ingress: *ingress, Aion: aion})
+		m, err := InitNetwork(*dir, InitOptions{Nodes: *nodes, Threshold: *t, QueueCapacity: *capacity, ServiceCapacity: *service, BasePort: *base, APIPort: *api, WindowBlocks: *window, BlockInterval: *interval, Ordering: *ordering, Ingress: *ingress, Aion: aion, EVM: *evm})
 		if err != nil {
 			return err
 		}
@@ -270,6 +273,22 @@ func RunCLI(args []string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), *timeout)
 	defer cancel()
 	switch args[0] {
+	case "evm-config", "evm-batch":
+		if !m.Policy.EVM {
+			return errors.New("initialize network with -evm")
+		}
+		if args[0] == "evm-config" {
+			fmt.Println(string(JSON(evmConfig(m))))
+			return nil
+		}
+		if *batchNumber < 1 {
+			return errors.New("batch number must be positive")
+		}
+		cert, err := fetchEVMBatch(ctx, m, *batchNumber)
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(JSON(cert)))
 	case "verify-receipt":
 		if *packetFile == "" {
 			return errors.New("verify-receipt requires -packet receipt file")
@@ -320,7 +339,7 @@ func RunCLI(args []string) error {
 			if err = ReadJSON(filepath.Join(*dir, "wallets", *owner+".json"), &key); err != nil {
 				return err
 			}
-			packet, err = NewPacket(m, round, protocol.Order{Owner: *owner, Nonce: *nonce, Kind: *kind, Listing: "yes-1", Quantity: *quantity, Limit: *limit}, ed25519.PrivateKey(key))
+			packet, err = NewPacket(m, round, protocol.Order{Owner: *owner, Nonce: *nonce, Kind: *kind, Listing: *listing, Quantity: *quantity, Limit: *limit}, ed25519.PrivateKey(key))
 			if err != nil {
 				return err
 			}

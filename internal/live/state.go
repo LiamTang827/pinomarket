@@ -243,7 +243,11 @@ func (s *State) Apply(m Manifest, t SignedTx, height int64) error {
 				continue
 			}
 			s.Openings = append(s.Openings, opened)
-			s.Results = append(s.Results, s.Market.Execute(opened.Order))
+			if m.Policy.EVM {
+				s.Results = append(s.Results, protocol.Result{Order: opened.Order.Ref(), Status: "awaiting_evm"})
+			} else {
+				s.Results = append(s.Results, s.Market.Execute(opened.Order))
+			}
 		}
 		s.Queue = s.Queue[len(lock.Items):]
 		s.Services = append(s.Services, *lock)

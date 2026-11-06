@@ -21,6 +21,10 @@ bash scripts/network-demo.sh runs/first-demo
 
 演示目录会生成密钥，提交到 GitHub 前只挑选需要分享的公开回执和审计结果。每次演示使用新的目录。
 
+## Anvil 攻击与性能对照
+
+[中文复现与读数说明](docs/ANVIL_EVALUATION.zh-CN.md) 包含明文抢跑／三明治、密文锁序到 EVM 结算、确认延迟、通信与 gas 统计。
+
 ## 从哪里看代码
 
 | 位置 | 内容 |

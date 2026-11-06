@@ -31,7 +31,7 @@ type NodeTelemetry struct {
 	Limitations      string                        `json:"limitations"`
 }
 
-var measuredHTTPRoutes = []string{"/submit", "/gossip", "/open", "/state", "/health", "/aion/prove", "/aion/calibrate", "/aion/challenge", "/aion/vote"}
+var measuredHTTPRoutes = []string{"/submit", "/gossip", "/open", "/state", "/health", "/aion/prove", "/aion/calibrate", "/aion/challenge", "/aion/vote", "/evm/sign-batch"}
 
 const telemetryLimitations = "Cumulative per-process application HTTP body counters, attributed when a handler completes or unwinds; in-flight handlers are absent, and interval-crossing handlers contribute their entire body at completion. Request bytes count only bytes read by handlers; responses count bytes accepted by ResponseWriter. Excludes headers, TCP/framing, CometBFT P2P/RPC and /metrics itself. /state and /health are observer overhead, separate from /submit, /gossip, /open and /aion/*. Handler elapsed time includes waiting and is not CPU time. Counters reset after process restart."
 
@@ -179,6 +179,9 @@ func (n *liveNode) routes() *http.ServeMux {
 	mux.HandleFunc("/gossip", n.telemetry.wrap("/gossip", n.gossip))
 	mux.HandleFunc("/open", n.telemetry.wrap("/open", n.open))
 	mux.HandleFunc("/metrics", n.metrics)
+	if n.evmKey != nil {
+		mux.HandleFunc("/evm/sign-batch", n.telemetry.wrap("/evm/sign-batch", n.signEVMBatch))
+	}
 	if n.aion != nil {
 		n.registerAionHandlers(mux)
 	}
